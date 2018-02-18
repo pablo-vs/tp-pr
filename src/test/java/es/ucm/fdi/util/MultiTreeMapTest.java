@@ -8,7 +8,7 @@ import java.util.Comparator;
 import static org.junit.Assert.*;
 
 /**
- * Created by mfreire on 12/01/18.
+ * Unit tests for MultiTreeMap
  */
 public class MultiTreeMapTest {
 
@@ -57,10 +57,54 @@ public class MultiTreeMapTest {
     }
 
     @Test
-    public void add() throws Exception {
+    public void putAndRemove() throws Exception {
+        MultiTreeMap<Integer, T> ts = new MultiTreeMap<>();
+        T[] array = new T[]{
+                new T(3, "3"),
+                new T(1, "1"),
+                new T(2, "2"),
+                new T(3, "3.1"),
+                new T(1, "1.1"),
+                new T(2, "2.1"),
+                new T(3, "3.2"),
+                new T(0, "0"),
+                new T(2, "2.2")};
+        for (T t : array) ts.putValue(t.i, t);
 
+
+        T t = new T(1, "1.1");
+        assertEquals(2, ts.get(t.i).size());
+        ts.putValue(t.i, t);
+        // duplicado añadido correctamente
+        assertEquals(3, ts.get(t.i).size());
+        // borrar elimina el primero, pero no el duplicado
+        boolean removed = ts.removeValue(t.i, t);
+        assertTrue("removed correctly", removed);
+        assertTrue(ts.get(t.i).get(1) == t);
+        removed = ts.removeValue(t.i, t);
+        assertTrue("removed correctly", removed);
+        assertEquals(1, ts.get(t.i).size());
     }
-/*
+
+    @Test
+    public void sizeComputation() throws Exception {
+        MultiTreeMap<Integer, T> ts = new MultiTreeMap<>();
+        T[] array = new T[]{
+                new T(3, "3"),
+                new T(1, "1"),
+                new T(2, "2"),
+                new T(3, "3.1"),
+                new T(1, "1.1"),
+                new T(2, "2.1"),
+                new T(3, "3.2"),
+                new T(0, "0"),
+                new T(2, "2.2")};
+
+        for (T t : array) ts.putValue(t.i, t);
+        assertEquals("size ok", array.length,
+                ts.sizeOfValues());
+    }
+
     @Test
     public void innerValuesAscending() throws Exception {
         MultiTreeMap<Integer, T> ts = new MultiTreeMap<>();
@@ -111,5 +155,5 @@ public class MultiTreeMapTest {
             i++;
         }
         assertEquals("all elements iterated", array.length, i);
-    }*/
+    }
 }
