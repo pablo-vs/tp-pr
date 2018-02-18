@@ -14,24 +14,24 @@ public class IniSection {
 	/**
 	 * The section's tag
 	 */
-	private String tag;
+	private String _tag;
 
 	/**
 	 * Key-Value mapping
 	 */
-	private Map<String, String> attr;
+	private Map<String, String> _attr;
 
 	/**
 	 * The list of keys. We could get it from field {@code _attr}, but keep
 	 * another list of keys in the order in which they where added. This is
 	 * mainly used when writing the INI structure.
 	 */
-	private List<String> keys;
+	private List<String> _keys;
 
 	/**
 	 * Key-comment mapping
 	 */
-	private Map<String, List<String>> comments;
+	private Map<String, List<String>> _comments;
 
 	/**
 	 * Creates and INI section
@@ -40,11 +40,11 @@ public class IniSection {
 	 *            The tag of the INI section
 	 */
 	public IniSection(String tag) {
-		this.tag = tag;
-		this.attr = new HashMap<>();
-		this.keys = new LinkedList<>();
-		this.comments = new HashMap<>();
-		this.comments.put("", new ArrayList<>()); // section comments
+		_tag = tag;
+		_attr = new HashMap<>();
+		_keys = new LinkedList<>();
+		_comments = new HashMap<>();
+		_comments.put("", new ArrayList<>()); // section comments
 	}
 
 	private void checkKeyValidity(String key) {
@@ -58,7 +58,7 @@ public class IniSection {
 	 * @return The tag of the INI section
 	 */
 	public String getTag() {
-		return tag;
+		return _tag;
 	}
 
 	/**
@@ -73,10 +73,10 @@ public class IniSection {
 	public void setValue(String key, Object value) {
 		checkKeyValidity(key);
 		if (getValue(key) == null) {
-			keys.add(key);
-			comments.put(key, new ArrayList<>()); // key comments
+			_keys.add(key);
+			_comments.put(key, new ArrayList<>()); // key comments
 		}
-		attr.put(key, value.toString());
+		_attr.put(key, value.toString());
 	}
 
 	/**
@@ -87,7 +87,7 @@ public class IniSection {
 	 */
 	public void addKeyComment(String key, String comment) {
 		if (getValue(key) != null) {
-			comments.get(key).add(comment);
+			_comments.get(key).add(comment);
 		}
 	}
 
@@ -98,7 +98,7 @@ public class IniSection {
 	 * @param comment
 	 */
 	public void addSectionComment(String comment) {
-		comments.get("").add(comment);
+		_comments.get("").add(comment);
 	}
 
 	/**
@@ -109,12 +109,12 @@ public class IniSection {
 	 * @return Value for key
 	 */
 	public String getValue(String key) {
-		return attr.get(key);
+		return _attr.get(key);
 	}
 
 	public List<String> getKeyComments(String key) {
 		checkKeyValidity(key);
-		return comments.get(key);
+		return _comments.get(key);
 	}
 
 	/**
@@ -134,7 +134,7 @@ public class IniSection {
 	 * @return the key-value map of this section.
 	 */
 	public Map<String, String> getKeysMap() {
-		return Collections.unmodifiableMap(attr);
+		return Collections.unmodifiableMap(_attr);
 	}
 
 	/**
@@ -142,7 +142,7 @@ public class IniSection {
 	 * @return
 	 */
 	public List<String> getKeys() {
-		return Collections.unmodifiableList(keys);
+		return Collections.unmodifiableList(_keys);
 	}
 
 	/**
@@ -179,20 +179,20 @@ public class IniSection {
 		String s = "";
 
 		// section comments
-		for (String c : comments.get("")) {
+		for (String c : _comments.get("")) {
 			s += ";" + c + System.lineSeparator();
 		}
 
-		s += "[" + tag + "]" + System.lineSeparator();
-		for (String key : keys) {
+		s += "[" + _tag + "]" + System.lineSeparator();
+		for (String key : _keys) {
 
 			// key comments
-			for (String c : comments.get(key)) {
+			for (String c : _comments.get(key)) {
 				s += ";" + c + System.lineSeparator();
 				;
 			}
 
-			s += key + " = " + attr.get(key) + System.lineSeparator();
+			s += key + " = " + _attr.get(key) + System.lineSeparator();
 		}
 		return s;
 	}

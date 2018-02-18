@@ -24,27 +24,27 @@ public class Ini {
 	/**
 	 * A pattern for matching an INI section line
 	 */
-	private Pattern section = Pattern.compile("\\s*\\[([^]]*)\\]\\s*");
+	private Pattern _section = Pattern.compile("\\s*\\[([^]]*)\\]\\s*");
 
 	/**
 	 * A pattern for matching a key-value line
 	 */
-	private Pattern keyValue = Pattern.compile("\\s*([^=]*)=(.*)");
+	private Pattern _keyValue = Pattern.compile("\\s*([^=]*)=(.*)");
 
 	/**
 	 * A pattern for matching white spaces
 	 */
-	private Pattern whitespaces = Pattern.compile("\\s*");
+	private Pattern _whitespaces = Pattern.compile("\\s*");
 
 	/**
 	 * A pattern for matching a comment
 	 */
-	private Pattern comment = Pattern.compile("[;,#](.*)");
+	private Pattern _comment = Pattern.compile("[;,#](.*)");
 
 	/**
 	 * List of section
 	 */
-	private List<IniSection> iniSections = new ArrayList<>();
+	private List<IniSection> _iniSections = new ArrayList<>();
 
 	/**
 	 * Construct an empty INI structure
@@ -88,29 +88,29 @@ public class Ini {
 		InputStreamReader r = new InputStreamReader(is);
 		BufferedReader br = new BufferedReader(r);
 		String line;
-		IniSection currentSection = null;
+		IniSection section = null;
 
 		while ((line = br.readLine()) != null) {
 			Boolean matched = false;
 
-			if (comment.matcher(line).matches() || whitespaces.matcher(line).matches()) {
+			if (_comment.matcher(line).matches() || _whitespaces.matcher(line).matches()) {
 				matched = true;
 			} else {
-				Matcher m = section.matcher(line);
+				Matcher m = _section.matcher(line);
 				if (m.matches()) {
-					currentSection = new IniSection(m.group(1).trim());
+					section = new IniSection(m.group(1).trim());
 					// if the section name starts with '!' then we ignore it
 					// (still the syntax of its key-value elements must be
 					// valid)
-					if (!currentSection.getTag().startsWith("!"))
-						iniSections.add(currentSection);
+					if (!section.getTag().startsWith("!"))
+						_iniSections.add(section);
 					matched = true;
-				} else if (currentSection != null) {
-					m = keyValue.matcher(line);
+				} else if (section != null) {
+					m = _keyValue.matcher(line);
 					if (m.matches()) {
 						String key = m.group(1).trim();
 						String value = m.group(2).trim();
-						currentSection.setValue(key, value);
+						section.setValue(key, value);
 						matched = true;
 					}
 				}
@@ -130,7 +130,7 @@ public class Ini {
 	 *            A section to be added to the INI structure
 	 */
 	public void addsection(IniSection sec) {
-		iniSections.add(sec);
+		_iniSections.add(sec);
 	}
 
 	/**
@@ -139,7 +139,7 @@ public class Ini {
 	 * @return a list of sections in this INI structure
 	 */
 	public List<IniSection> getSections() {
-		return Collections.unmodifiableList(iniSections);
+		return Collections.unmodifiableList(_iniSections);
 	}
 
 	/**
@@ -152,7 +152,7 @@ public class Ini {
 	 *             Exceptions thrown by the output stream
 	 */
 	public void store(OutputStream outStream) throws IOException {
-		for (IniSection sec : iniSections) {
+		for (IniSection sec : _iniSections) {
 			sec.store(outStream);
 			outStream.write(System.lineSeparator().getBytes());
 		}
@@ -190,7 +190,7 @@ public class Ini {
 	@Override
 	public String toString() {
 		String s = "";
-		for (IniSection sec : iniSections) {
+		for (IniSection sec : _iniSections) {
 			s += sec + System.lineSeparator();
 		}
 		return s;
