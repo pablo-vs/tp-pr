@@ -1,6 +1,8 @@
 package es.ucm.fdi.sim;
 
 import es.ucm.fdi.sim.events.Event;
+import es.ucm.fdi.sim.objects.SimObject;
+import es.ucm.fdi.exceptions.ObjectNotFoundException;
 //import es.ucm.fdi.util.MultiTreeMap;
 
 import java.util.Map;
@@ -18,6 +20,10 @@ public class Simulator {
 	
 	public void insertaEvento(Event e){
 		
+	}
+
+	public SimObject getObject(String id) throws ObjectNotFoundException {
+		return null;
 	}
 	
 	public void ejecuta(int pasosSimulacion, OutputStream ficheroSalida)

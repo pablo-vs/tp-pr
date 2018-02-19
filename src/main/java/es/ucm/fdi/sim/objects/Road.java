@@ -6,16 +6,15 @@ import java.util.ArrayList;
 import es.ucm.fdi.sim.objects.Vehicle;
 import es.ucm.fdi.sim.objects.Junction;
 
-public class Road {
+public class Road extends SimObject{
 	
-	private static String type = "road_report";
+	private static String type = "road";
 	private List<Vehicle> vehicleList; //La localizacion 0 ocupa la ultima posicion.
-	private String id;
 	private int length, maxVel;
 	private Junction ini,end;
 	
 	public Road(String id, int l, int maxV, Junction ini, Junction end){
-		this.id = id;
+		super(id);
 		length = l;
 		maxVel = maxV;
 		this.ini = ini;
@@ -56,10 +55,6 @@ public class Road {
 		}
 	}
 	
-	public String getID(){
-		return id;
-	}
-	
 	public int getLength(){
 		return length;
 	}
@@ -76,31 +71,31 @@ public class Road {
 		return end;
 	}
 	
-	public String generateReport(){
+	public String generateReport(int t){
 		boolean first;
-		StringBuilder sb = new StringBuilder(vehicleList.size()*10);
+		StringBuilder report = new StringBuilder(vehicleList.size()*60);
 
 		first = true;
-		sb.append("[");
-		sb.append(type);
-		sb.append("]\nid = ");
-		sb.append(id);
-		sb.append("\nstate = ");
+		report.append("[");
+		report.append(type);
+		report.append("_report]\nid = ");
+		report.append(getID());
+		report.append("\nstate = ");
 
 		for(Vehicle v : vehicleList){
 			if(!first){
-				sb.append(",");
+				report.append(",");
 			}else{
-				first = true;
+				first = false;
 			}
 			
-			sb.append("(");
-			sb.append(v.getID());
-			sb.append(",");
-			sb.append(v.getPosition());
-			sb.append(")");
+			report.append("(");
+			report.append(v.getID());
+			report.append(",");
+			report.append(v.getPosition());
+			report.append(")");
 		}
 		
-		return sb.toString();
+		return report.toString();
 	}
 }

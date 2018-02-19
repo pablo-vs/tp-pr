@@ -12,8 +12,7 @@ import es.ucm.fdi.sim.objects.Junction;
 */
 public class Vehicle extends SimObject{
 	
-	private static String type = "vehicle_report";
-	private String id;
+	private static String type = "vehicle";
 	private Road currentRoad;
 	private List<Junction> itinerary; //Carreteras??
 	private int maxVel, currentVel, position, brokenTime;
@@ -21,7 +20,6 @@ public class Vehicle extends SimObject{
 	
 	public Vehicle(String id, List<Junction> itinerary){
 		super(id);
-		this.id = id;
 		this.itinerary = itinerary;
 		//currentRoad = ;
 		maxVel = 0;
@@ -85,32 +83,38 @@ public class Vehicle extends SimObject{
 		return position;
 	}	
 	
-	public String generateReport(int paso){
+	public String generateReport(int t){
 		//Genera el informe en formato INI
-		String report;
+		StringBuilder report = new StringBuilder(100);
 		//STRING BUILDER
-		report = "[" + type + "]\n";
-		report += "id = " + id + "\n";
-		report += "time = " + paso + "\n";
-		report += "speed = " + currentVel + "\n";
-		report += "kilometraje = " + position + "\n";
-		report += "faulty = ";
+		report.append("[");
+		report.append(type);
+		report.append("_report]\nid = ");
+		report.append(getID());
+		report.append("\ntime = ");
+		report.append(t);
+		report.append("\nspeed = ");
+		report.append(currentVel);
+		report.append("\nkilometraje = ");
+		report.append(position);
+		report.append("\nfaulty = ");
 		
 		if(brokenTime > 0){
-			report += 1;
+			report.append("1\nlocation = ");
 		}
 		else{
-			report += 0;
+			report.append("0\nlocation = ");
 		}
-		report += "\n";
 		
-		report += "location = ";
 		if(arrived){
-			report += "arrived";
+			report.append("arrived");
 		}else{
-			report += "(" + currentRoad.getID() + "," + position;
+			report.append("(");
+			report.append(currentRoad.getID());
+			report.append(",");
+			report.append(position);
 		}
 		
-		return report;
+		return report.toString();
 	}
 }
