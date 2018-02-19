@@ -48,7 +48,7 @@ public class Road {
 	}
 	
 	//Invocado por el simulador
-	public void advance(){
+	public void move(){
 		//Avanzar + Calcular velocidadBase + reajustar la velocidad + hacer avanzar al Vehicle 
 		for(Vehicle v : vehicleList){
 			//VELOCIDADBASE

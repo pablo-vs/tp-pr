@@ -6,10 +6,10 @@ import es.ucm.fdi.sim.objects.Road;
 
 public class Junction{
 	
-	//semaphore (???)
 	List<Vehicle> queue; //QUEUE better
 	List<Road> roads;
-	//List<boolean> trafficLight;
+	List<Boolean> trafficLight;
+
 	
 	public Junction(){
 		
