@@ -1,35 +1,35 @@
 package es.ucm.fdi.sim.objects;
 
-import java.util.Collection.*
-import Vehiculo
-import Carretera
+import java.util.Collection.List
+import es.ucm.fdi.sim.objects.Vehicle
+import es.ucm.fdi.sim.objects.Road
 
-public class Cruce{
+public class Junction{
 	
-	//Semaforos (???)
-	List<Vehiculo> cola; //QUEUE better
-	List<Carretera> carreteras;
-	List<boolean> semaforos;
+	//semaphore (???)
+	List<Vehicle> queue; //QUEUE better
+	List<Road> roads;
+	List<boolean> semaphore;
 	
-	public Cruces(){
+	public Junctions(){
 		
 	}
 	
-	//Invocado por vehiculos -> Ordenados por orden de llegada
-	public void entraVehiculo(Vehiculo v){
-		cola.add(v);
+	//Invocado por Vehicles -> Ordenados por orden de llegada
+	public void vehicleIn(Vehicle v){
+		queue.add(v);
 	}
 	
-	//Invocado por vehiculos -> Ordenados por orden de llegada
-	public void saleVehiculo(Vehiculo v){
-		cola.pop(); //REVISAR - pop_back()
+	//Invocado por Vehicles -> Ordenados por orden de llegada
+	public void vehicleOut(Vehicle v){
+		queue.pop(); //REVISAR - pop_back()
 	}
 	
-	public void avanza(){
+	public void advance(){
 		
 	}
 	
-	public String generaInforme(){
+	public String generateReport(){
 		
 	}
 }

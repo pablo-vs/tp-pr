@@ -2,55 +2,55 @@ package es.ucm.fdi.sim.objects;
 
 import java.util.Collection.*
 import java.lang.String
-import Vehiculo
-import Cruce
+import es.ucm.fdi.sim.objects.Vehicle
+import Junction
 
-public class Carretera{
+public class Road{
 	
 	private static String type = "road_report"
-	private List<Vehiculo> listaVehiculos; //La localizacion 0 ocupa la ultima posicion.
+	private List<Vehicle> vehicleList; //La localizacion 0 ocupa la ultima posicion.
 	private String id;
-	private int longitud, maxVel;
-	private Cruce ini,fin;
+	private int length, maxVel;
+	private Junction ini,end;
 	
-	public Carretera(String id, int l, int maxV, Cruce ini, Cruce fin){
+	public Road(String id, int l, int maxV, Junction ini, Junction end){
 		this.id = id;
-		longitud = l;
+		length = l;
 		maxVel = maxV;
 		this.ini = ini;
-		this.fin = fin;
+		this.end = end;
 	}
 	
-	//Invocado por vehiculos - Insercion ordenada
-	public void entraVehiculo(Vehiculo v){
+	//Invoked by Vehicle - Ordered insertion
+	public void vehicleIn(Vehicle v){
 		boolean end = false;
 		int i = 0;
 		
-		while(i < listaVehiculos.size() && !end){
-			if(v.getLocalizacion() < listaVehiculos[i].getLocalizacion()){
+		while(i < vehicleList.size() && !end){
+			if(v.getPosition() < vehicleList[i].getPosition()){
 				++i;
 			}else{
-				listaVehiculos.add(i,v);
+				vehicleList.add(i,v);
 				end = true;
 			}
 		}
 	}
 	
-	//Invocado por vehiculos
-	public void saleVehiculo(Vehiculo v){
-		int i = 0; //SIEMPRE SALE EL ÚLTIMO NO HACE FALTA BUSCAR
-		while(!this.listaVehiculos[i].equals(v)){
+	//Invoked by Vehicle
+	public void vehicleOut(Vehicle v){
+		int i = 0; //SIEMPRE EL ÚLTIMO NO HACE FALTA BUSCAR
+		while(!this.vehicleList[i].equals(v)){
 			++i;
 		}	
-		listaVehiculos.remove(i);
+		vehicleList.remove(i);
 	}
 	
 	//Invocado por el simulador
-	public void avanza(){
-		//Avanzar + Calcular velocidadBase + reajustar la velocidad + hacer avanzar al vehiculo 
-		for(v : listaVehiculos){
+	public void advance(){
+		//Avanzar + Calcular velocidadBase + reajustar la velocidad + hacer avanzar al Vehicle 
+		for(v : vehicleList){
 			//VELOCIDADBASE
-			v.avanza();
+			v.advance();
 		}
 	}
 	
@@ -58,41 +58,47 @@ public class Carretera{
 		return id;
 	}
 	
-	public int getLongitud(){
-		return longitud;
+	public int getLength(){
+		return length;
 	}
 	
 	public int getMaxVel(){
 		return maxVel;
 	}
 	
-	public Cruce getIni(){
+	public Junction getIni(){
 		return ini;
 	}
 	
-	public Cruce getFin(){
-		return fin;
+	public Junction getEnd(){
+		return end;
 	}
 	
-	public String generaInforme(){
-		String informe;
+	public String generateReport(){
 		boolean first;
-		
+		StringBuilder sb = new StringBuilder(vehicleList.size()*10)
+
 		first = true;
-		informe = "[" + type + "]\n";
-		informe += "id = " + id + "\n";
-		informe += "state = "
-		
-		for(v : listaVehiculos){
+		sb.append("[");
+		sb.append(type);
+		sb.append("]\nid = ");
+		sb.append(id);
+		sb.append("\nstate = ");
+
+		for(v : vehicleList){
 			if(!first){
-				informe += ",";
+				sb.append(",");
 			}else{
 				first = true;
 			}
 			
-			informe += "(" + v.getID() + "," + v.getLocalizacion() + ")";
+			sb.append("(");
+			sb.append(v.getID());
+			sb.append(",");
+			sb.append(v.getLocalizacion());
+			sb.append(")");
 		}
 		
-		return informe;
+		return sb.toString();
 	}
 }

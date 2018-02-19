@@ -1,6 +1,6 @@
 package es.ucm.fdi.sim.objects;
 
-import java.util.Collection.*; //:(
+import java.util.Collection.List;
 import java.lang.String
 import Carretera;
 import Cruce;
