@@ -5,7 +5,7 @@ public abstract class SimObject {
 	//private static String type;
 	private String id;
 	
-	public SimObject(String id, String type){
+	public SimObject(String id){
 		this.id = id;
 	}
 	
@@ -13,5 +13,5 @@ public abstract class SimObject {
 		return id;
 	}
 	
-	public abstract String generateReport();
+	public abstract String generateReport(int t);
 }
