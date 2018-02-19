@@ -18,10 +18,10 @@ import es.ucm.fdi.ini.Ini;
 
 public class ExampleMain {
 
-	private final static Integer timeLimitDefaultValue = 10;
-	private static Integer timeLimit = null;
-	private static String inFile = null;
-	private static String outFile = null;
+	private final static Integer _timeLimitDefaultValue = 10;
+	private static Integer _timeLimit = null;
+	private static String _inFile = null;
+	private static String _outFile = null;
 
 	private static void parseArgs(String[] args) {
 
@@ -66,7 +66,7 @@ public class ExampleMain {
 		cmdLineOptions.addOption(
 				Option.builder("o").longOpt("output").hasArg().desc("Output file, where reports are written.").build());
 		cmdLineOptions.addOption(Option.builder("t").longOpt("ticks").hasArg()
-				.desc("Ticks to execute the simulator's main loop (default value is " + timeLimitDefaultValue + ").")
+				.desc("Ticks to execute the simulator's main loop (default value is " + _timeLimitDefaultValue + ").")
 				.build());
 
 		return cmdLineOptions;
@@ -81,21 +81,21 @@ public class ExampleMain {
 	}
 
 	private static void parseInFileOption(CommandLine line) throws ParseException {
-		inFile = line.getOptionValue("i");
-		if (inFile == null) {
+		_inFile = line.getOptionValue("i");
+		if (_inFile == null) {
 			throw new ParseException("An events file is missing");
 		}
 	}
 
 	private static void parseOutFileOption(CommandLine line) throws ParseException {
-		outFile = line.getOptionValue("o");
+		_outFile = line.getOptionValue("o");
 	}
 
 	private static void parseStepsOption(CommandLine line) throws ParseException {
-		String t = line.getOptionValue("t", timeLimitDefaultValue.toString());
+		String t = line.getOptionValue("t", _timeLimitDefaultValue.toString());
 		try {
-			timeLimit = Integer.parseInt(t);
-			assert (timeLimit < 0);
+			_timeLimit = Integer.parseInt(t);
+			assert (_timeLimit < 0);
 		} catch (Exception e) {
 			throw new ParseException("Invalid value for time limit: " + t);
 		}
@@ -131,12 +131,12 @@ public class ExampleMain {
 	}
 
 	private static void test(String inFile, String outFile, String expectedOutFile, int timeLimit) throws IOException {
-		ExampleMain.outFile = outFile;
-		ExampleMain.inFile = inFile;
-		ExampleMain.timeLimit = timeLimit;
+		_outFile = outFile;
+		_inFile = inFile;
+		_timeLimit = timeLimit;
 		startBatchMode();
-		boolean equalOutput = (new Ini(ExampleMain.outFile)).equals(new Ini(expectedOutFile));
-		System.out.println("Result for: '" + ExampleMain.inFile + "' : "
+		boolean equalOutput = (new Ini(_outFile)).equals(new Ini(expectedOutFile));
+		System.out.println("Result for: '" + _inFile + "' : "
 				+ (equalOutput ? "OK!" : ("not equal to expected output +'" + expectedOutFile + "'")));
 	}
 

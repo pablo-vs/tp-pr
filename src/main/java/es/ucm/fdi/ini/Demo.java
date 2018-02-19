@@ -33,8 +33,7 @@ public class Demo {
 
 		ini.addsection(sec);
 
-		File file = new File("output.ini");
-		System.out.println(file.getAbsolutePath());
+		File file = new File("resources/output/output.ini");
 		OutputStream s = new FileOutputStream(file);
 		ini.store(s);
 		s.close();
