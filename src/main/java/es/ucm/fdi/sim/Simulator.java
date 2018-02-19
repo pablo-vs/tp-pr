@@ -1,24 +1,29 @@
 package es.ucm.fdi.sim;
 
-import java.util.Collection.*
-import Evento
+import es.ucm.fdi.sim.events.Event;
+//import es.ucm.fdi.util.MultiTreeMap;
+
+import java.util.Map;
+import java.util.List;
+import java.io.OutputStream;
 
 public class Simulator {
 
-	List<Evento> listaEventos; //Ordenados por tiempo y, a igualdad, orden de llegada
+	List<Event> listaEventos; //Ordenados por tiempo y, a igualdad, orden de llegada
+	int timeLimit, timer;
 	
-	public Simulador(){
+	public Simulator(){
 		
 	}
 	
-	public void insertaEvento(Evento e){
+	public void insertaEvento(Event e){
 		
 	}
 	
 	public void ejecuta(int pasosSimulacion, OutputStream ficheroSalida)
 	{
-		limiteTiempo = contadorTiempo + pasosSimulacion - 1;
-		while (contadorTiempo <= limiteTiempo) {
+		timeLimit = timer + pasosSimulacion - 1;
+		while (timer <= timeLimit) {
 			// 1. ejecutar los eventos correspondientes a ese tiempo
 			// 2. invocar al método avanzar de las carreteras
 			// 3. invocar al método avanzar de los cruces
@@ -29,8 +34,8 @@ public class Simulator {
 
 	}
 	
-	public String generaInforme() //???
+	public String prepareReport(Map<String, String> report) //???
 	{
-		
+		return "";
 	}
 }
