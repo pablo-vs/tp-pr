@@ -5,7 +5,7 @@ import java.lang.String
 import Vehiculo
 import Cruce
 
-public class Carretera{
+public class Road{
 	
 	private static String type = "road_report"
 	private List<Vehiculo> listaVehiculos; //La localizacion 0 ocupa la ultima posicion.

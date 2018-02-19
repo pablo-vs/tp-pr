@@ -4,7 +4,7 @@ import java.util.Collection.*
 import Vehiculo
 import Carretera
 
-public class Cruce{
+public class Junction{
 	
 	//Semaforos (???)
 	List<Vehiculo> cola; //QUEUE better
