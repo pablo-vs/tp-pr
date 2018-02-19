@@ -1,8 +1,8 @@
 package es.ucm.fdi.sim.objects;
 
-import java.util.Collection.List
-import es.ucm.fdi.sim.objects.Vehicle
-import es.ucm.fdi.sim.objects.Road
+import java.util.Collection.List;
+import es.ucm.fdi.sim.objects.Vehicle;
+import es.ucm.fdi.sim.objects.Road;
 
 public class Junction{
 	
@@ -11,7 +11,7 @@ public class Junction{
 	List<Road> roads;
 	List<boolean> semaphore;
 	
-	public Junctions(){
+	public Junction(){
 		
 	}
 	
@@ -30,6 +30,6 @@ public class Junction{
 	}
 	
 	public String generateReport(){
-		
+		return ""
 	}
 }

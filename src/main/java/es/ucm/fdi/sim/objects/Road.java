@@ -1,13 +1,13 @@
 package es.ucm.fdi.sim.objects;
 
-import java.util.Collection.*
-import java.lang.String
-import es.ucm.fdi.sim.objects.Vehicle
-import Junction
+import java.util.Collection.List;
+import java.lang.String;
+import es.ucm.fdi.sim.objects.Vehicle;
+import es.ucm.fdi.sim.objects.Junction;
 
-public class Road{
+public class Road {
 	
-	private static String type = "road_report"
+	private static String type = "road_report";
 	private List<Vehicle> vehicleList; //La localizacion 0 ocupa la ultima posicion.
 	private String id;
 	private int length, maxVel;
@@ -48,7 +48,7 @@ public class Road{
 	//Invocado por el simulador
 	public void advance(){
 		//Avanzar + Calcular velocidadBase + reajustar la velocidad + hacer avanzar al Vehicle 
-		for(v : vehicleList){
+		for(Vehicle v : vehicleList){
 			//VELOCIDADBASE
 			v.advance();
 		}
@@ -76,7 +76,7 @@ public class Road{
 	
 	public String generateReport(){
 		boolean first;
-		StringBuilder sb = new StringBuilder(vehicleList.size()*10)
+		StringBuilder sb = new StringBuilder(vehicleList.size()*10);
 
 		first = true;
 		sb.append("[");
@@ -85,7 +85,7 @@ public class Road{
 		sb.append(id);
 		sb.append("\nstate = ");
 
-		for(v : vehicleList){
+		for(Vehicle v : vehicleList){
 			if(!first){
 				sb.append(",");
 			}else{
