@@ -1,6 +1,7 @@
 package es.ucm.fdi.sim.objects;
 
-import java.util.List; //:(
+import java.util.List;
+import java.util.ArrayList;
 
 import es.ucm.fdi.sim.objects.SimObject;
 import es.ucm.fdi.sim.objects.Road;
@@ -29,6 +30,7 @@ public class Vehicle extends SimObject{
 		brokenTime = 0;
 		arrived = false;
 		inQueue = false;
+		itinerary = new ArrayList<Junction>();
 	}
 	
 	public void move(){
@@ -36,8 +38,8 @@ public class Vehicle extends SimObject{
 		if(brokenTime == 0 && !inQueue){
 			position += currentVel;
 			
-			if(position >= currentRoad.getLongitud()){ //???? INCORRECTO
-				position = currentRoad.getLongitud();
+			if(position >= currentRoad.getLength()){ //???? INCORRECTO
+				position = currentRoad.getLength();
 				currentRoad.getEnd().vehicleIn(this);
 				currentRoad.vehicleOut(this);
 				currentVel = 0;

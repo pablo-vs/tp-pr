@@ -1,7 +1,8 @@
 package es.ucm.fdi.sim.objects;
 
-import java.util.Collection.List;
+import java.util.List;
 import java.lang.String;
+import java.util.ArrayList;
 import es.ucm.fdi.sim.objects.Vehicle;
 import es.ucm.fdi.sim.objects.Junction;
 
@@ -19,6 +20,7 @@ public class Road {
 		maxVel = maxV;
 		this.ini = ini;
 		this.end = end;
+		vehicleList = new ArrayList<Vehicle>();
 	}
 	
 	//Invoked by Vehicle - Ordered insertion
@@ -27,7 +29,7 @@ public class Road {
 		int i = 0;
 		
 		while(i < vehicleList.size() && !end){
-			if(v.getPosition() < vehicleList[i].getPosition()){
+			if(v.getPosition() < vehicleList.get(i).getPosition()){
 				++i;
 			}else{
 				vehicleList.add(i,v);
@@ -39,7 +41,7 @@ public class Road {
 	//Invoked by Vehicle
 	public void vehicleOut(Vehicle v){
 		int i = 0; //SIEMPRE EL ÚLTIMO NO HACE FALTA BUSCAR
-		while(!this.vehicleList[i].equals(v)){
+		while(!vehicleList.get(i).equals(v)){
 			++i;
 		}	
 		vehicleList.remove(i);
@@ -50,7 +52,7 @@ public class Road {
 		//Avanzar + Calcular velocidadBase + reajustar la velocidad + hacer avanzar al Vehicle 
 		for(Vehicle v : vehicleList){
 			//VELOCIDADBASE
-			v.advance();
+			v.move();
 		}
 	}
 	
@@ -95,7 +97,7 @@ public class Road {
 			sb.append("(");
 			sb.append(v.getID());
 			sb.append(",");
-			sb.append(v.getLocalizacion());
+			sb.append(v.getPosition());
 			sb.append(")");
 		}
 		
