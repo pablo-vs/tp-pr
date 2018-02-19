@@ -1,6 +1,6 @@
 package es.ucm.fdi.sim.objects;
 
-import java.util.Collection.List;
+import java.util.List;
 import java.lang.String;
 import es.ucm.fdi.sim.objects.Vehicle;
 import es.ucm.fdi.sim.objects.Junction;
@@ -46,11 +46,11 @@ public class Road {
 	}
 	
 	//Invocado por el simulador
-	public void advance(){
+	public void move(){
 		//Avanzar + Calcular velocidadBase + reajustar la velocidad + hacer avanzar al Vehicle 
 		for(Vehicle v : vehicleList){
 			//VELOCIDADBASE
-			v.advance();
+			v.move();
 		}
 	}
 	

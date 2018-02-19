@@ -36,8 +36,8 @@ public class Vehicle extends SimObject{
 		if(brokenTime == 0 && !inQueue){
 			position += currentVel;
 			
-			if(position >= currentRoad.getLongitud()){ //???? INCORRECTO
-				position = currentRoad.getLongitud();
+			if(position >= currentRoad.getLength()){ //???? INCORRECTO
+				position = currentRoad.getLength();
 				currentRoad.getEnd().vehicleIn(this);
 				currentRoad.vehicleOut(this);
 				currentVel = 0;
