@@ -12,7 +12,12 @@ import java.util.stream.Collectors;
  */
 public class MultiTreeMap<K, V> extends TreeMap<K, ArrayList<V>> {
 
-    public MultiTreeMap() {}
+    /**
+	 * Generated UID
+	 */
+	private static final long serialVersionUID = -4499248827104580712L;
+
+	public MultiTreeMap() {}
 
     public MultiTreeMap(Comparator<K> comparator) {
         super(comparator);
