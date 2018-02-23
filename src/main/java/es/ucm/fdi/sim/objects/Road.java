@@ -4,13 +4,14 @@ import java.util.List;
 import java.lang.String;
 import java.util.ArrayList;
 
+import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.sim.objects.Vehicle;
 import es.ucm.fdi.sim.objects.Junction;
 
 public class Road extends SimObject{
 	
 	private static String type = "road";
-	private List<Vehicle> vehicleList; //La localizacion 0 ocupa la ultima posicion.
+	private List<Vehicle> vehicleList; //0 position is last. Keep entry order right to left
 	private int length, maxVel;
 	private Junction ini,end;
 	
@@ -41,14 +42,14 @@ public class Road extends SimObject{
 	
 	//Invoked by Vehicle
 	public void vehicleOut(Vehicle v){
-		int i = 0; //SIEMPRE EL ÚLTIMO NO HACE FALTA BUSCAR
+		int i = 0; //No need to search. Last one
 		while(!vehicleList.get(i).equals(v)){
 			++i;
 		}	
 		vehicleList.remove(i);
 	}
 	
-	//Invocado por el simulador
+	//Invoked by Simulator
 	public void move(){
 		int baseSpeed = Math.min(maxVel, maxVel/(Math.max(vehicleList.size(), 1)) + 1), reductionFactor = 1;
 		for(Vehicle v : vehicleList){
@@ -74,31 +75,28 @@ public class Road extends SimObject{
 		return end;
 	}
 	
-	public String generateReport(int t){
-		boolean first;
-		StringBuilder report = new StringBuilder(vehicleList.size()*60);
-
-		first = true;
-		report.append("[");
-		report.append(type);
-		report.append("_report]\nid = ");
-		report.append(getID());
-		report.append("\nstate = ");
-
+	public IniSection generateReport(int t){
+		boolean first = true;
+		IniSection sec = new IniSection(type);
+		StringBuilder aux = new StringBuilder(vehicleList.size()*60);
+		
+		sec.setValue("id", getID());
+		sec.setValue("time", t);
 		for(Vehicle v : vehicleList){
 			if(!first){
-				report.append(",");
-			}else{
+				aux.append(",");
+			}
+			else{
 				first = false;
 			}
-			
-			report.append("(");
-			report.append(v.getID());
-			report.append(",");
-			report.append(v.getPosition());
-			report.append(")");
+			aux.append("(");
+			aux.append(v.getID());
+			aux.append(",");
+			aux.append(v.getPosition());
+			aux.append(")");
 		}
+		sec.setValue("state", aux.toString());
 		
-		return report.toString();
+		return sec;
 	}
 }

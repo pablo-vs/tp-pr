@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Queue;
 import java.util.ArrayDeque;
+
+import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.sim.objects.Vehicle;
 import es.ucm.fdi.sim.objects.Road;
 import es.ucm.fdi.exceptions.UnreachableJunctionException;
@@ -36,6 +38,10 @@ public class Junction extends SimObject{
 		public void setTrafficLight(boolean b) {
 			trafficLight = b;
 		}
+	}
+	
+	public int getTime(){
+		return time;
 	}
 
 	private void updateTrafficLights() {
@@ -113,44 +119,40 @@ public class Junction extends SimObject{
 		}
 	}
 	
-	public String generateReport(int t){
-		StringBuilder report = new StringBuilder();
-		boolean first = false, firstVehicle;
-
-		report.append("[");
-		report.append("_report]\nid = ");
-		report.append(getID());
-		report.append("\ntime = ");
-		report.append(time);
-		report.append("\nqueues = ");
-
-		for(JunctionQueue queue : queues) {
-			if(!first) {
-				report.append(",");
+	public IniSection generateReport(int t){
+		IniSection sec = new IniSection(type);
+		boolean first = true, firstVehicle;
+		StringBuilder aux = new StringBuilder();
+		
+		sec.setValue("id", getID());
+		sec.setValue("time", t);
+		
+		for(JunctionQueue queue : queues){
+			if(!first){
+				aux.append(",");
 			} else {
 				first = false;
 			}
-
-			report.append("(");
-			report.append(queue.getRoad().getID());
-			if(queue.getTrafficLight()) {
-				report.append(",green,[");	
-			}	else {
-				report.append(",red,[");
+			aux.append("(");
+			aux.append(queue.getRoad().getID());
+			if(queue.getTrafficLight()){
+				aux.append(",green,[");
+			} else {
+				aux.append(",red,[");
 			}
-
+			
 			firstVehicle = true;
-			for(Vehicle v : queue) {
-				if(!firstVehicle) {
-					report.append(",");
+			for(Vehicle v : queue){
+				if(!firstVehicle){
+					aux.append(",");
 				} else {
 					firstVehicle = false;
 				}
-				report.append(v.getID());
+				aux.append(v.getID());
 			}
-			report.append("]");
+			aux.append("]");
 		}
 
-		return report.toString();
+		return sec;
 	}
 }

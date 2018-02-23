@@ -1,8 +1,8 @@
 package es.ucm.fdi.sim.objects;
 
+import es.ucm.fdi.ini.IniSection;
 
 public abstract class SimObject {
-	//private static String type;
 	private String id;
 	
 	public SimObject(String id){
@@ -14,8 +14,15 @@ public abstract class SimObject {
 	}
 
 	public boolean equals(SimObject other) {
-		return id == other.getID();
+		boolean equal = false;
+		
+		//Full check
+		if(getClass() == other.getClass() && id == other.getID()){
+			equal = true;
+		}
+		
+		return equal;
 	}
 	
-	public abstract String generateReport(int t);
+	public abstract IniSection generateReport(int t);
 }

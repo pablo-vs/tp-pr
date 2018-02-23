@@ -34,7 +34,7 @@ public class IniSection {
 	private Map<String, List<String>> _comments;
 
 	/**
-	 * Creates and INI section
+	 * Creates an INI section
 	 * 
 	 * @param tag
 	 *            The tag of the INI section
@@ -48,9 +48,9 @@ public class IniSection {
 	}
 
 	private void checkKeyValidity(String key) {
-		if (key.isEmpty()) {
+		/*if (key.isEmpty()) {
 			throw new IniError("Invalid key: " + key);
-		}
+		} ON HOLD FOR NOW */
 	}
 
 	/**

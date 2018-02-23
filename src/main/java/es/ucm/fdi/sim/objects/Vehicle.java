@@ -3,16 +3,17 @@ package es.ucm.fdi.sim.objects;
 import java.util.List;
 import java.util.ArrayList;
 
+import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.sim.objects.SimObject;
 import es.ucm.fdi.sim.objects.Road;
 import es.ucm.fdi.sim.objects.Junction;
 
 /**
- *	Controla el comportamiento general de los vehículos en la simulación.
+ *	Controls the general behavior of vehicles in the simulation 
  */
 public class Vehicle extends SimObject{
 	
-	private static String type = "vehicle";
+	private static String type = "vehicle_report";
 	private Road currentRoad;
 	private List<Junction> itinerary;
 	private int maxVel, currentVel, position, brokenTime, kilometrage, nextJunction;
@@ -26,7 +27,7 @@ public class Vehicle extends SimObject{
 		position = 0;
 		brokenTime = 0;
 		kilometrage = 0;
-	        nextJunction = 0;
+	    nextJunction = 0; //Points to the position in the itinerary
 		arrived = false;
 		inQueue = false;
 		moveToNextRoad();
@@ -34,8 +35,7 @@ public class Vehicle extends SimObject{
 	
 	public void move(){
 		
-		if(brokenTime == 0 && !inQueue){
-						
+		if(brokenTime == 0 && !inQueue){						
 			if(position + currentVel >= currentRoad.getLength()) {
 				kilometrage += currentRoad.getLength() - position;
 				position = currentRoad.getLength();
@@ -48,7 +48,6 @@ public class Vehicle extends SimObject{
 					currentRoad.getEnd().vehicleIn(this);
 					inQueue = true;
 				}
-				
 				
 			} else {
 				position += currentVel;
@@ -95,40 +94,27 @@ public class Vehicle extends SimObject{
 		return currentRoad;
 	}
 	
-	public String generateReport(int t){
-		//REESCRIBIR TODOS LOS REPORTS CON INISECTION
-		//Genera el informe en formato INI
-		StringBuilder report = new StringBuilder(100);
-		//STRING BUILDER
-		report.append("[");
-		report.append(type);
-		report.append("_report]\nid = ");
-		report.append(getID());
-		report.append("\ntime = ");
-		report.append(t);
-		report.append("\nspeed = ");
-		report.append(currentVel);
-		report.append("\nkilometrage = ");
-		report.append(kilometrage);
-		report.append("\nfaulty = ");
+	/**
+	 * Generates an INI formatted report
+	 */
+	public IniSection generateReport(int t){
+		IniSection sec = new IniSection(type);
 		
+		sec.setValue("id", getID());
+		sec.setValue("time", t);
+		sec.setValue("speed", currentVel);
+		sec.setValue("kilometrage", kilometrage);
 		if(brokenTime > 0){
-			report.append("1\nlocation = ");
-		}
-		else{
-			report.append("0\nlocation = ");
-		}
-		
-		if(arrived){
-			report.append("arrived");
+			sec.setValue("faulty", "1");
 		}else{
-			report.append("(");
-			report.append(currentRoad.getID());
-			report.append(",");
-			report.append(position);
-			report.append(")");
+			sec.setValue("faulty", "0");
 		}
-		
-		return report.toString();
+		if(arrived){
+			sec.setValue("location", "arrived");
+		}else{ //NEEDS SB OPTIMIZATION
+			sec.setValue("location", "(" + currentRoad.getID() + "," + position + ")");
+		}
+
+		return sec;
 	}
 }

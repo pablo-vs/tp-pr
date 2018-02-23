@@ -12,17 +12,19 @@ import java.util.regex.Matcher;
 public abstract class Event {
 
 	private String id;
+	private int time;
 	
-	public Event() {
-
-	}
-
-	public Event(String id){
+	public Event() {}
+	public Event(int  t, String id){
 		this.id = id;
 	}
 	
 	public String getID(){
 		return id;
+	}
+	
+	public int getTime(){
+		return time;
 	}
 
 	/**
@@ -30,13 +32,13 @@ public abstract class Event {
 	*/
 	abstract class EventBuilder {
 		
-		private Pattern checkId = Pattern.compile("[\\w_]");
+		private Pattern checkID = Pattern.compile("[\\w_]");
 
 		/**
 		*	Checks the validity of object IDs from the INI file using a Pattern.
 		*/
-		public void checkIdValidity(String id) {
-			Matcher m = checkId.matcher(id);
+		public void checkIDValidity(String id) {
+			Matcher m = checkID.matcher(id);
 			if(!m.matches()) {
 				throw new InvalidIdException(id);
 			}
