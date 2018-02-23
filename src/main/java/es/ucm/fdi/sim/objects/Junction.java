@@ -2,15 +2,17 @@ package es.ucm.fdi.sim.objects;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Queue;
 import java.util.ArrayDeque;
 import es.ucm.fdi.sim.objects.Vehicle;
 import es.ucm.fdi.sim.objects.Road;
+import es.ucm.fdi.exceptions.UnreachableJunctionException;
 
 public class Junction extends SimObject{
 	
 	private static String type = "junction";
-	private int time;
+	private int time, currentOpenQueue;
 	private List<JunctionQueue> queues;
 
 	private class JunctionQueue extends ArrayDeque<Vehicle> {
@@ -36,9 +38,22 @@ public class Junction extends SimObject{
 		}
 	}
 
+	private void updateTrafficLights() {
+		queues.get(currentOpenQueue).setTrafficLight(false);
+		currentOpenQueue = (currentOpenQueue + 1) % queues.size();
+		queues.get(currentOpenQueue).setTrafficLight(true);
+	}
+	
+	public Junction(String id) {
+		super(id);
+		queues = new ArrayList<JunctionQueue>();
+		currentOpenQueue = -1;
+	}
+
 	public Junction(String id, List<Road> roads){
 		super(id);
 		queues = new ArrayList<JunctionQueue>(roads.size());
+		currentOpenQueue = 0;
 		for(int i = 0; i < roads.size(); ++i) {
 			queues.set(i, new JunctionQueue(roads.get(i)));
 		}
@@ -46,17 +61,56 @@ public class Junction extends SimObject{
 	
 	//Invocado por Vehicles -> Ordenados por orden de llegada
 	public void vehicleIn(Vehicle v){
-		//FIND ROAD IN THE QUEUES? CHANGE LIST TO MAP<ROAD, JUNCTIONQUEUE>??
-		//queues[i].add(v);
+	        boolean found = false;
+		Iterator<JunctionQueue> it = queues.iterator();
+		JunctionQueue queue = null;
+		while(!found && it.hasNext()) {
+			queue = it.next();;
+			if(queue.getRoad().equals(v.getRoad())) {
+				queue.add(v);
+				found = true;
+			}
+		}
 	}
 	
 	//Invocado por Vehicles -> Ordenados por orden de llegada
-	public void vehicleOut(Vehicle v){
-		//queue[i].remove(queue.size()-1); //REVISAR - pop_back()
+	public Vehicle vehicleOut(){
+		return queues.get(currentOpenQueue).removeFirst();
+	}
+
+	public Road getRoadToJunction(Junction j) throws UnreachableJunctionException{
+		
+		Road result = null;
+		boolean found = false;
+		Iterator<JunctionQueue> it = queues.iterator();
+		JunctionQueue queue = null;
+		while(!found && it.hasNext()) {
+			queue = it.next();
+			if(queue.getRoad().getEnd().equals(j)) {
+				result = queue.getRoad();
+				found = true;
+			}
+		}
+
+		if(!found) {
+			throw new UnreachableJunctionException("Could not get from " + getID() + " to " + j.getID());
+		}
+
+		return result;
 	}
 	
-	public void advance(){
-		
+	public void move(){
+		Vehicle out = vehicleOut();
+		out.moveToNextRoad();
+		updateTrafficLights();
+	}
+	
+	public void addRoad(Road r) {
+		queues.add(new JunctionQueue(r));
+		if(currentOpenQueue == -1) {
+			currentOpenQueue = 0;
+			queues.get(0).setTrafficLight(true);
+		}
 	}
 	
 	public String generateReport(int t){

@@ -8,40 +8,51 @@ import es.ucm.fdi.sim.objects.Road;
 import es.ucm.fdi.sim.objects.Junction;
 
 /**
-	Controla el comportamiento general de los vehículos en la simulación.
-*/
+ *	Controla el comportamiento general de los vehículos en la simulación.
+ */
 public class Vehicle extends SimObject{
 	
 	private static String type = "vehicle";
 	private Road currentRoad;
-	private List<Junction> itinerary; //Carreteras??
-	private int maxVel, currentVel, position, brokenTime;
+	private List<Junction> itinerary;
+	private int maxVel, currentVel, position, brokenTime, kilometrage, nextJunction;
 	private boolean arrived, inQueue;
 	
-	public Vehicle(String id, List<Junction> itinerary){
+	public Vehicle(String id, int maxVel, List<Junction> itinerary){
 		super(id);
-		this.itinerary = itinerary;
-		//currentRoad = ;
-		maxVel = 0;
+		this.itinerary = new ArrayList<Junction>(itinerary);
+		this.maxVel = maxVel;
 		currentVel = 0;
 		position = 0;
 		brokenTime = 0;
+		kilometrage = 0;
+	        nextJunction = 0;
 		arrived = false;
 		inQueue = false;
-		itinerary = new ArrayList<Junction>();
+		moveToNextRoad();
 	}
 	
 	public void move(){
 		
 		if(brokenTime == 0 && !inQueue){
-			position += currentVel;
-			
-			if(position >= currentRoad.getLength()){ //???? INCORRECTO
+						
+			if(position + currentVel >= currentRoad.getLength()) {
+				kilometrage += currentRoad.getLength() - position;
 				position = currentRoad.getLength();
-				currentRoad.getEnd().vehicleIn(this);
-				currentRoad.vehicleOut(this);
 				currentVel = 0;
-				inQueue = true;
+
+				if(nextJunction == itinerary.size()-1) {
+					//DESTROY VEHICLE??
+					arrived = true;
+				} else {
+					currentRoad.getEnd().vehicleIn(this);
+					inQueue = true;
+				}
+				
+				
+			} else {
+				position += currentVel;
+				kilometrage += currentVel;
 			}
 			
 		}else if(brokenTime > 0){
@@ -51,16 +62,13 @@ public class Vehicle extends SimObject{
 	
 	public void moveToNextRoad(){
 		position = 0;
-		//carreteraActual++;
 		inQueue = false;
+
+		Junction currentJunction = itinerary.get(nextJunction);
+		nextJunction++;
+		currentRoad = currentJunction.getRoadToJunction(itinerary.get(nextJunction));
+		currentRoad.vehicleIn(this);
 		
-		/*if(carreteraActual == itinerary.size()) { //NOPE
-			haLlegado = true
-			currentVel = 0;
-		}else{
-			velMaxima = carreteraActual.getMaxVel();
-		}
-	*/
 	}
 	
 	public void setBrokenTime(int t){
@@ -81,9 +89,14 @@ public class Vehicle extends SimObject{
 	
 	public int getPosition(){
 		return position;
-	}	
+	}
+
+	public Road getRoad() {
+		return currentRoad;
+	}
 	
 	public String generateReport(int t){
+		//REESCRIBIR TODOS LOS REPORTS CON INISECTION
 		//Genera el informe en formato INI
 		StringBuilder report = new StringBuilder(100);
 		//STRING BUILDER
@@ -95,8 +108,8 @@ public class Vehicle extends SimObject{
 		report.append(t);
 		report.append("\nspeed = ");
 		report.append(currentVel);
-		report.append("\nkilometraje = ");
-		report.append(position);
+		report.append("\nkilometrage = ");
+		report.append(kilometrage);
 		report.append("\nfaulty = ");
 		
 		if(brokenTime > 0){
@@ -113,6 +126,7 @@ public class Vehicle extends SimObject{
 			report.append(currentRoad.getID());
 			report.append(",");
 			report.append(position);
+			report.append(")");
 		}
 		
 		return report.toString();

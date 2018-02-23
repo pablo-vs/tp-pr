@@ -12,6 +12,10 @@ public abstract class SimObject {
 	public String getID(){
 		return id;
 	}
+
+	public boolean equals(SimObject other) {
+		return id == other.getID();
+	}
 	
 	public abstract String generateReport(int t);
 }

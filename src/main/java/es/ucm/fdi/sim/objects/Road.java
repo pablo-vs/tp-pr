@@ -3,6 +3,7 @@ package es.ucm.fdi.sim.objects;
 import java.util.List;
 import java.lang.String;
 import java.util.ArrayList;
+
 import es.ucm.fdi.sim.objects.Vehicle;
 import es.ucm.fdi.sim.objects.Junction;
 
@@ -26,15 +27,16 @@ public class Road extends SimObject{
 	public void vehicleIn(Vehicle v){
 		boolean end = false;
 		int i = 0;
-		
+
+		/*TEMPORARY, FOR TESTING
 		while(i < vehicleList.size() && !end){
 			if(v.getPosition() < vehicleList.get(i).getPosition()){
 				++i;
-			}else{
-				vehicleList.add(i,v);
+				}else{*/
+				vehicleList.add(i,v);/*
 				end = true;
 			}
-		}
+			}*/
 	}
 	
 	//Invoked by Vehicle
@@ -48,9 +50,10 @@ public class Road extends SimObject{
 	
 	//Invocado por el simulador
 	public void move(){
-		//Avanzar + Calcular velocidadBase + reajustar la velocidad + hacer avanzar al Vehicle 
+		int baseSpeed = Math.min(maxVel, maxVel/(Math.max(vehicleList.size(), 1)) + 1), reductionFactor = 1;
 		for(Vehicle v : vehicleList){
-			//VELOCIDADBASE
+			//CALCULATE REDUCTION FACTOR!!!!!
+			v.setCurrentVel(baseSpeed/reductionFactor);
 			v.move();
 		}
 	}
