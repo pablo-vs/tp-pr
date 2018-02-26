@@ -9,7 +9,10 @@ import es.ucm.fdi.sim.objects.Road;
 import es.ucm.fdi.sim.objects.Junction;
 
 /**
- *	Controls the general behavior of vehicles in the simulation 
+ *	Class that controls the general behavior of <code>Vehicles</code> in the simulation. 
+ *	Allows basic dynamics such as movement between <code>Roads</code> and <code>Junctions</code>.
+ *
+ *	@version 26.02.2018
  */
 public class Vehicle extends SimObject{
 	
@@ -19,6 +22,14 @@ public class Vehicle extends SimObject{
 	private int maxVel, currentVel, position, brokenTime, kilometrage, nextJunction;
 	private boolean arrived, inQueue;
 	
+	
+	/**
+	 * Constructor.
+	 * 
+	 * @param id 		ID of the new object.
+	 * @param maxVel	Maximum velocity of the new object.
+	 * @param itinerary	Itinerary to follow by the <code>Vehicle</code>
+	 */
 	public Vehicle(String id, int maxVel, List<Junction> itinerary){
 		super(id);
 		this.itinerary = new ArrayList<Junction>(itinerary);
@@ -33,6 +44,13 @@ public class Vehicle extends SimObject{
 		moveToNextRoad();
 	}
 	
+	/**
+	 * Moves this <code>Vehicle</code> in the current road if it is not broken or waiting
+	 * to move to the next road.
+	 *  
+	 * If it reaches the end, it stops and is indexed in the ending <code>Junction</code>'s
+	 * entry queue. 
+	 */
 	public void move(){
 		
 		if(brokenTime == 0 && !inQueue){						
@@ -59,22 +77,38 @@ public class Vehicle extends SimObject{
 		} //WHAT DO WE DO WHEN IN QUEUE?
 	}
 	
+	/**
+	 * Moves this <code>Vehicle</code> to the next road through the current <code>Junction</code>.
+	 * That is, the method tries to find a road that connects the current <code>Junction</code> to
+	 * the next on the itinerary.
+	 */
 	public void moveToNextRoad(){
 		position = 0;
 		inQueue = false;
 
 		Junction currentJunction = itinerary.get(nextJunction);
 		nextJunction++;
+		//THROWS UNREACHABLE JUNCTION EXCEPTION
 		currentRoad = currentJunction.getRoadToJunction(itinerary.get(nextJunction));
 		currentRoad.vehicleIn(this);
 		
 	}
 	
+	/**
+	 * Setter method for {@link Vehicle#brokenTime}.
+	 * 
+	 * @param t	Time for this <code>Vehicle</code> to be broken.
+	 */
 	public void setBrokenTime(int t){
 		brokenTime += t;
 		currentVel = 0;
 	}
 	
+	/**
+	 * Setter method for {@link Vehicle#currentVel}.
+	 * 
+	 * @param v	New velocity for this <code>Vehicle</code>.
+	 */
 	public void setCurrentVel(int v){
 		if(v <= maxVel){
 			currentVel = v;	
@@ -83,19 +117,39 @@ public class Vehicle extends SimObject{
 		}
 	}
 	
-	//¿?
+	/**
+	 * Setter method for {@link Vehicle#maxVel}.
+	 * 
+	 * @param v New maximum velocity for this <code>Vehicle</code>.
+	 */
+	//NECESSARY?
 	public void setMaxVel(int v){
 		maxVel = v;
 	}
 	
+	/**
+	 * Getter method for {@link Vehicle#position}.
+	 * 
+	 * @return Current <code>Road</code>'s position.
+	 */
 	public int getPosition(){
 		return position;
 	}
 
+	/**
+	 * Getter method for {@link Vehicle#currentRoad}.
+	 * 
+	 * @return Current <code>Road</code>.
+	 */
 	public Road getRoad() {
 		return currentRoad;
 	}
 	
+	/**
+	 * Indicates whether this <code>Vehicle</code> is faulty.
+	 * 
+	 * @return true if this <code>Vehicle</code> is faulty, false otherwise.
+	 */
 	public boolean isFaulty() {
 		boolean faulty = false;
 		if(brokenTime > 0){
@@ -105,7 +159,9 @@ public class Vehicle extends SimObject{
 	}
 	
 	/**
-	 * Generates an INI formatted report
+	 * Generates an INI formatted report. 
+	 * 
+	 * @return Report of the state of this <code>Vehicle</code>
 	 */
 	public IniSection generateReport(int t){
 		IniSection sec = new IniSection(type);

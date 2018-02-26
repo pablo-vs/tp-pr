@@ -122,8 +122,7 @@ public class Junction extends SimObject{
 			incomingRoads.get(0).setTrafficLight(true);
 		}
 	}
-	
-	//
+
 	public IniSection generateReport(int t){
 		IniSection sec = new IniSection(type);
 		boolean first = true, firstVehicle;
