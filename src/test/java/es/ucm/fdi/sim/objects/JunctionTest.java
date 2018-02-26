@@ -55,11 +55,12 @@ public class JunctionTest {
 		v2 = new Vehicle("v2", 50, it2);
 		r3.move();
 		v3 = new Vehicle("v3", 100, it1);
+		r2.move();
 			
 		sec = new IniSection("junction_report");
 		sec.setValue("id", "j");
 		sec.setValue("time", "4");
-		sec.setValue("incomingRoads", "(r1,green,[]),(r2,red,[v1,v3]),(r3,red,[v2]),(r4,red,[])");
+		sec.setValue("incomingRoads", "(r2,green,[v1,v3]),(r3,red,[v2])");
 		
 		assertEquals("Report does not match", sec, j.generateReport(4));
 	}

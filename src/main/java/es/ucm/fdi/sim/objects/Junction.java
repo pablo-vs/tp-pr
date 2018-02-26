@@ -45,6 +45,7 @@ public class Junction extends SimObject{
 	public Junction(String id) {
 		super(id);
 		incomingRoads = new ArrayList<JunctionQueue>();
+		outgoingRoads = new ArrayList<JunctionQueue>();
 		currentOpenQueue = -1;
 	}
 
