@@ -109,16 +109,6 @@ public class Junction extends SimObject{
 			addOutgoingRoad(outgoing.get(i));
 		}
 	}
-	
-	/**
-	 * Getter method for {@link Junction#time}.
-	 * 
-	 * @return	Current time.
-	 */
-	//??????? WHY ????????
-	public int getTime(){
-		return time;
-	}
 
 	/**
 	 * Sets the trafficLights to its next state.
