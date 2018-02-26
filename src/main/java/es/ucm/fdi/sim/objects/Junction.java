@@ -16,7 +16,6 @@ public class Junction extends SimObject{
 	private static String type = "junction_report";
 	private int time, currentOpenQueue;
 	private List<JunctionQueue> incomingRoads;
-	//Map + List 
 
 	private class JunctionQueue extends ArrayDeque<Vehicle> {
 		private Road road;
@@ -77,14 +76,13 @@ public class Junction extends SimObject{
 		while(!found && it.hasNext()) {
 			queue = it.next();
 			
-			System.err.print(queue.getRoad().getID() + " vs " + v.getRoad().getID()+ " - ");
-			System.err.print(queue.getRoad() + " vs " + v.getRoad() + " - ");
+			//System.err.print(queue.getRoad().getID() + " vs " + v.getRoad().getID()+ " - ");
+			//System.err.print(queue.getRoad() + " vs " + v.getRoad() + " - ");
 			if(queue.getRoad().equals(v.getRoad())) {
 				queue.add(v);
 				found = true;
 			}
 		}
-		System.err.println(found);
 	}
 	
 	public Vehicle vehicleOut(){
@@ -159,7 +157,7 @@ public class Junction extends SimObject{
 			aux.append("]");
 			aux.append(")");
 		}
-		sec.setValue("queues", aux);
+		sec.setValue("incomingRoads", aux);
 
 		return sec;
 	}
