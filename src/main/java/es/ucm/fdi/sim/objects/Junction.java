@@ -123,6 +123,7 @@ public class Junction extends SimObject{
 		}
 	}
 	
+	//
 	public IniSection generateReport(int t){
 		IniSection sec = new IniSection(type);
 		boolean first = true, firstVehicle;
