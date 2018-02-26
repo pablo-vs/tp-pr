@@ -20,7 +20,7 @@ public class JunctionTest {
 		Junction j, j2, j3;
 		IniSection sec;
 		Vehicle v1,v2,v3;
-		Road r1, r2, r3, r4, r5;
+		Road r1, r2, r3, r4;
 		List<Junction> it1, it2;
 		
 		j = new Junction("j");
@@ -38,36 +38,28 @@ public class JunctionTest {
 		
 		r1 = new Road("r1", 50, 50, j, j2);
 		r2 = new Road("r2", 50, 100, j2, j);
-		r3 = new Road("r3", 50, 50, j2, j3);
-		r4 = new Road("r4", 50, 50, j3, j);
-		r5 = new Road("r5", 50, 50, j, j3);
+		r3 = new Road("r3", 50, 50, j3, j);
+		r4 = new Road("r4", 50, 50, j, j3);
 		
-		j.addRoad(r1);
-		j.addRoad(r2);
-		j.addRoad(r4);
-		j.addRoad(r5);
-		j2.addRoad(r1);
-		j2.addRoad(r2);
-		j2.addRoad(r3);
-		j3.addRoad(r3);
-		j3.addRoad(r4);
-		j3.addRoad(r5);
+		j.addIncomingRoad(r2);
+		j.addIncomingRoad(r3);
+		j.addOutgoingRoad(r1);
+		j.addOutgoingRoad(r4);
+		j2.addIncomingRoad(r1);
+		j2.addOutgoingRoad(r2);
+		j3.addIncomingRoad(r4);
+		j3.addOutgoingRoad(r3);
 		
 		v1 = new Vehicle("v1", 100, it1);
-		//System.err.println(r2.generateReport(0));
 		r2.move();
-		//System.err.println(r2.generateReport(0));
 		v2 = new Vehicle("v2", 50, it2);
-		r4.move();
+		r3.move();
 		v3 = new Vehicle("v3", 100, it1);
-		//System.err.println(r2.generateReport(0));
-		r2.move();
-		//System.err.println(r2.generateReport(0));
 			
 		sec = new IniSection("junction_report");
 		sec.setValue("id", "j");
 		sec.setValue("time", "4");
-		sec.setValue("incomingRoads", "(r1,green,[]),(r2,red,[v1,v3]),(r4,red,[v2]),(r5,red,[])");
+		sec.setValue("incomingRoads", "(r1,green,[]),(r2,red,[v1,v3]),(r3,red,[v2]),(r4,red,[])");
 		
 		assertEquals("Report does not match", sec, j.generateReport(4));
 	}

@@ -31,7 +31,7 @@ public class RoadTest {
 		l.add(end);
 		
 		r = new Road("r1",200, 20, ini, end);
-		ini.addRoad(r);
+		ini.addIncomingRoad(r);
 		v1 = new Vehicle("v1", 20, l);
 		r.move();
 		v2 = new Vehicle("v2", 10, l);

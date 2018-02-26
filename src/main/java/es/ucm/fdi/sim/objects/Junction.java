@@ -16,6 +16,7 @@ public class Junction extends SimObject{
 	private static String type = "junction_report";
 	private int time, currentOpenQueue;
 	private List<JunctionQueue> incomingRoads;
+	private List<JunctionQueue> outgoingRoads;
 
 	private class JunctionQueue extends ArrayDeque<Vehicle> {
 		private Road road;
@@ -90,14 +91,13 @@ public class Junction extends SimObject{
 	}
 
 	public Road getRoadToJunction(Junction j) throws UnreachableJunctionException{
-		Road result = null;
+		Road result = null, road;
 		boolean found = false;
-		Iterator<JunctionQueue> it = incomingRoads.iterator();
-		JunctionQueue queue = null;
+		Iterator<JunctionQueue> it = outgoingRoads.iterator();
 		while(!found && it.hasNext()) {
-			queue = it.next();
-			if(queue.getRoad().getEnd().equals(j)) {
-				result = queue.getRoad();
+			road = it.next().getRoad();
+			if(road.getEnd().equals(j)) {
+				result = road;
 				found = true;
 			}
 		}
@@ -115,13 +115,18 @@ public class Junction extends SimObject{
 		updateTrafficLights();
 	}
 	
-	public void addRoad(Road r) {
+	public void addIncomingRoad(Road r) {
 		incomingRoads.add(new JunctionQueue(r));
 		if(currentOpenQueue == -1) {
 			currentOpenQueue = 0;
 			incomingRoads.get(0).setTrafficLight(true);
 		}
 	}
+
+	
+	public void addOutgoingRoad(Road r) {
+		outgoingRoads.add(new JunctionQueue(r));
+	}	
 
 	public IniSection generateReport(int t){
 		IniSection sec = new IniSection(type);
