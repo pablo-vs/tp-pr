@@ -13,6 +13,7 @@ public class NewRoadEvent extends Event {
 	private Junction ini, end;
 	private List<Vehicle> vehicleList;
 	
+	public NewRoadEvent(){}
 	public NewRoadEvent(int t, String s){
 		super(t,s);
 	}
@@ -41,7 +42,7 @@ public class NewRoadEvent extends Event {
 		return vehicleList;
 	}
 	
-	class NewRoadEventBuilder extends EventBuilder{
+	public static class Builder extends EventBuilder{
 		public static final String TAG = "new_road";
 		
 		public NewRoadEvent build(IniSection ini){
@@ -49,9 +50,10 @@ public class NewRoadEvent extends Event {
 			String lengthStr, maxVelStr; 
 			
 			//CHECK THE JUNCTION LIST?
-			vehicleList = new ArrayList<Vehicle>();
+			//vehicleList = new ArrayList<Vehicle>(); :D
 			
-			event = NewRoadEvent.this;
+			//event = NewRoadEvent.this; ^^
+			event = null;
 			return event;
 		}
 	}

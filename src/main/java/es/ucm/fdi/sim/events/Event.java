@@ -13,6 +13,7 @@ public abstract class Event {
 
 	private String id;
 	private int time;
+
 	
 	public Event() {}
 	public Event(int  t, String id){
@@ -34,7 +35,7 @@ public abstract class Event {
 	/**
 	*	Abstract parent of all the EventBuilders
 	*/
-	abstract class EventBuilder {
+	public static abstract class EventBuilder {
 		
 		private Pattern checkID = Pattern.compile("[\\w_]");
 

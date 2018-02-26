@@ -14,6 +14,7 @@ public class NewVehicleEvent extends Event {
 	private String vehicleID;
 	private List<String> itinerary; //BETTER TO USE LIST AND INSTANTIATE ARRAYASLIST LATER?
 	
+	public NewVehicleEvent(){}
 	public NewVehicleEvent(int t, String s){
 		super(t,s);
 	}
@@ -30,7 +31,7 @@ public class NewVehicleEvent extends Event {
 		return itinerary;
 	}
 	
-	class NewVehicleEventBuilder extends EventBuilder {
+	public static class Builder extends EventBuilder {
 
 		public static final String TAG = "new_vehicle";
 		
@@ -48,24 +49,25 @@ public class NewVehicleEvent extends Event {
 					itineraryStr = section.getValue("itinerary");
 
 					//Parse the attributes
-					setTime(Integer.parseInt(timeStr)); //MAY NEED CONSTRUCTOR CHANGE
-					maxSpeed = Integer.parseInt(maxSpeedStr);
+					//setTime(Integer.parseInt(timeStr)); //MAY NEED CONSTRUCTOR CHANGE
+					//maxSpeed = Integer.parseInt(maxSpeedStr);
 
 					checkIDValidity(vehicleIdStr);
-					vehicleID = vehicleIdStr;
+					//vehicleID = vehicleIdStr;
 
 					/*THIS DOES NOT CHECK THAT THE JUNCTIONS EXIST.
 					SHOULD THAT BE CHECKED WHEN THE	VEHICLE IS CREATED?*/
-					itinerary = new ArrayList<>();
+					//itinerary = new ArrayList<>();
 					for(String junctionID : itineraryStr.split(",")) {
 						checkIDValidity(junctionID); 
 						//WE MIGHT NEED TO CHECK WHETHER TWO CONSECUTIVE JUNCTIONS ARE JOINED
-						itinerary.add(junctionID);
+						//itinerary.add(junctionID);
 					}
 				} catch(Exception e) {
 					throw new InvalidEventException("Error while parsing event:\n" + e.getMessage());
 				}
-				event = NewVehicleEvent.this;
+				//event = NewVehicleEvent.this; :_
+				event = null;
 
 			} else {
 				event = null;

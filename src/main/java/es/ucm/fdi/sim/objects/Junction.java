@@ -82,11 +82,8 @@ public class Junction extends SimObject{
 			if(queue.getRoad().equals(v.getRoad())) {
 				queue.add(v);
 				found = true;
-
-				//System.err.println("Adding vehicle " + queue.getFirst().getID() + " to junction " + getID());
 			}
 		}
-		//System.err.println(found);
 	}
 	
 	public Vehicle vehicleOut(){

@@ -12,7 +12,7 @@ public class Road extends SimObject{
 	
 	private static String type = "road_report";
 	private List<Vehicle> vehicleList; //0 position is last. Keep entry order right to left
-	//WE NEED TO USE A DEQUE HERE
+	//WE NEED TO USE A QUEUE
 	private int length, maxVel;
 	private Junction ini,end;
 	
@@ -26,20 +26,7 @@ public class Road extends SimObject{
 	}
 	
 	//Invoked by Vehicle - Ordered insertion
-	public void vehicleIn(Vehicle v){
-		//boolean end = false;
-		//int i = vehicleList.size();
-
-		/*TEMPORARY, FOR TESTING*/
-		//Better to start checking from the end
-		/*while(i > 0 && !end){
-			if(v.getPosition() > vehicleList.get(i-1).getPosition()){
-				--i;
-				}else{
-				end = true;
-			}
-		}*/
-		
+	public void vehicleIn(Vehicle v){	
 		//Last one in list
 		vehicleList.add(v);
 	}
@@ -47,10 +34,6 @@ public class Road extends SimObject{
 	//Invoked by Vehicle. Since it is called by a vehicle, it is a precondition that a 
 	//vehicle is in the list, given the program is correct
 	public void vehicleOut(Vehicle v){
-		/*int i = 0; //No need to search. Last one
-		while(!vehicleList.get(i).equals(v)){
-			++i;
-		}*/	
 		vehicleList.remove(0);
 	}
 	
