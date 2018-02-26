@@ -4,6 +4,7 @@ import java.util.List;
 import java.lang.String;
 import java.util.ArrayList;
 
+import es.ucm.fdi.util.MultiTreeMap;
 import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.sim.objects.Vehicle;
 import es.ucm.fdi.sim.objects.Junction;
@@ -16,8 +17,9 @@ import es.ucm.fdi.sim.objects.Junction;
 public class Road extends SimObject{
 	
 	private static String type = "road_report";
-	private List<Vehicle> vehicleList; //0 position is last. Keep entry order right to left
-	//WE NEED TO USE A QUEUE
+	//VehicleList: Position -> List of vehicles
+	//VehicleList is inversely ordered
+	private MultiTreeMap<Integer, Vehicle> vehicleList;
 	private int length, maxVel;
 	private Junction ini,end;
 	
@@ -36,7 +38,7 @@ public class Road extends SimObject{
 		maxVel = maxV;
 		this.ini = ini;
 		this.end = end;
-		vehicleList = new ArrayList<Vehicle>();
+		vehicleList = new MultiTreeMap<Integer, Vehicle>((Integer a, Integer b) -> b-a);
 	}
 	
 	/**
@@ -44,21 +46,17 @@ public class Road extends SimObject{
 	 * 
 	 * @param v	<code>Vehicle</code> to insert in the current <code>Road</code>.
 	 */
-	//Invoked by Vehicle - Ordered insertion
-	public void vehicleIn(Vehicle v){	
-		//Last one in list
-		vehicleList.add(v);
+	public void vehicleIn(Vehicle v){
+		vehicleList.putValue(0, v);
 	}
 	
 	/**
-	 * Removes the first vehicle of the list.
+	 * Removes the given vehicle from the end of the road.
 	 * 
-	 * @param v ??
+	 * @param The vehicle to remove
 	 */
-	//Invoked by Vehicle. Since it is called by a vehicle, it is a precondition that a 
-	//vehicle is in the list, given the program is correct NEEDS PARAMETERS?????
 	public void vehicleOut(Vehicle v){
-		vehicleList.remove(0);
+		vehicleList.removeValue(length, v);
 	}
 	
 	/**
@@ -67,16 +65,27 @@ public class Road extends SimObject{
 	//Invoked by Simulator
 	public void move(){
 		int baseSpeed = Math.min(maxVel, maxVel/(Math.max(vehicleList.size(), 1)) + 1),
-				reductionFactor = 1;
-		
-		for(Vehicle v : vehicleList){
-			//CALCULATE REDUCTION FACTOR!!!!!
-			if(v.isFaulty()){
+				reductionFactor = 1,
+				faultyPos = 0;
+
+		//Store the vehicles in a new map to avoid messing the iterator
+		MultiTreeMap newVehicleList = new MultiTreeMap<Integer, Vehicle>((Integer a, Integer b) -> b-a);
+		for(Vehicle v : vehicleList.innerValues()){
+			//Check if vehicle is behind a faulty vehicle
+			//All vehicles further in the list will also be behind it
+			if(v.getPosition() < faultyPos){
 				reductionFactor = 2;
+			}
+			//If the vehicle is faulty, we need to slow down all vehicles whose
+			//position is STRICTLY lower than v's
+			if(faultyPos == 0 && v.isFaulty()) {
+				faultyPos = v.getPosition();
 			}
 			v.setCurrentVel(baseSpeed/reductionFactor);
 			v.move();
+			newVehicleList.putValue(v.getPosition(), v);
 		}
+		vehicleList = newVehicleList;
 	}
 	
 	/**
@@ -123,7 +132,7 @@ public class Road extends SimObject{
 		
 		sec.setValue("id", getID());
 		sec.setValue("time", t);
-		for(Vehicle v : vehicleList){
+		for(Vehicle v : vehicleList.innerValues()){
 			if(!first){
 				aux.append(",");
 			}

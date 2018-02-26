@@ -59,14 +59,12 @@ public class Vehicle extends SimObject{
 				position = currentRoad.getLength();
 				currentVel = 0;
 
-				if(nextJunction == itinerary.size()-1) {
-					//DESTROY VEHICLE??
-					arrived = true;
-				} else {
-					currentRoad.getEnd().vehicleIn(this);
-					inQueue = true;
-				}
-				
+				//According to specification, the arrival of the vehicle
+				//must be handled in moveToNextRoad, after exiting the last
+				//Junction's queue
+				currentRoad.getEnd().vehicleIn(this);
+				inQueue = true;
+							
 			} else {
 				position += currentVel;
 				kilometrage += currentVel;
@@ -74,7 +72,7 @@ public class Vehicle extends SimObject{
 			
 		}else if(brokenTime > 0){
 			brokenTime--;
-		} //WHAT DO WE DO WHEN IN QUEUE?
+		}
 	}
 	
 	/**
@@ -86,12 +84,17 @@ public class Vehicle extends SimObject{
 		position = 0;
 		inQueue = false;
 
-		Junction currentJunction = itinerary.get(nextJunction);
-		nextJunction++;
-		//THROWS UNREACHABLE JUNCTION EXCEPTION
-		currentRoad = currentJunction.getRoadToJunction(itinerary.get(nextJunction));
-		currentRoad.vehicleIn(this);
-		
+		if(nextJunction > 0) {
+			currentRoad.vehicleOut(this);
+		}
+		if(nextJunction == itinerary.size()-1) {
+			arrived = true;
+		} else {
+			Junction currentJunction = itinerary.get(nextJunction);
+			nextJunction++;
+			currentRoad = currentJunction.getRoadToJunction(itinerary.get(nextJunction));
+			currentRoad.vehicleIn(this);
+		}
 	}
 	
 	/**

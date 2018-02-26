@@ -17,20 +17,6 @@ public class VehicleTest {
 	 */
 	@Test
 	public void buildReportTest() throws Exception {
-		String v1report1 = "[vehicle_report]" + System.lineSeparator() 
-					+ "id = v1" + System.lineSeparator() 
-					+ "time = 5" + System.lineSeparator()
-					+ "speed = 0" + System.lineSeparator()
-					+ "kilometrage = 0" + System.lineSeparator() 
-					+ "faulty = 0" + System.lineSeparator() 
-					+ "location = (r1,0)" + System.lineSeparator(),
-		v2report1 = "[vehicle_report]"+System.lineSeparator()
-					+ "id = v2"+System.lineSeparator()
-					+ "time = 8" + System.lineSeparator() 
-					+ "speed = 0" + System.lineSeparator()
-					+ "kilometrage = 0" + System.lineSeparator() 
-					+ "faulty = 0" + System.lineSeparator() 
-					+ "location = (r2,0)" + System.lineSeparator();
 		IniSection v1Report, v2Report;
 		Junction j1 = new Junction("j1"), j2 = new Junction("j2"), j3 = new Junction("j3");
 		Road r1 = new Road("r1", 2, 2, j1, j2);
@@ -64,10 +50,8 @@ public class VehicleTest {
 		Vehicle v1 = new Vehicle("v1", 2, it1), v2 = new Vehicle("v2", 30, it2);
 		IniSection rep1 = v1.generateReport(5); //WEIRD BEHAVIOR WHEN GENERATING IN ASSERTEQUALS
 		IniSection rep2 = v2.generateReport(8);
-		assertEquals("Report does not match", v1Report, rep1);
-		assertEquals("Report does not match", v2Report, rep2);
-		assertEquals("Report does not match", v1report1, rep1.toString());
-		assertEquals("Report does not match", v2report1, rep2.toString());
+		assertEquals("Report does not match", v1Report.toString(), rep1.toString());
+		assertEquals("Report does not match", v2Report.toString(), rep2.toString());
 	}
 
 	/**
@@ -130,6 +114,7 @@ public class VehicleTest {
 		j1.addOutgoingRoad(r1);
 		j2.addIncomingRoad(r1);
 		j2.addOutgoingRoad(r2);
+		j3.addIncomingRoad(r2);
 		
 		it1.add(j1);
 		it1.add(j2);
@@ -151,6 +136,7 @@ public class VehicleTest {
 		assertEquals("Report does not match", v1Report5, v1.generateReport(9));
 		
 		r2.move();
+		j3.move();
 		assertEquals("Report does not match", v1Report6, v1.generateReport(10));
 		
 	}
