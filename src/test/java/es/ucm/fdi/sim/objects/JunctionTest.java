@@ -2,6 +2,7 @@ package es.ucm.fdi.sim.objects;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -10,6 +11,7 @@ import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.sim.objects.Junction;
 import es.ucm.fdi.sim.objects.Road;
 import es.ucm.fdi.sim.objects.Vehicle;
+import es.ucm.fdi.control.Controller;
 
 public class JunctionTest {
 	
@@ -19,6 +21,7 @@ public class JunctionTest {
 	public void buildReportTest() throws Exception {
 		Junction j, j2, j3;
 		IniSection sec;
+		HashMap<String, String> report = new HashMap<String, String>();
 		Vehicle v1,v2,v3;
 		Road r1, r2, r3, r4;
 		List<Junction> it1, it2;
@@ -62,6 +65,7 @@ public class JunctionTest {
 		sec.setValue("time", "4");
 		sec.setValue("incomingRoads", "(r2,green,[v1,v3]),(r3,red,[v2])");
 		
-		assertEquals("Report does not match", sec, j.generateReport(4));
+		j.report(4, report);
+		assertEquals("Report does not match", sec, Controller.iniReport(report));
 	}
 }

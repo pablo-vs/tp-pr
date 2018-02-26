@@ -2,6 +2,7 @@ package es.ucm.fdi.sim.objects;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 
 import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.sim.objects.SimObject;
@@ -16,7 +17,7 @@ import es.ucm.fdi.sim.objects.Junction;
  */
 public class Vehicle extends SimObject{
 	
-	private static String type = "vehicle_report";
+	private static String report_header = "vehicle_report";
 	private Road currentRoad;
 	private List<Junction> itinerary;
 	private int maxVel, currentVel, position, brokenTime, kilometrage, nextJunction;
@@ -162,28 +163,31 @@ public class Vehicle extends SimObject{
 	}
 	
 	/**
-	 * Generates an INI formatted report. 
-	 * 
-	 * @return Report of the state of this <code>Vehicle</code>
-	 */
-	public IniSection generateReport(int t){
-		IniSection sec = new IniSection(type);
-		
-		sec.setValue("id", getID());
-		sec.setValue("time", t);
-		sec.setValue("speed", currentVel);
-		sec.setValue("kilometrage", kilometrage);
+	* Fills the given map with the details of the state of the object.
+	*
+	* @param out Map to store the report.
+	*/
+	public void fillReportDetails(Map<String, String> out) {
+		out.put("speed", Integer.toString(currentVel));
+		out.put("kilometrage", Integer.toString(kilometrage));
 		if(brokenTime > 0){
-			sec.setValue("faulty", "1");
+			out.put("faulty", "1");
 		}else{
-			sec.setValue("faulty", "0");
+			out.put("faulty", "0");
 		}
 		if(arrived){
-			sec.setValue("location", "arrived");
-		}else{ //NEEDS SB OPTIMIZATION
-			sec.setValue("location", "(" + currentRoad.getID() + "," + position + ")");
+			out.put("location", "arrived");
+		}else{
+			out.put("location", "(" + currentRoad.getID() + "," + position + ")");
 		}
+	}
 
-		return sec;
+	/**
+	* Returns the header for the object report.
+	*
+	* @return The header as a <code>String</code>
+	*/
+	public String getReportHeader() {
+		return report_header;
 	}
 }

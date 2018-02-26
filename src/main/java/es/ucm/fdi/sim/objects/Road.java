@@ -3,6 +3,7 @@ package es.ucm.fdi.sim.objects;
 import java.util.List;
 import java.lang.String;
 import java.util.ArrayList;
+import java.util.Map;
 
 import es.ucm.fdi.util.MultiTreeMap;
 import es.ucm.fdi.ini.IniSection;
@@ -16,7 +17,7 @@ import es.ucm.fdi.sim.objects.Junction;
  */
 public class Road extends SimObject{
 	
-	private static String type = "road_report";
+	private static String report_header = "road_report";
 	//VehicleList: Position -> List of vehicles
 	//VehicleList is inversely ordered
 	private MultiTreeMap<Integer, Vehicle> vehicleList;
@@ -124,14 +125,15 @@ public class Road extends SimObject{
 		return end;
 	}
 	
-	//Automatic javadoc?
-	public IniSection generateReport(int t){
+	/**
+	* Fills the given map with the details of the state of the object.
+	*
+	* @param out Map to store the report.
+	*/
+	public void fillReportDetails(Map<String, String> out) {
 		boolean first = true;
-		IniSection sec = new IniSection(type);
 		StringBuilder aux = new StringBuilder(vehicleList.size()*60);
 		
-		sec.setValue("id", getID());
-		sec.setValue("time", t);
 		for(Vehicle v : vehicleList.innerValues()){
 			if(!first){
 				aux.append(",");
@@ -145,8 +147,15 @@ public class Road extends SimObject{
 			aux.append(v.getPosition());
 			aux.append(")");
 		}
-		sec.setValue("state", aux.toString());
-		
-		return sec;
+		out.put("state", aux.toString());
+	}
+
+	/**
+	* Returns the header for the object report.
+	*
+	* @return The header as a <code>String</code>
+	*/
+	public String getReportHeader() {
+		return report_header;
 	}
 }

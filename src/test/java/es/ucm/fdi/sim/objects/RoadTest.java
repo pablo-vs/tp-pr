@@ -2,6 +2,7 @@ package es.ucm.fdi.sim.objects;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -10,6 +11,7 @@ import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.sim.objects.Road;
 import es.ucm.fdi.sim.objects.Vehicle;
 import es.ucm.fdi.sim.objects.Junction;
+import es.ucm.fdi.control.Controller;
 
 public class RoadTest {
 	
@@ -18,7 +20,8 @@ public class RoadTest {
 		Road r;
 		Junction ini, end;
 		Vehicle v1,v2,v3,v4;
-		IniSection report;
+		IniSection sec;
+		HashMap<String, String> report = new HashMap<String, String>();
 		List<Junction> l = new ArrayList<Junction>();
 		
 		ini = new Junction("j1");
@@ -46,20 +49,22 @@ public class RoadTest {
 		r.move();
 		//v4 at 6, v3 at 9, v1 at 15, v2 out
 
-		report = new IniSection("");
-		report.setValue("id", "r1");
-		report.setValue("time", "5");
-		report.setValue("state", "(v2,35),(v1,15),(v3,9),(v4,6)");
+		sec = new IniSection("");
+		sec.setValue("id", "r1");
+		sec.setValue("time", "5");
+		sec.setValue("state", "(v2,35),(v1,15),(v3,9),(v4,6)");
 		
-		assertEquals("Report does not match", report, r.generateReport(5));
+		r.report(5, report);
+		assertEquals("sec does not match", sec, Controller.iniReport(report));
 	}
 	
 	@Test
-	public void buildReportTest() throws Exception {
+	public void buildsecTest() throws Exception {
 		Road r;
 		Junction ini, end;
 		Vehicle v1,v2;
-		IniSection report;
+		IniSection sec;
+		HashMap<String, String> report = new HashMap<String, String>();
 		List<Junction> l = new ArrayList<Junction>();
 		
 		ini = new Junction("j1");
@@ -75,12 +80,13 @@ public class RoadTest {
 		v2 = new Vehicle("v2", 10, l);
 		r.move(); //BASE SPEED 11 
 		
-		//We will check the report after 4 steps of the simulation
-		report = new IniSection("");
-		report.setValue("id", "r1");
-		report.setValue("time", "4");
-		report.setValue("state", "(v1,31),(v2,10)");
+		//We will check the sec after 4 steps of the simulation
+		sec = new IniSection("");
+		sec.setValue("id", "r1");
+		sec.setValue("time", "4");
+		sec.setValue("state", "(v1,31),(v2,10)");
 		
-		assertEquals("Report does not match", report, r.generateReport(4));
+		r.report(4, report);
+		assertEquals("sec does not match", sec, Controller.iniReport(report));
 	}
 }

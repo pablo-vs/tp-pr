@@ -1,6 +1,6 @@
 package es.ucm.fdi.sim.objects;
 
-import es.ucm.fdi.ini.IniSection;
+import java.util.Map;
 
 /**
  *	Abstract class grouping the behavior of every object of the simulation.
@@ -63,7 +63,28 @@ public abstract class SimObject {
 	 * Method for generating a report of this object's status.
 	 * 
 	 * @param t Time at which the report is issued.
-	 * @return Report of the current <code>SimObject</code>'s state as an <code>IniSection</code>.
+	 * @param out Reference to a map where the report will be stored.
 	 */
-	public abstract IniSection generateReport(int t);
+	public void report(int t, Map<String, String> out) {
+		out.clear();
+		out.put("", getReportHeader());
+		out.put("id", id);
+		out.put("time", Integer.toString(t));
+		fillReportDetails(out);
+	}
+
+	/**
+	* Fills the given map with the details of the state of the object.
+	*
+	* @param out Map to store the report.
+	*/
+	public abstract void fillReportDetails(Map<String, String> out);
+
+	/**
+	* Returns the header for the object report.
+	*
+	* @return The header as a <code>String</code>
+	*/
+	public abstract String getReportHeader();
+	//DEFAULT IMPLEMENTATION??
 }

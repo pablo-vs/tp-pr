@@ -12,30 +12,30 @@ import java.io.OutputStream;
 
 public class Simulator {
 
-	List<Event> listaEventos; //Ordenados por tiempo y, a igualdad, orden de llegada
+	List<Event> eventList; //Ordenados por tiempo y, a igualdad, orden de llegada
 	int timeLimit, timer;
 	
 	public Simulator(int limit){
-		listaEventos = new ArrayList<Event>(); 
+		eventList = new ArrayList<Event>(); 
 		timeLimit = limit;
 		timer = 0;
 	}
 	
-	public void insertaEvento(Event e){
+	public void insertEvent(Event e){
 		int i = 0;
 		//Order with minimum time on the right - QUEUE STYLE
-		//while(i < listaEventos.size() && listaEventos[i].getTime() < )
+		//while(i < eventList.size() && eventList[i].getTime() < )
 	}
 
 	public SimObject getObject(String id) throws ObjectNotFoundException {
 		return null;
 	}
 	
-	public void ejecuta(int pasosSimulacion, OutputStream ficheroSalida)
+	public void execute(int simulationSteps, OutputStream outputFile)
 	{
-		timeLimit = timer + pasosSimulacion - 1;
+		timeLimit = timer + simulationSteps - 1;
 		while (timer <= timeLimit) {
-			// 1. ejecutar los eventos correspondientes a ese tiempo
+			// 1. execute los eventos correspondientes a ese tiempo
 			// 2. invocar al método avanzar de las carreteras
 			// 3. invocar al método avanzar de los cruces
 			// 4. this.contadorTiempo++;
@@ -45,7 +45,7 @@ public class Simulator {
 
 	}
 	
-	public String prepareReport(Map<String, String> report) //???
+	public String prepareReport(Map<String, String> report)
 	{
 		return "";
 	}

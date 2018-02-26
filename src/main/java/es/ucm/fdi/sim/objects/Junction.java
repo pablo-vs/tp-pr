@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Queue;
 import java.util.ArrayDeque;
+import java.util.Map;
+import java.util.HashMap;
 
 import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.sim.objects.Vehicle;
@@ -18,32 +20,34 @@ import es.ucm.fdi.exceptions.UnreachableJunctionException;
  */
 public class Junction extends SimObject{
 	
-	private static String type = "junction_report";
+	private static String report_header = "junction_report";
 	private int time, currentOpenQueue;
-	private List<JunctionQueue> incomingRoads;
-	private List<JunctionQueue> outgoingRoads;
+	private List<IncomingRoad> incomingRoads;
+	private List<Road> outgoingRoads;
+	private HashMap<Road, IncomingRoad> roadToQueueMap;
+	private HashMap<Junction, Road> junctionToRoadMap;
 
 	/**
 	 * Private class representing a <code>Road</code> with its respective queue of 
 	 * <code>Vehicles</code> and traffic light.
 	 */
-	private class JunctionQueue extends ArrayDeque<Vehicle> {
+	private class IncomingRoad extends ArrayDeque<Vehicle> {
 		private Road road;
 		private boolean trafficLight;
 
 		/**
 		 * Constructor.
 		 * 
-		 * @param road	<code>Road</code> associated to current <code>JunctionQueue</code>.
+		 * @param road	<code>Road</code> associated to current <code>IncomingRoad</code>.
 		 */
-		JunctionQueue(Road road) {
+		IncomingRoad(Road road) {
 			super();
 			this.road = road;
 			trafficLight = false;
 		}
 
 		/**
-		 * Getter method for {@link JunctionQueue#road}.
+		 * Getter method for {@link IncomingRoad#road}.
 		 * 
 		 * @return Current <code>Road</code>.
 		 */
@@ -52,7 +56,7 @@ public class Junction extends SimObject{
 		}
 
 		/**
-		 * Getter method for {@link JunctionQueue#trafficLight}.
+		 * Getter method for {@link IncomingRoad#trafficLight}.
 		 * 
 		 * @return State of traffic light.
 		 */
@@ -61,7 +65,7 @@ public class Junction extends SimObject{
 		}
 
 		/**
-		 * Setter method for {@link JunctionQueue#trafficLight}.
+		 * Setter method for {@link IncomingRoad#trafficLight}.
 		 * 
 		 * @param b	New state of the traffic light.
 		 */
@@ -77,8 +81,11 @@ public class Junction extends SimObject{
 	 */
 	public Junction(String id) {
 		super(id);
-		incomingRoads = new ArrayList<JunctionQueue>();
-		outgoingRoads = new ArrayList<JunctionQueue>();
+		incomingRoads = new ArrayList<IncomingRoad>();
+		outgoingRoads = new ArrayList<Road>();
+		roadToQueueMap = new HashMap<Road, IncomingRoad>();
+		junctionToRoadMap = new HashMap<Junction, Road>();
+
 		currentOpenQueue = -1;
 	}
 
@@ -91,15 +98,15 @@ public class Junction extends SimObject{
 	 */
 	public Junction(String id, List<Road> incoming, List<Road> outgoing){
 		super(id);
-		incomingRoads = new ArrayList<JunctionQueue>(incoming.size());
+		incomingRoads = new ArrayList<IncomingRoad>(incoming.size());
 		currentOpenQueue = 0;
 		for(int i = 0; i < incoming.size(); ++i) {
-			incomingRoads.set(i, new JunctionQueue(incoming.get(i)));
+			addIncomingRoad(incoming.get(i));
 		}
 		
-		outgoingRoads = new ArrayList<JunctionQueue>(outgoing.size());
+		outgoingRoads = new ArrayList<Road>(outgoing.size());
 		for(int i = 0; i < outgoing.size(); i++){
-			outgoingRoads.set(i, new JunctionQueue(outgoing.get(i)));
+			addOutgoingRoad(outgoing.get(i));
 		}
 	}
 	
@@ -129,19 +136,10 @@ public class Junction extends SimObject{
 	 */
 	//Invocado por Vehicles -> Ordenados por orden de llegada
 	public void vehicleIn(Vehicle v){
-		boolean found = false;
-		Iterator<JunctionQueue> it = incomingRoads.iterator();
-		JunctionQueue queue = null;
+		IncomingRoad queue = roadToQueueMap.get(v.getRoad());
 		
-		while(!found && it.hasNext()) {
-			queue = it.next();
-			
-			//System.err.print(queue.getRoad().getID() + " vs " + v.getRoad().getID()+ " - ");
-			//System.err.print(queue.getRoad() + " vs " + v.getRoad() + " - ");
-			if(queue.getRoad().equals(v.getRoad())) {
-				queue.add(v);
-				found = true;
-			}
+		if(queue != null) {
+			queue.add(v);
 		}
 	}
 	
@@ -163,18 +161,9 @@ public class Junction extends SimObject{
 	 * @throws UnreachableJunctionException.
 	 */
 	public Road getRoadToJunction(Junction j) throws UnreachableJunctionException{
-		Road result = null, road;
-		boolean found = false;
-		Iterator<JunctionQueue> it = outgoingRoads.iterator();
-		while(!found && it.hasNext()) {
-			road = it.next().getRoad();
-			if(road.getEnd().equals(j)) {
-				result = road;
-				found = true;
-			}
-		}
+		Road result = junctionToRoadMap.get(j);
 
-		if(!found) {
+		if(result == null) {
 			throw new UnreachableJunctionException("Could not get from " + getID() + " to " + j.getID());
 		}
 
@@ -196,7 +185,9 @@ public class Junction extends SimObject{
 	 * @param r	<code>Road</code> to add.
 	 */
 	public void addIncomingRoad(Road r) {
-		incomingRoads.add(new JunctionQueue(r));
+		IncomingRoad newQueue = new IncomingRoad(r);
+		incomingRoads.add(newQueue);
+		roadToQueueMap.put(r, newQueue);
 		if(currentOpenQueue == -1) {
 			currentOpenQueue = 0;
 			incomingRoads.get(0).setTrafficLight(true);
@@ -209,19 +200,29 @@ public class Junction extends SimObject{
 	 * @param r	<code>Road</code> to add.
 	 */
 	public void addOutgoingRoad(Road r) {
-		outgoingRoads.add(new JunctionQueue(r));
+		outgoingRoads.add(r);
+		junctionToRoadMap.put(r.getEnd(), r);
 	}	
 
-	//AUTOMATIC JAVADOC¿?
-	public IniSection generateReport(int t){
-		IniSection sec = new IniSection(type);
+	/**
+	* Returns the header for the object report.
+	*
+	* @return The header as a <code>String</code>
+	*/
+	public String getReportHeader() {
+		return report_header;
+	}
+
+	/**
+	* Fills the given map with the details of the state of the object.
+	*
+	* @param out Map to store the report.
+	*/
+	public void fillReportDetails(Map<String, String> out) {
 		boolean first = true, firstVehicle;
 		StringBuilder aux = new StringBuilder();
 		
-		sec.setValue("id", getID());
-		sec.setValue("time", t);
-		
-		for(JunctionQueue queue : incomingRoads){
+		for(IncomingRoad queue : incomingRoads){
 			if(!first){
 				aux.append(",");
 			} else {
@@ -247,8 +248,6 @@ public class Junction extends SimObject{
 			aux.append("]");
 			aux.append(")");
 		}
-		sec.setValue("incomingRoads", aux);
-
-		return sec;
+		out.put("incomingRoads", aux.toString());
 	}
 }
