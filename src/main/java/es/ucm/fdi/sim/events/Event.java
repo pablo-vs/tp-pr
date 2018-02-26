@@ -26,6 +26,10 @@ public abstract class Event {
 	public int getTime(){
 		return time;
 	}
+	
+	public void setTime(int t){
+		time = t;
+	}
 
 	/**
 	*	Abstract parent of all the EventBuilders

@@ -10,8 +10,9 @@ import es.ucm.fdi.sim.objects.Junction;
 
 public class Road extends SimObject{
 	
-	private static String type = "road";
+	private static String type = "road_report";
 	private List<Vehicle> vehicleList; //0 position is last. Keep entry order right to left
+	//WE NEED TO USE A DEQUE HERE
 	private int length, maxVel;
 	private Junction ini,end;
 	
@@ -26,34 +27,43 @@ public class Road extends SimObject{
 	
 	//Invoked by Vehicle - Ordered insertion
 	public void vehicleIn(Vehicle v){
-		boolean end = false;
-		int i = 0;
+		//boolean end = false;
+		//int i = vehicleList.size();
 
-		/*TEMPORARY, FOR TESTING
-		while(i < vehicleList.size() && !end){
-			if(v.getPosition() < vehicleList.get(i).getPosition()){
-				++i;
-				}else{*/
-				vehicleList.add(i,v);/*
+		/*TEMPORARY, FOR TESTING*/
+		//Better to start checking from the end
+		/*while(i > 0 && !end){
+			if(v.getPosition() > vehicleList.get(i-1).getPosition()){
+				--i;
+				}else{
 				end = true;
 			}
-			}*/
+		}*/
+		
+		//Last one in list
+		vehicleList.add(v);
 	}
 	
-	//Invoked by Vehicle
+	//Invoked by Vehicle. Since it is called by a vehicle, it is a precondition that a 
+	//vehicle is in the list, given the program is correct
 	public void vehicleOut(Vehicle v){
-		int i = 0; //No need to search. Last one
+		/*int i = 0; //No need to search. Last one
 		while(!vehicleList.get(i).equals(v)){
 			++i;
-		}	
-		vehicleList.remove(i);
+		}*/	
+		vehicleList.remove(0);
 	}
 	
 	//Invoked by Simulator
 	public void move(){
-		int baseSpeed = Math.min(maxVel, maxVel/(Math.max(vehicleList.size(), 1)) + 1), reductionFactor = 1;
+		int baseSpeed = Math.min(maxVel, maxVel/(Math.max(vehicleList.size(), 1)) + 1),
+				reductionFactor = 1;
+		
 		for(Vehicle v : vehicleList){
 			//CALCULATE REDUCTION FACTOR!!!!!
+			if(v.isFaulty()){
+				reductionFactor = 2;
+			}
 			v.setCurrentVel(baseSpeed/reductionFactor);
 			v.move();
 		}

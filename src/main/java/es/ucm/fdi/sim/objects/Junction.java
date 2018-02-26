@@ -13,7 +13,7 @@ import es.ucm.fdi.exceptions.UnreachableJunctionException;
 
 public class Junction extends SimObject{
 	
-	private static String type = "junction";
+	private static String type = "junction_report";
 	private int time, currentOpenQueue;
 	private List<JunctionQueue> queues;
 
@@ -40,15 +40,6 @@ public class Junction extends SimObject{
 		}
 	}
 	
-	public int getTime(){
-		return time;
-	}
-
-	private void updateTrafficLights() {
-		queues.get(currentOpenQueue).setTrafficLight(false);
-		currentOpenQueue = (currentOpenQueue + 1) % queues.size();
-		queues.get(currentOpenQueue).setTrafficLight(true);
-	}
 	
 	public Junction(String id) {
 		super(id);
@@ -65,27 +56,40 @@ public class Junction extends SimObject{
 		}
 	}
 	
-	//Invocado por Vehicles -> Ordenados por orden de llegada
-	public void vehicleIn(Vehicle v){
-	        boolean found = false;
-		Iterator<JunctionQueue> it = queues.iterator();
-		JunctionQueue queue = null;
-		while(!found && it.hasNext()) {
-			queue = it.next();;
-			if(queue.getRoad().equals(v.getRoad())) {
-				queue.add(v);
-				found = true;
-			}
-		}
+	public int getTime(){
+		return time;
+	}
+
+	private void updateTrafficLights() {
+		queues.get(currentOpenQueue).setTrafficLight(false);
+		currentOpenQueue = (currentOpenQueue + 1) % queues.size();
+		queues.get(currentOpenQueue).setTrafficLight(true);
 	}
 	
 	//Invocado por Vehicles -> Ordenados por orden de llegada
+	//WEIRD BEHAVIOR - MIGHT NEED REFS IN ROAD QUEUE
+	public void vehicleIn(Vehicle v){
+		boolean found = false;
+		Iterator<JunctionQueue> it = queues.iterator();
+		JunctionQueue queue = null;
+		
+		while(!found && it.hasNext()) {
+			queue = it.next();
+			
+			System.err.print(queue.getRoad().getID() + " vs " + v.getRoad().getID()+ " - ");
+			System.err.print(queue.getRoad() + " vs " + v.getRoad() + " - ");
+			if(queue.getRoad().equals(v.getRoad())) {
+				queue.add(v);
+			}
+		}
+		System.err.println(found);
+	}
+	
 	public Vehicle vehicleOut(){
 		return queues.get(currentOpenQueue).removeFirst();
 	}
 
 	public Road getRoadToJunction(Junction j) throws UnreachableJunctionException{
-		
 		Road result = null;
 		boolean found = false;
 		Iterator<JunctionQueue> it = queues.iterator();
@@ -151,7 +155,9 @@ public class Junction extends SimObject{
 				aux.append(v.getID());
 			}
 			aux.append("]");
+			aux.append(")");
 		}
+		sec.setValue("queues", aux);
 
 		return sec;
 	}

@@ -48,8 +48,7 @@ public class NewVehicleEvent extends Event {
 					itineraryStr = section.getValue("itinerary");
 
 					//Parse the attributes
-					time = Integer.parseInt(timeStr);
-					//REQUIRES FIX - CONSTRUCTOR ?
+					setTime(Integer.parseInt(timeStr)); //MAY NEED CONSTRUCTOR CHANGE
 					maxSpeed = Integer.parseInt(maxSpeedStr);
 
 					checkIDValidity(vehicleIdStr);

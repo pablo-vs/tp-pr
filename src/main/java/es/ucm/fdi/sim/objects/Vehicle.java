@@ -56,7 +56,7 @@ public class Vehicle extends SimObject{
 			
 		}else if(brokenTime > 0){
 			brokenTime--;
-		}
+		} //WHAT DO WE DO WHEN IN QUEUE?
 	}
 	
 	public void moveToNextRoad(){
@@ -72,6 +72,7 @@ public class Vehicle extends SimObject{
 	
 	public void setBrokenTime(int t){
 		brokenTime += t;
+		currentVel = 0;
 	}
 	
 	public void setCurrentVel(int v){
@@ -82,6 +83,7 @@ public class Vehicle extends SimObject{
 		}
 	}
 	
+	//¿?
 	public void setMaxVel(int v){
 		maxVel = v;
 	}
@@ -92,6 +94,14 @@ public class Vehicle extends SimObject{
 
 	public Road getRoad() {
 		return currentRoad;
+	}
+	
+	public boolean isFaulty() {
+		boolean faulty = false;
+		if(brokenTime > 0){
+			faulty = true;
+		}
+		return faulty;
 	}
 	
 	/**

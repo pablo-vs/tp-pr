@@ -1,7 +1,8 @@
 package es.ucm.fdi.sim.objects;
 
-import org.junit.Test;
 import java.util.ArrayList;
+
+import org.junit.Test;
 import static org.junit.Assert.*;
 
 import es.ucm.fdi.ini.IniSection;
@@ -75,13 +76,8 @@ public class VehicleTest {
 	
 	@Test
 	public void completeItineraryTest() throws Exception {
-		/*String v1report1 = "[vehicle_report]\nid = v1\ntime = 5\nspeed = 0\nkilometrage = 0\nfaulty = 0\nlocation = (r1,0)",
-			v1report2 = "[vehicle_report]\nid = v1\ntime = 6\nspeed = 2\nkilometrage = 2\nfaulty = 0\nlocation = (r1,2)",
-			v1report3 = "[vehicle_report]\nid = v1\ntime = 7\nspeed = 0\nkilometrage = 3\nfaulty = 0\nlocation = (r1,3)",
-			v1report4 = "[vehicle_report]\nid = v1\ntime = 8\nspeed = 0\nkilometrage = 3\nfaulty = 0\nlocation = (r2,0)",
-			v1report5 = "[vehicle_report]\nid = v1\ntime = 9\nspeed = 3\nkilometrage = 6\nfaulty = 0\nlocation = (r2,3)",
-			v1report6 = "[vehicle_report]\nid = v1\ntime = 10\nspeed = 0\nkilometrage = 8\nfaulty = 0\nlocation = arrived";
-		*/
+		//HERE WE ONLY COMPARE INISECTIONS, WE ASSUME STRING GENERATION IS OK
+		//DUE TO buildReportTest
 		IniSection v1Report1, v1Report2, v1Report3, v1Report4, v1Report5, v1Report6;
 		v1Report1 = new IniSection("vehicle_report");
 		v1Report1.setValue("id", "v1");
