@@ -26,12 +26,12 @@ public class MakeVehicleFaultyEvent extends Event {
 	 * Full constructor.
 	 *
 	 * @param t Time of the event.
-	 * @param id Identifiers of the <code>Vehicles</code> to break.
+	 * @param vehicles Identifiers of the <code>Vehicles</code> to break.
 	 * @param duration Duration of the fault.
 	 */
 	public MakeVehicleFaultyEvent(int t, List<String> vehicles, int duration){
 		super(t);
-		this.vehicles = new ArrayList(vehicles);
+		this.vehicles = new ArrayList<String>(vehicles);
 		this.duration = duration;
 	}
 
@@ -64,7 +64,7 @@ public class MakeVehicleFaultyEvent extends Event {
 					durationStr = section.getValue("duration");
 
 					//Parse the attributes
-				        time = Integer.parseInt(timeStr);
+				    time = Integer.parseInt(timeStr);
 					duration = Integer.parseInt(durationStr);
 
 					vehicles = Arrays.asList(vehiclesIdStr.split(","));

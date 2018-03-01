@@ -14,7 +14,7 @@ public class EventParser {
 	public static List<Event.EventBuilder> possibleEvents = new ArrayList() {{
 		new NewJunctionEvent.Builder();
 		new NewVehicleEvent.Builder();
-		new NewMakeVehicleFaultyEvent.Builder();
+		new MakeVehicleFaultyEvent.Builder();
 	}};
 	
 	

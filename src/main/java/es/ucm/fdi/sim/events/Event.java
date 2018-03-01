@@ -11,26 +11,18 @@ import java.util.regex.Matcher;
 */
 public abstract class Event {
 
-	private String id;
 	private int time;
 
 	
 	public Event() {}
-	public Event(int  t, String id){
-		this.id = id;
-	}
-	
-	public String getID(){
-		return id;
+	public Event(int  t){
+		time = t;
 	}
 	
 	public int getTime(){
 		return time;
 	}
-	
-	public void setTime(int t){
-		time = t;
-	}
+	//SET TIME?
 
 	/**
 	*	Abstract parent of all the EventBuilders

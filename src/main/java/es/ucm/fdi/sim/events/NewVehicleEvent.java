@@ -15,8 +15,11 @@ public class NewVehicleEvent extends Event {
 	private List<String> itinerary; //BETTER TO USE LIST AND INSTANTIATE ARRAYASLIST LATER?
 	
 	public NewVehicleEvent(){}
-	public NewVehicleEvent(int t, String s){
-		super(t,s);
+	public NewVehicleEvent(int t, int v, String id, List<String> it){
+		super(t);
+		maxSpeed = v;
+		vehicleID = id;
+		itinerary = it;
 	}
 	
 	public String getVehicleID(){
@@ -37,40 +40,36 @@ public class NewVehicleEvent extends Event {
 		
 		public NewVehicleEvent build(IniSection section) throws InvalidEventException {
 			NewVehicleEvent event;
-			String timeStr, vehicleIdStr, maxSpeedStr, itineraryStr;
+			String timeStr, vehicleIDStr, maxSpeedStr, itineraryStr;
+			List<String> itinerary;
 
+			event = null;
 			if(TAG.equals(section.getTag())) {
-				try	{
+				try	{ //WHY TRY CATCH?
 					//Check existence of all necessary keys and read the attributes
 					//This ignores other unnecessary keys
+					itinerary = new ArrayList<String>();
 					timeStr = section.getValue("time");
-					vehicleIdStr = section.getValue("id");
+					vehicleIDStr = section.getValue("id");
 					maxSpeedStr = section.getValue("max_speed");
 					itineraryStr = section.getValue("itinerary");
 
 					//Parse the attributes
-					//setTime(Integer.parseInt(timeStr)); //MAY NEED CONSTRUCTOR CHANGE
-					//maxSpeed = Integer.parseInt(maxSpeedStr);
-
-					checkIDValidity(vehicleIdStr);
-					//vehicleID = vehicleIdStr;
+					checkIDValidity(vehicleIDStr);
 
 					/*THIS DOES NOT CHECK THAT THE JUNCTIONS EXIST.
 					SHOULD THAT BE CHECKED WHEN THE	VEHICLE IS CREATED?*/
-					//itinerary = new ArrayList<>();
 					for(String junctionID : itineraryStr.split(",")) {
 						checkIDValidity(junctionID); 
 						//WE MIGHT NEED TO CHECK WHETHER TWO CONSECUTIVE JUNCTIONS ARE JOINED
-						//itinerary.add(junctionID);
+						itinerary.add(junctionID);
 					}
 				} catch(Exception e) {
 					throw new InvalidEventException("Error while parsing event:\n" + e.getMessage());
 				}
-				//event = NewVehicleEvent.this; :_
-				event = null;
+				event = new NewVehicleEvent(Integer.parseInt(timeStr), Integer.parseInt(maxSpeedStr),
+						maxSpeedStr, itinerary);
 
-			} else {
-				event = null;
 			}
 
 			return event;

@@ -6,8 +6,9 @@ public class NewJunctionEvent extends Event {
 	private String junctionID;
 	
 	public NewJunctionEvent(){}
-	public NewJunctionEvent(int t, String s){
-		super(t,s);
+	public NewJunctionEvent(int t, String id){
+		super(t);
+		junctionID = id;
 	}
 	
 	public String getJunctionID(){
@@ -18,11 +19,15 @@ public class NewJunctionEvent extends Event {
 		
 		public NewJunctionEvent build(IniSection sec){
 			NewJunctionEvent event;
+			String tStr, idStr;
 			
-			//CAREFUL, CHECK TIME IS VALID 
+			//CAREFUL, CHECK TIME IS VALID
+			tStr = sec.getValue("time");
+			idStr = sec.getValue("id");
+			checkIDValidity(idStr);
 			
 			//event = NewJunctionEvent.this; :)
-			event = null;
+			event = new NewJunctionEvent(Integer.parseInt(tStr), idStr); //:)
 			return event;
 		}
 	}
