@@ -167,18 +167,18 @@ public class Vehicle extends SimObject{
 	*
 	* @param out Map to store the report.
 	*/
-	public void fillReportDetails(Map<String, String> out) {
-		out.put("speed", Integer.toString(currentVel));
-		out.put("kilometrage", Integer.toString(kilometrage));
+	public void fillReportDetails(IniSection out) {
+		out.setValue("speed", Integer.toString(currentVel));
+		out.setValue("kilometrage", Integer.toString(kilometrage));
 		if(brokenTime > 0){
-			out.put("faulty", "1");
+			out.setValue("faulty", "1");
 		}else{
-			out.put("faulty", "0");
+			out.setValue("faulty", "0");
 		}
 		if(arrived){
-			out.put("location", "arrived");
+			out.setValue("location", "arrived");
 		}else{
-			out.put("location", "(" + currentRoad.getID() + "," + position + ")");
+			out.setValue("location", "(" + currentRoad.getID() + "," + position + ")");
 		}
 	}
 

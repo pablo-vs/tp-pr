@@ -130,7 +130,7 @@ public class Road extends SimObject{
 	*
 	* @param out Map to store the report.
 	*/
-	public void fillReportDetails(Map<String, String> out) {
+	public void fillReportDetails(IniSection out) {
 		boolean first = true;
 		StringBuilder aux = new StringBuilder(vehicleList.size()*60);
 		
@@ -147,7 +147,7 @@ public class Road extends SimObject{
 			aux.append(v.getPosition());
 			aux.append(")");
 		}
-		out.put("state", aux.toString());
+		out.setValue("state", aux.toString());
 	}
 
 	/**

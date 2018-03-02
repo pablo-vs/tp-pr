@@ -208,7 +208,7 @@ public class Junction extends SimObject{
 	*
 	* @param out Map to store the report.
 	*/
-	public void fillReportDetails(Map<String, String> out) {
+	public void fillReportDetails(IniSection out) {
 		boolean first = true, firstVehicle;
 		StringBuilder aux = new StringBuilder();
 		
@@ -238,6 +238,6 @@ public class Junction extends SimObject{
 			aux.append("]");
 			aux.append(")");
 		}
-		out.put("incomingRoads", aux.toString());
+		out.setValue("incomingRoads", aux.toString());
 	}
 }

@@ -2,6 +2,8 @@ package es.ucm.fdi.sim.objects;
 
 import java.util.Map;
 
+import es.ucm.fdi.ini.IniSection;
+
 /**
  *	Abstract class grouping the behavior of every object of the simulation.
  *
@@ -65,12 +67,13 @@ public abstract class SimObject {
 	 * @param t Time at which the report is issued.
 	 * @param out Reference to a map where the report will be stored.
 	 */
-	public void report(int t, Map<String, String> out) {
-		out.clear();
-		out.put("", getReportHeader());
-		out.put("id", id);
-		out.put("time", Integer.toString(t));
+	public IniSection report(int t) {
+		IniSection out = new IniSection(getReportHeader());
+		out.setValue("id", id);
+		out.setValue("time", Integer.toString(t));
 		fillReportDetails(out);
+		
+		return out;
 	}
 
 	/**
@@ -78,7 +81,7 @@ public abstract class SimObject {
 	*
 	* @param out Map to store the report.
 	*/
-	public abstract void fillReportDetails(Map<String, String> out);
+	public abstract void fillReportDetails(IniSection out);
 
 	/**
 	* Returns the header for the object report.

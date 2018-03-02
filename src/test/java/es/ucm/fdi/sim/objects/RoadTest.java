@@ -20,8 +20,7 @@ public class RoadTest {
 		Road r;
 		Junction ini, end;
 		Vehicle v1,v2,v3,v4;
-		IniSection sec;
-		HashMap<String, String> report = new HashMap<String, String>();
+		IniSection sec, report;
 		List<Junction> l = new ArrayList<Junction>();
 		
 		ini = new Junction("j1");
@@ -54,8 +53,8 @@ public class RoadTest {
 		sec.setValue("time", "5");
 		sec.setValue("state", "(v2,35),(v1,15),(v3,9),(v4,6)");
 		
-		r.report(5, report);
-		assertEquals("sec does not match", sec, Controller.iniReport(report));
+		report = r.report(5);
+		assertEquals("sec does not match", sec, report);
 	}
 	
 	@Test
@@ -63,8 +62,7 @@ public class RoadTest {
 		Road r;
 		Junction ini, end;
 		Vehicle v1,v2;
-		IniSection sec;
-		HashMap<String, String> report = new HashMap<String, String>();
+		IniSection sec, report;
 		List<Junction> l = new ArrayList<Junction>();
 		
 		ini = new Junction("j1");
@@ -86,7 +84,7 @@ public class RoadTest {
 		sec.setValue("time", "4");
 		sec.setValue("state", "(v1,31),(v2,10)");
 		
-		r.report(4, report);
-		assertEquals("sec does not match", sec, Controller.iniReport(report));
+		report = r.report(4);
+		assertEquals("sec does not match", sec, report);
 	}
 }
