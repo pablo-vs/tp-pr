@@ -54,11 +54,11 @@ public class RoadTest {
 		sec.setValue("state", "(v2,35),(v1,15),(v3,9),(v4,6)");
 		
 		report = r.report(5);
-		assertEquals("sec does not match", sec, report);
+		assertEquals("Report does not match", sec, report);
 	}
 	
 	@Test
-	public void buildsecTest() throws Exception {
+	public void buildReportTest() throws Exception {
 		Road r;
 		Junction ini, end;
 		Vehicle v1,v2;
