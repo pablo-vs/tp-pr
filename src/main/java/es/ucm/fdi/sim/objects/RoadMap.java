@@ -7,106 +7,166 @@ import java.util.ArrayList;
 import es.ucm.fdi.exceptions.ObjectNotFoundException;
 
 /**
-* Class that contains all the <code>SimObject</code> objects in the model
-* and manages addition and deletion of objects.
-*
-* @version 26.02.2018
-*/
+ * Class that contains all the <code>SimObject</code> objects in the model
+ * and manages addition and deletion of objects.
+ *
+ * @version 26.02.2018
+ */
 public class RoadMap {
-	// búsqueda por ids, unicidad
-	private Map<String, SimObject> simObjects;
+    // búsqueda por ids, unicidad
+    private Map<String, SimObject> simObjects;
 
-	// listados reales
-	private List<Junction> junctions = new ArrayList<>();
-	private List<Road> roads = new ArrayList<>();
-	private List<Vehicle> vehicles = new ArrayList<>();
+    // listados reales
+    private List<Junction> junctions = new ArrayList<>();
+    private List<Road> roads = new ArrayList<>();
+    private List<Vehicle> vehicles = new ArrayList<>();
 
-	// listados read-only, via Collections.unmodifiableList();
-	private List<Junction> junctionsRO;
-	private List<Road> roadsRO;
-	private List<Vehicle> vehiclesRO; 
+    // listados read-only, via Collections.unmodifiableList();
+    private List<Junction> junctionsRO;
+    private List<Road> roadsRO;
+    private List<Vehicle> vehiclesRO; 
 
-	// búsqueda por ids, unicidad
-	/**
-	* Gets the object with the given identifier.
-	*
-	* @param id Identifier of the object.
-	* @return The object corresponding to the id.
-	*/
-	public SimObject getSimObject(String id) {
-		SimObject object = simObjects.get(id);
-		if(object == null) {
-			throw new ObjectNotFoundException("No object found with id " + id);
-		}
-		return object;
+    // búsqueda por ids, unicidad
+    /**
+     * Gets the object with the given identifier.
+     *
+     * @param id Identifier of the object.
+     * @return The object corresponding to the id.
+     */
+    public SimObject getSimObject(String id) throws ObjectNotFoundException{
+	SimObject object = simObjects.get(id);
+	if(object == null) {
+	    throw new ObjectNotFoundException("No object found with id " + id);
 	}
-
-	public Junction getJunction(String id) {
-		SimObject result = getSimObject(id);
-		if(!(result instanceof Junction)) {
-			throw new ObjectNotFoundException("Object " + id + " is not a Junction");
-		}
-		return (Junction)result;
+	return object;
+    }
+    
+    /**
+     * Gets the <code>Junction</code> with the given identifier.
+     *
+     * @param id Identifier of the Junciton.
+     * @return The object corresponding to the id.
+     */
+    public Junction getJunction(String id) {
+	SimObject result = getSimObject(id);
+	if(!(result instanceof Junction)) {
+	    result = null;
 	}
-
-	public Road getRoad(String id) {
-		SimObject result = getSimObject(id);
-		if(!(result instanceof Road)) {
-			throw new ObjectNotFoundException("Object " + id + " is not a Road");
-		}
-		return (Road)result;
+	return (Junction)result;
+    }
+    
+    /**
+     * Gets the <code>Road</code> with the given identifier.
+     *
+     * @param id Identifier of the Road.
+     * @return The object corresponding to the id.
+     */
+    public Road getRoad(String id) {
+	SimObject result = getSimObject(id);
+	if(!(result instanceof Road)) {
+	    result = null;
 	}
-
-	public Vehicle getVehicle(String id) {
-		SimObject result = getSimObject(id);
-		if(!(result instanceof Vehicle)) {
-			throw new ObjectNotFoundException("Object " + id + " is not a Vehicle");
-		}
-		return (Vehicle)result;
+	return (Road)result;
+    }
+    
+    /**
+     * Gets the <code>Vehicle</code> with the given identifier.
+     *
+     * @param id Identifier of the Vehicle.
+     * @return The object corresponding to the id.
+     */
+    public Vehicle getVehicle(String id) {
+	SimObject result = getSimObject(id);
+	if(!(result instanceof Vehicle)) {
+	    result = null;
 	}
+	return (Vehicle)result;
+    }
 
-	//listado (sólo lectura)
-	public List<Junction> getJunctions() {
-		return junctionsRO;
-	}
+    //listado (sólo lectura)
+    /**
+     * Returns a list containing all the <code>Junctions</code> in the map.
+     *
+     * @return Constant list of Junctions.
+     */
+    public List<Junction> getJunctions() {
+	return junctionsRO;
+    }
+    
+    /**
+     * Returns a list containing all the <code>Roads</code> in the map.
+     *
+     * @return Constant list of Roads.
+     */
+    public List<Road> getRoads() {
+	return roadsRO;
+    }
+    
+    /**
+     * Returns a list containing all the <code>Vehicles</code> in the map.
+     *
+     * @return Constant list of Vehicles.
+     */
+    public List<Vehicle> getVehicles() {
+	return vehiclesRO;
+    }
+    
+    /**
+     * Checks whether an id is in the map.
+     * 
+     * @param id The id to check.
+     */
+    private boolean checkIdUnicity(String id) {
+	return (getSimObject(id) == null);
+    }
 
-	public List<Road> getRoads() {
-		return roadsRO;
-	}
+    // inserción de objetos (package-protected)
 
-	public List<Vehicle> getVehicles() {
-		return vehiclesRO;
+    /**
+     * Adds a <code>Junction</code> to the map.
+     *
+     * @param j The <code>Junction</code> to add.
+     */
+    void addJunction(Junction j) throws InvalidIdException{
+	String id = j.getID();
+	if(checkIdUnicity(id)) {
+	    simObjects.put(id, j);
+	    junctions.add(j);
+	    junctionsRO.add(j);
+	} else {
+	    throw new InvalidIdException("Duplicated id: " id);
 	}
+    }
+    
+    /**
+     * Adds a <code>Road</code> to the map.
+     *
+     * @param j The <code>Road</code> to add.
+     */
+    void addRoad(Road r) throws InvalidIdException{
+	String id = r.getID();
+	if(checkIdUnicity(id)) {
+	    simObjects.put(id, r);
+	    roads.add(r);
+	    roadsRO.add(r);
+	} else {
+	    throw new InvalidIdException("Duplicated id: " id);
+	}
+    }
 
-	private boolean checkIdUnicity(String id) {
-		return (getSimObject(id) == null);
+    /**
+     * Adds a <code>Vehicle</code> to the map.
+     *
+     * @param j The <code>Vehicle</code> to add.
+     */
+    void addVehicle(Vehicle v) throws InvalidIdException {
+	String id = v.getID();
+	if(checkIdUnicity(id)) {
+	    simObjects.put(id, v);
+	    vehicles.add(v);
+	    vehiclesRO.add(v);
+	} else {
+	    throw new InvalidIdException("Duplicated id: " id);
 	}
-
-	// inserción de objetos (package-protected)
-	void addJunction(Junction j) {
-		String id = j.getID();
-		if(checkIdUnicity(id)) {
-			simObjects.put(id, j);
-			junctions.add(j);
-			junctionsRO.add(j);
-		}
-	}
-
-	void addRoad(Road r) {
-		String id = r.getID();
-		if(checkIdUnicity(id)) {
-			simObjects.put(id, r);
-			roads.add(r);
-			roadsRO.add(r);
-		}
-	}
-
-	void addVehicle(Vehicle v) {
-		String id = v.getID();
-		if(checkIdUnicity(id)) {
-			simObjects.put(id, v);
-			vehicles.add(v);
-			vehiclesRO.add(v);
-		}
-	}
+    }
 }

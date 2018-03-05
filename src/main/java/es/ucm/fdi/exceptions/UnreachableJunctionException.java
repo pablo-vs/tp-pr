@@ -1,6 +1,7 @@
 package es.ucm.fdi.exceptions;
 
 import java.lang.RuntimeException;
+import java.lang.Throwable;
 
 public class UnreachableJunctionException extends RuntimeException {
 	
@@ -8,5 +9,9 @@ public class UnreachableJunctionException extends RuntimeException {
 
 	public UnreachableJunctionException(String message) {
 		super(message);
+	}
+
+	public UnreachableJunctionException(String message, Throwable cause) {
+		super(message, cause);
 	}
 }
