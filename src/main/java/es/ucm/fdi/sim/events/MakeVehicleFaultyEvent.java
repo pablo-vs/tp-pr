@@ -1,12 +1,14 @@
 package es.ucm.fdi.sim.events;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import es.ucm.fdi.ini.IniSection;
+import es.ucm.fdi.sim.objects.RoadMap;
 import es.ucm.fdi.exceptions.InvalidEventException;
+import es.ucm.fdi.exceptions.ObjectNotFoundException;
 
 /**
  * Represents a Make Vehicle Faulty <code>Event</code>.
@@ -20,8 +22,8 @@ public class MakeVehicleFaultyEvent extends Event {
 	/**
 	 * Empty constructor.
 	 */
-	public MakeVehicleFaultyEvent(){}
-
+	public MakeVehicleFaultyEvent(){}	
+	
 	/**
 	 * Full constructor.
 	 *
@@ -33,6 +35,16 @@ public class MakeVehicleFaultyEvent extends Event {
 		super(t);
 		this.vehicles = new ArrayList<String>(vehicles);
 		this.duration = duration;
+	}
+	
+	public void execute(RoadMap r) throws InvalidEventException{
+		for(String s : vehicles){
+			try{
+				r.getVehicle(s).setBrokenTime(duration);
+			}catch(ObjectNotFoundException e){
+				throw new InvalidEventException("Error: vehicle not found.\n" + e.getMessage());
+			}
+		}
 	}
 
 	/**
@@ -46,22 +58,23 @@ public class MakeVehicleFaultyEvent extends Event {
 		/**
 		 * Attempts to build a <code>MakeVehicleFaultyEvent</code> from the given <code>IniSection</code>.
 		 *
-		 * @param section The section from which to build the <code>Event</code>.
+		 * @param ini The section from which to build the <code>Event</code>.
 		 * @return A <code>MakeVehicleFaultyEvent</code>, or <code>null</code> if there were parsing errors.
 		 */
-		public MakeVehicleFaultyEvent build(IniSection section){
+		public MakeVehicleFaultyEvent build(IniSection ini){
 			MakeVehicleFaultyEvent event;
 			int time, duration;
 			List<String> vehicles;
 			String timeStr, vehiclesIdStr, durationStr;
-
-			if(TAG.equals(section.getTag())) {
+			
+			event = null;
+			if(TAG.equals(ini.getTag())) {
 				try	{
 					//Check existence of all necessary keys and read the attributes
 					//This ignores other unnecessary keys
-					timeStr = section.getValue("time");
-					vehiclesIdStr = section.getValue("vehicles");
-					durationStr = section.getValue("duration");
+					timeStr = ini.getValue("time");
+					vehiclesIdStr = ini.getValue("vehicles");
+					durationStr = ini.getValue("duration");
 
 					//Parse the attributes
 				    time = Integer.parseInt(timeStr);
@@ -76,8 +89,6 @@ public class MakeVehicleFaultyEvent extends Event {
 
 				event = new MakeVehicleFaultyEvent(time, vehicles, duration);
 				
-			} else {
-				event = null;
 			}
 
 			return event;

@@ -3,19 +3,19 @@ package es.ucm.fdi.exceptions;
 import java.lang.RuntimeException;
 import java.lang.Throwable;
 
-public class InvalidIdException extends RuntimeException {
+public class InvalidIDException extends RuntimeException {
 
     private static final long serialVersionUID = 21L;
 
-    public InvalidIdException(String id) {
+    public InvalidIDException(String id) {
 	super("Invalid object identifier: " + id);
     }
 	
-    public InvalidIdException(String message) {
+    public InvalidIDException(String message) {
 	super(message);
     }
 
-    public InvalidIdException(String message, Throwable cause) {
+    public InvalidIDException(String message, Throwable cause) {
 	super(message, cause);
     }
 }
