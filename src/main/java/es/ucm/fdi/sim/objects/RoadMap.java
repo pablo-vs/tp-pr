@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import es.ucm.fdi.exceptions.ObjectNotFoundException;
+import es.ucm.fdi.exceptions.InvalidIDException;
 
 /**
  * Class that contains all the <code>SimObject</code> objects in the model
@@ -127,14 +128,14 @@ public class RoadMap {
      *
      * @param j The <code>Junction</code> to add.
      */
-    void addJunction(Junction j) throws InvalidIdException{
+    public void addJunction(Junction j) throws InvalidIDException{
 	String id = j.getID();
 	if(checkIdUnicity(id)) {
 	    simObjects.put(id, j);
 	    junctions.add(j);
 	    junctionsRO.add(j);
 	} else {
-	    throw new InvalidIdException("Duplicated id: " id);
+	    throw new InvalidIDException("Duplicated id: " + id);
 	}
     }
     
@@ -143,14 +144,14 @@ public class RoadMap {
      *
      * @param j The <code>Road</code> to add.
      */
-    void addRoad(Road r) throws InvalidIdException{
+    public void addRoad(Road r) throws InvalidIDException{
 	String id = r.getID();
 	if(checkIdUnicity(id)) {
 	    simObjects.put(id, r);
 	    roads.add(r);
 	    roadsRO.add(r);
 	} else {
-	    throw new InvalidIdException("Duplicated id: " id);
+	    throw new InvalidIDException("Duplicated id: " + id);
 	}
     }
 
@@ -159,14 +160,14 @@ public class RoadMap {
      *
      * @param j The <code>Vehicle</code> to add.
      */
-    void addVehicle(Vehicle v) throws InvalidIdException {
+    public void addVehicle(Vehicle v) throws InvalidIDException {
 	String id = v.getID();
 	if(checkIdUnicity(id)) {
 	    simObjects.put(id, v);
 	    vehicles.add(v);
 	    vehiclesRO.add(v);
 	} else {
-	    throw new InvalidIdException("Duplicated id: " id);
+	    throw new InvalidIDException("Duplicated id: " + id);
 	}
     }
 }

@@ -15,6 +15,7 @@ import es.ucm.fdi.ini.IniSection;
 import java.util.Map;
 import java.util.List;
 import java.io.OutputStream;
+import java.io.IOException;
 
 
 /**
@@ -24,12 +25,12 @@ import java.io.OutputStream;
  */
 public class Simulator {
 
-    MultiTreeMap<Int, Event> eventList; //Ordenados por tiempo y, a igualdad, orden de llegada
+    MultiTreeMap<Integer, Event> eventList; //Ordenados por tiempo y, a igualdad, orden de llegada
     RoadMap roadMap;
     int timeLimit, timer;
 	
     public Simulator(int limit){
-	eventList = new MultiTreeMap<Int, Event>((a, b) -> a.getTime() - b.getTime()); 
+	eventList = new MultiTreeMap<Integer, Event>(); 
 	timeLimit = limit;
 	timer = 0;
     }
@@ -40,7 +41,7 @@ public class Simulator {
      * @param e The <code>Event</code> to insert.
      */
     public void insertEvent(Event e){
-	eventList.put(e.getTime(), e);
+	eventList.putValue(e.getTime(), e);
     }
 	
     /**
@@ -49,8 +50,7 @@ public class Simulator {
      * @param simulationSteps The number of steps to simulate
      * @param outputFIle <code>OutputStream</code> to store the reports.
      */
-    public void execute(int simulationSteps, OutputStream outputFile)
-    {
+    public void execute(int simulationSteps, OutputStream outputFile) throws IOException {
 	timeLimit = timer + simulationSteps - 1;
 	while (timer <= timeLimit) {
 	    // 1. ejecutar los eventos correspondientes a ese tiempo
@@ -74,7 +74,12 @@ public class Simulator {
 	    // 5. esciribir un informe en OutputStream
 	    // en caso de que no sea null
 	    if(outputFile != null) {
-		prepareReport().store(outputFile);
+		try {
+		    prepareReport().store(outputFile);
+		}
+		catch(IOException e) {
+		    throw new IOException("Error while writing report", e);
+		}
 	    }
 	}
     }
@@ -88,15 +93,15 @@ public class Simulator {
      */
     public Ini prepareReport()
     {
-	Ini report;
+	Ini report = new Ini();
 	for(Road r : roadMap.getRoads()) {
-	    report.addSection(r.report(timer));
+	    report.addsection(r.report(timer));
 	}
 	for(Junction j : roadMap.getJunctions()) {
-	    report.addSection(j.report(timer));
+	    report.addsection(j.report(timer));
 	}
 	for(Vehicle v : roadMap.getVehicles()) {
-	    report.addSection(v.report(timer));
+	    report.addsection(v.report(timer));
 	}
 	return report;
     }
