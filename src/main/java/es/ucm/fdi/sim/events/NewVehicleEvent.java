@@ -7,6 +7,7 @@ import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.sim.objects.Vehicle;
 import es.ucm.fdi.sim.objects.RoadMap;
 import es.ucm.fdi.sim.objects.Junction;
+import es.ucm.fdi.exceptions.InvalidIDException;
 import es.ucm.fdi.exceptions.InvalidEventException;
 import es.ucm.fdi.exceptions.ObjectNotFoundException;
 
@@ -31,7 +32,7 @@ public class NewVehicleEvent extends Event {
 	 * 
 	 * @param r The <code>RoadMap</code> of the current simulation.
 	 */
-	public void execute(RoadMap r) {	
+	public void execute(RoadMap r) throws InvalidEventException {	
 		List<Junction> it = new ArrayList<Junction>();
 		
 		try{
@@ -41,7 +42,7 @@ public class NewVehicleEvent extends Event {
 			r.addVehicle(new Vehicle(vehicleID, maxSpeed, it));
 			
 		} catch(ObjectNotFoundException e){
-			//DO SOMETHING
+			throw new InvalidEventException("Error: Junction not found.\n" + e.getMessage());
 		}
 	}
 	

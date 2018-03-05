@@ -37,12 +37,12 @@ public class MakeVehicleFaultyEvent extends Event {
 		this.duration = duration;
 	}
 	
-	public void execute(RoadMap r){ //WUT?
+	public void execute(RoadMap r) throws InvalidEventException{
 		for(String s : vehicles){
 			try{
 				r.getVehicle(s).setBrokenTime(duration);
 			}catch(ObjectNotFoundException e){
-				//DO SOMETHING
+				throw new InvalidEventException("Error: vehicle not found.\n" + e.getMessage());
 			}
 		}
 	}

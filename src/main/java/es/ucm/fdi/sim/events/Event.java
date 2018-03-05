@@ -5,7 +5,7 @@ import java.util.regex.Matcher;
 
 import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.sim.objects.RoadMap;
-import es.ucm.fdi.exceptions.InvalidIdException;
+import es.ucm.fdi.exceptions.InvalidIDException;
 import es.ucm.fdi.exceptions.InvalidEventException;
 
 /**
@@ -41,7 +41,7 @@ public abstract class Event {
 		public void checkIDValidity(String id) {
 			Matcher m = checkID.matcher(id);
 			if(!m.matches()) {
-				throw new InvalidIdException(id);
+				throw new InvalidIDException(id);
 			}
 		}
 

@@ -25,7 +25,7 @@ public class NewRoadEvent extends Event {
 		length = l;
 	}
 	
-	public void execute(RoadMap r){
+	public void execute(RoadMap r) throws InvalidEventException{
 		Junction iniJ, endJ;
 		
 		try{
@@ -34,7 +34,7 @@ public class NewRoadEvent extends Event {
 			r.addRoad(new Road(roadID, length, maxVel, iniJ, endJ));
 			
 		} catch (ObjectNotFoundException e){
-			//DO SOMETHING
+			throw new InvalidEventException("Error: Junction not found.\n" + e.getMessage());
 		}
 	}
 	
