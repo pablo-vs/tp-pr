@@ -1,12 +1,14 @@
 package es.ucm.fdi.sim.events;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import es.ucm.fdi.ini.IniSection;
+import es.ucm.fdi.sim.objects.RoadMap;
 import es.ucm.fdi.exceptions.InvalidEventException;
+import es.ucm.fdi.exceptions.ObjectNotFoundException;
 
 /**
  * Represents a Make Vehicle Faulty <code>Event</code>.
@@ -20,8 +22,8 @@ public class MakeVehicleFaultyEvent extends Event {
 	/**
 	 * Empty constructor.
 	 */
-	public MakeVehicleFaultyEvent(){}
-
+	public MakeVehicleFaultyEvent(){}	
+	
 	/**
 	 * Full constructor.
 	 *
@@ -33,6 +35,16 @@ public class MakeVehicleFaultyEvent extends Event {
 		super(t);
 		this.vehicles = new ArrayList<String>(vehicles);
 		this.duration = duration;
+	}
+	
+	public void execute(RoadMap r){ //WUT?
+		for(String s : vehicles){
+			try{
+				r.getVehicle(s).setBrokenTime(duration);
+			}catch(ObjectNotFoundException e){
+				//DO SOMETHING
+			}
+		}
 	}
 
 	/**

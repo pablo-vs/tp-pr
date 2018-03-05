@@ -1,6 +1,8 @@
 package es.ucm.fdi.sim.events;
 
 import es.ucm.fdi.ini.IniSection;
+import es.ucm.fdi.sim.objects.RoadMap;
+import es.ucm.fdi.sim.objects.Junction;
 
 public class NewJunctionEvent extends Event {
 	private String junctionID;
@@ -11,8 +13,8 @@ public class NewJunctionEvent extends Event {
 		junctionID = id;
 	}
 	
-	public String getJunctionID(){
-		return junctionID;
+	public void execute(RoadMap r){
+		r.addJunction(new Junction(junctionID));
 	}
 	
 	public static class Builder extends EventBuilder{

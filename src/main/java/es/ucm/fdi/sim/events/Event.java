@@ -1,10 +1,12 @@
 package es.ucm.fdi.sim.events;
 
-import es.ucm.fdi.ini.IniSection;
-import es.ucm.fdi.exceptions.InvalidEventException;
-import es.ucm.fdi.exceptions.InvalidIdException;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+
+import es.ucm.fdi.ini.IniSection;
+import es.ucm.fdi.sim.objects.RoadMap;
+import es.ucm.fdi.exceptions.InvalidIdException;
+import es.ucm.fdi.exceptions.InvalidEventException;
 
 /**
 *	Abstrac parent of all the Events
@@ -22,7 +24,9 @@ public abstract class Event {
 	public int getTime(){
 		return time;
 	}
-	//SET TIME?
+
+
+	public abstract void execute(RoadMap r);
 
 	/**
 	*	Abstract parent of all the EventBuilders

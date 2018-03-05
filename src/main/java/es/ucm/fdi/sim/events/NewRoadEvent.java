@@ -3,8 +3,12 @@ package es.ucm.fdi.sim.events;
 import java.util.List;
 import java.util.ArrayList;
 
-import es.ucm.fdi.sim.objects.Vehicle;
 import es.ucm.fdi.ini.IniSection;
+import es.ucm.fdi.sim.objects.Road;
+import es.ucm.fdi.sim.objects.RoadMap;
+import es.ucm.fdi.sim.objects.Vehicle;
+import es.ucm.fdi.sim.objects.Junction;
+import es.ucm.fdi.exceptions.ObjectNotFoundException;
 
 public class NewRoadEvent extends Event {
 	private String roadID, ini, end;
@@ -20,17 +24,17 @@ public class NewRoadEvent extends Event {
 		length = l;
 	}
 	
-	//GETTER NEEDED?
-	public String getRoadID(){
-		return roadID;
-	}
-	
-	public int getLength(){
-		return length;
-	}
-	
-	public int getMaxVel(){
-		return maxVel;
+	public void execute(RoadMap r){
+		Junction iniJ, endJ;
+		
+		try{
+			iniJ = r.getJunction(ini);
+			endJ = r.getJunction(end);
+			r.addRoad(new Road(roadID, length, maxVel, iniJ, endJ));
+			
+		} catch (ObjectNotFoundException e){
+			//DO SOMETHING
+		}
 	}
 	
 	//PENDING MODS - HOW DO WE FIND THE JUNCTION?

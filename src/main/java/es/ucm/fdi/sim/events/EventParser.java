@@ -11,11 +11,11 @@ import es.ucm.fdi.ini.IniSection;
  */
 public class EventParser {
 	//BETTER ARRAY
-	public static List<Event.EventBuilder> possibleEvents = new ArrayList() {{
-		new NewJunctionEvent.Builder();
-		new NewVehicleEvent.Builder();
-		new MakeVehicleFaultyEvent.Builder();
-	}};
+	public static Event.EventBuilder []possibleEvents = {
+		new NewJunctionEvent.Builder(),
+		new NewVehicleEvent.Builder(),
+		new MakeVehicleFaultyEvent.Builder(),
+	};
 	
 	
 	//PASAR A CONTROLLER

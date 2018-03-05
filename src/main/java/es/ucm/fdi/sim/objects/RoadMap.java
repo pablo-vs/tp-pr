@@ -78,32 +78,32 @@ public class RoadMap {
 		return vehiclesRO;
 	}
 
-	private boolean checkIdUnicity(String id) {
+	private boolean checkIDUnicity(String id) {
 		return (getSimObject(id) == null);
 	}
 
-	// inserción de objetos (package-protected)
-	void addJunction(Junction j) {
+	// inserción de objetos
+	public void addJunction(Junction j) {
 		String id = j.getID();
-		if(checkIdUnicity(id)) {
+		if(checkIDUnicity(id)) {
 			simObjects.put(id, j);
 			junctions.add(j);
 			junctionsRO.add(j);
 		}
 	}
 
-	void addRoad(Road r) {
+	public void addRoad(Road r) {
 		String id = r.getID();
-		if(checkIdUnicity(id)) {
+		if(checkIDUnicity(id)) {
 			simObjects.put(id, r);
 			roads.add(r);
 			roadsRO.add(r);
 		}
 	}
 
-	void addVehicle(Vehicle v) {
+	public void addVehicle(Vehicle v) {
 		String id = v.getID();
-		if(checkIdUnicity(id)) {
+		if(checkIDUnicity(id)) {
 			simObjects.put(id, v);
 			vehicles.add(v);
 			vehiclesRO.add(v);

@@ -4,7 +4,11 @@ import java.util.List;
 import java.util.ArrayList;
 
 import es.ucm.fdi.ini.IniSection;
+import es.ucm.fdi.sim.objects.Vehicle;
+import es.ucm.fdi.sim.objects.RoadMap;
+import es.ucm.fdi.sim.objects.Junction;
 import es.ucm.fdi.exceptions.InvalidEventException;
+import es.ucm.fdi.exceptions.ObjectNotFoundException;
 
 /**
 *	Represents the New Vehicle event.
@@ -22,16 +26,23 @@ public class NewVehicleEvent extends Event {
 		itinerary = it;
 	}
 	
-	public String getVehicleID(){
-		return vehicleID;
-	}
-	
-	public int getMaxSpeed(){
-		return maxSpeed;
-	}
-	
-	public List<String> getItinerary(){ //IS IT POSSIBLE TO GIVE A REF?
-		return itinerary;
+	/**
+	 * Instantiates a new vehicle, given the parameters are valid.
+	 * 
+	 * @param r The <code>RoadMap</code> of the current simulation.
+	 */
+	public void execute(RoadMap r) {	
+		List<Junction> it = new ArrayList<Junction>();
+		
+		try{
+			for(String j : itinerary){
+				it.add(r.getJunction(j));
+			}
+			r.addVehicle(new Vehicle(vehicleID, maxSpeed, it));
+			
+		} catch(ObjectNotFoundException e){
+			//DO SOMETHING
+		}
 	}
 	
 	public static class Builder extends EventBuilder {
