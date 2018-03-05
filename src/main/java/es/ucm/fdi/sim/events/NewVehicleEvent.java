@@ -46,24 +46,23 @@ public class NewVehicleEvent extends Event {
 	}
 	
 	public static class Builder extends EventBuilder {
-
 		public static final String TAG = "new_vehicle";
 		
-		public NewVehicleEvent build(IniSection section) throws InvalidEventException {
+		public NewVehicleEvent build(IniSection ini) throws InvalidEventException {
 			NewVehicleEvent event;
 			String timeStr, vehicleIDStr, maxSpeedStr, itineraryStr;
 			List<String> itinerary;
 
 			event = null;
-			if(TAG.equals(section.getTag())) {
+			if(TAG.equals(ini.getTag())) {
 				try	{ //WHY TRY CATCH?
 					//Check existence of all necessary keys and read the attributes
 					//This ignores other unnecessary keys
 					itinerary = new ArrayList<String>();
-					timeStr = section.getValue("time");
-					vehicleIDStr = section.getValue("id");
-					maxSpeedStr = section.getValue("max_speed");
-					itineraryStr = section.getValue("itinerary");
+					timeStr = ini.getValue("time");
+					vehicleIDStr = ini.getValue("id");
+					maxSpeedStr = ini.getValue("max_speed");
+					itineraryStr = ini.getValue("itinerary");
 
 					//Parse the attributes
 					checkIDValidity(vehicleIDStr);
@@ -75,12 +74,12 @@ public class NewVehicleEvent extends Event {
 						//WE MIGHT NEED TO CHECK WHETHER TWO CONSECUTIVE JUNCTIONS ARE JOINED
 						itinerary.add(junctionID);
 					}
+					
+					event = new NewVehicleEvent(Integer.parseInt(timeStr), Integer.parseInt(maxSpeedStr),
+							maxSpeedStr, itinerary);
 				} catch(Exception e) {
 					throw new InvalidEventException("Error while parsing event:\n" + e.getMessage());
 				}
-				event = new NewVehicleEvent(Integer.parseInt(timeStr), Integer.parseInt(maxSpeedStr),
-						maxSpeedStr, itinerary);
-
 			}
 
 			return event;

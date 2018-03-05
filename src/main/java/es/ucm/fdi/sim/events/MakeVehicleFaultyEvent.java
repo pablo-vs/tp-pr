@@ -58,22 +58,23 @@ public class MakeVehicleFaultyEvent extends Event {
 		/**
 		 * Attempts to build a <code>MakeVehicleFaultyEvent</code> from the given <code>IniSection</code>.
 		 *
-		 * @param section The section from which to build the <code>Event</code>.
+		 * @param ini The section from which to build the <code>Event</code>.
 		 * @return A <code>MakeVehicleFaultyEvent</code>, or <code>null</code> if there were parsing errors.
 		 */
-		public MakeVehicleFaultyEvent build(IniSection section){
+		public MakeVehicleFaultyEvent build(IniSection ini){
 			MakeVehicleFaultyEvent event;
 			int time, duration;
 			List<String> vehicles;
 			String timeStr, vehiclesIdStr, durationStr;
-
-			if(TAG.equals(section.getTag())) {
+			
+			event = null;
+			if(TAG.equals(ini.getTag())) {
 				try	{
 					//Check existence of all necessary keys and read the attributes
 					//This ignores other unnecessary keys
-					timeStr = section.getValue("time");
-					vehiclesIdStr = section.getValue("vehicles");
-					durationStr = section.getValue("duration");
+					timeStr = ini.getValue("time");
+					vehiclesIdStr = ini.getValue("vehicles");
+					durationStr = ini.getValue("duration");
 
 					//Parse the attributes
 				    time = Integer.parseInt(timeStr);
@@ -88,8 +89,6 @@ public class MakeVehicleFaultyEvent extends Event {
 
 				event = new MakeVehicleFaultyEvent(time, vehicles, duration);
 				
-			} else {
-				event = null;
 			}
 
 			return event;

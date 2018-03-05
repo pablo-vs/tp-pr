@@ -8,6 +8,7 @@ import es.ucm.fdi.sim.objects.Road;
 import es.ucm.fdi.sim.objects.RoadMap;
 import es.ucm.fdi.sim.objects.Vehicle;
 import es.ucm.fdi.sim.objects.Junction;
+import es.ucm.fdi.exceptions.InvalidEventException;
 import es.ucm.fdi.exceptions.ObjectNotFoundException;
 
 public class NewRoadEvent extends Event {
@@ -45,21 +46,29 @@ public class NewRoadEvent extends Event {
 			NewRoadEvent event;
 			String timeStr, idStr, iniStr, endStr, maxVelStr, lengthStr;
 			
-			//CHECK THE JUNCTION LIST?
-			timeStr = ini.getValue("time");
-			idStr = ini.getValue("id");
-			iniStr = ini.getValue("src");
-			endStr = ini.getValue("dest");
-			maxVelStr = ini.getValue("max_speed");
-			lengthStr = ini.getValue("length");
-			
-			checkIDValidity(idStr);
-			checkIDValidity(iniStr);
-			checkIDValidity(endStr);
-			
-			//event = NewRoadEvent.this; ^^
-			event = new NewRoadEvent(Integer.parseInt(timeStr), idStr, iniStr,
-					endStr, Integer.parseInt(maxVelStr), Integer.parseInt(lengthStr));
+			event = null;
+			if(TAG.equals(ini.getTag()))
+			{
+				try{
+					timeStr = ini.getValue("time");
+					idStr = ini.getValue("id");
+					iniStr = ini.getValue("src");
+					endStr = ini.getValue("dest");
+					maxVelStr = ini.getValue("max_speed");
+					lengthStr = ini.getValue("length");
+					
+					checkIDValidity(idStr);
+					checkIDValidity(iniStr);
+					checkIDValidity(endStr);
+					
+					//event = NewRoadEvent.this; ^^
+					event = new NewRoadEvent(Integer.parseInt(timeStr), idStr, iniStr,
+							endStr, Integer.parseInt(maxVelStr), Integer.parseInt(lengthStr));
+				} catch (Exception e){
+					throw new InvalidEventException("Error while parsing event:\n" + e.getMessage());
+				}	
+			}
+
 			return event;
 		}
 	}
