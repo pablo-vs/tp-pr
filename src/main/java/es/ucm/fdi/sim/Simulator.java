@@ -29,9 +29,8 @@ public class Simulator {
     RoadMap roadMap;
     int timeLimit, timer;
 	
-    public Simulator(int limit){
-	eventList = new MultiTreeMap<Integer, Event>(); 
-	timeLimit = limit;
+    public Simulator(){
+	eventList = new MultiTreeMap<Integer, Event>();
 	timer = 0;
     }
 	
