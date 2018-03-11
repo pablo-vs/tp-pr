@@ -126,7 +126,7 @@ public class ExampleMain {
 	    });
 
 	for (File file : files) {
-	    test(file.getAbsolutePath(), file.getAbsolutePath() + ".out", file.getAbsolutePath() + ".eout",100);
+	    test(file.getAbsolutePath(), file.getAbsolutePath() + ".out", file.getAbsolutePath() + ".eout",3);
 	}
 
     }
@@ -180,10 +180,10 @@ public class ExampleMain {
 
 	// Call test in order to test the simulator on all examples in a directory.
 	//
-	//	test("resources/examples/events/basic");
+	test("resources/examples/sim/");
 
 	// Call start to start the simulator from command line, etc.
-	start(args);
+	//start(args);
 
     }
 

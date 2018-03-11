@@ -97,6 +97,8 @@ public class Controller {
 		sim.insertEvent(e);
 	    }
 	}
+	//Input is no longer necessary.
+	input.close();
     }
 
     /**
@@ -106,6 +108,8 @@ public class Controller {
      */
     public void run(int steps) throws IOException {
 	sim.execute(steps, output);
+	//output is no longer necessary.
+	output.close();
     }
 
     /*

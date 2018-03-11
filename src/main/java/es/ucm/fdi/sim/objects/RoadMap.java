@@ -1,10 +1,11 @@
 package es.ucm.fdi.sim.objects;
 
 import java.util.Map;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Collections;
 
-import es.ucm.fdi.exceptions.ObjectNotFoundException;
 import es.ucm.fdi.exceptions.InvalidIDException;
 
 /**
@@ -15,7 +16,7 @@ import es.ucm.fdi.exceptions.InvalidIDException;
  */
 public class RoadMap {
     // búsqueda por ids, unicidad
-    private Map<String, SimObject> simObjects;
+    private Map<String, SimObject> simObjects = new HashMap<String, SimObject>();
 
     // listados reales
     private List<Junction> junctions = new ArrayList<>();
@@ -25,7 +26,7 @@ public class RoadMap {
     // listados read-only, via Collections.unmodifiableList();
     private List<Junction> junctionsRO;
     private List<Road> roadsRO;
-    private List<Vehicle> vehiclesRO; 
+    private List<Vehicle> vehiclesRO;
 
     // búsqueda por ids, unicidad
     /**
@@ -34,11 +35,8 @@ public class RoadMap {
      * @param id Identifier of the object.
      * @return The object corresponding to the id.
      */
-    public SimObject getSimObject(String id) throws ObjectNotFoundException{
+    public SimObject getSimObject(String id) {
 	SimObject object = simObjects.get(id);
-	if(object == null) {
-	    throw new ObjectNotFoundException("No object found with id " + id);
-	}
 	return object;
     }
     
@@ -133,7 +131,7 @@ public class RoadMap {
 	if(checkIdUnicity(id)) {
 	    simObjects.put(id, j);
 	    junctions.add(j);
-	    junctionsRO.add(j);
+	    junctionsRO = Collections.unmodifiableList(junctions);
 	} else {
 	    throw new InvalidIDException("Duplicated id: " + id);
 	}
@@ -149,7 +147,7 @@ public class RoadMap {
 	if(checkIdUnicity(id)) {
 	    simObjects.put(id, r);
 	    roads.add(r);
-	    roadsRO.add(r);
+	    roadsRO = Collections.unmodifiableList(roads);
 	} else {
 	    throw new InvalidIDException("Duplicated id: " + id);
 	}
@@ -165,7 +163,7 @@ public class RoadMap {
 	if(checkIdUnicity(id)) {
 	    simObjects.put(id, v);
 	    vehicles.add(v);
-	    vehiclesRO.add(v);
+	    vehiclesRO = Collections.unmodifiableList(vehicles);
 	} else {
 	    throw new InvalidIDException("Duplicated id: " + id);
 	}

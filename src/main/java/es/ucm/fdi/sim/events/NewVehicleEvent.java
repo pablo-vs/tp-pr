@@ -12,78 +12,106 @@ import es.ucm.fdi.exceptions.InvalidEventException;
 import es.ucm.fdi.exceptions.ObjectNotFoundException;
 
 /**
-*	Represents the New Vehicle event.
-*/
+ * Represents the New Vehicle event.
+ */
 public class NewVehicleEvent extends Event {
-	private int maxSpeed;
-	private String vehicleID;
-	private List<String> itinerary; //BETTER TO USE LIST AND INSTANTIATE ARRAYASLIST LATER?
+    private int maxSpeed;
+    private String vehicleID;
+    private List<String> itinerary; //BETTER TO USE LIST AND INSTANTIATE ARRAYASLIST LATER?
+
+    /**
+     * Empty constructor.
+     */
+    public NewVehicleEvent(){}
+
+    /**
+     * Full constructor.
+     *
+     * @param t Time of the event.
+     * @param v Maximum speed of the vehicle.
+     * @param id ID of the vehicle.
+     * @param it Itinerary of the vehicle.
+     */
+    public NewVehicleEvent(int t, int v, String id, List<String> it){
+	super(t);
+	maxSpeed = v;
+	vehicleID = id;
+	itinerary = it;
+    }
 	
-	public NewVehicleEvent(){}
-	public NewVehicleEvent(int t, int v, String id, List<String> it){
-		super(t);
-		maxSpeed = v;
-		vehicleID = id;
-		itinerary = it;
-	}
-	
-	/**
-	 * Instantiates a new vehicle, given the parameters are valid.
-	 * 
-	 * @param r The <code>RoadMap</code> of the current simulation.
-	 */
-	public void execute(RoadMap r) throws InvalidEventException {	
-		List<Junction> it = new ArrayList<Junction>();
+    /**
+     * Instantiates a new vehicle, given the parameters are valid.
+     * 
+     * @param r The <code>RoadMap</code> of the current simulation.
+     */
+    @Override
+    public void execute(RoadMap r) throws InvalidEventException {	
+	List<Junction> it = new ArrayList<Junction>();
 		
-		try{
-			for(String j : itinerary){
-				it.add(r.getJunction(j));
-			}
-			r.addVehicle(new Vehicle(vehicleID, maxSpeed, it));
+	try{
+	    it.add(r.getJunction(itinerary.get(0)));
+	    for(int i = 1; i < itinerary.size(); ++i){
+		Junction j = r.getJunction(itinerary.get(i));
+		if(j == null) {
+		    throw new ObjectNotFoundException("No junction with id: " + itinerary.get(i));
+		}
+		if(it.get(i-1).getRoadToJunction(j) != null) {
+		    it.add(j);
+		}
+	    }
+	    r.addVehicle(new Vehicle(vehicleID, maxSpeed, it));
 			
-		} catch(ObjectNotFoundException e){
-			throw new InvalidEventException("Error: Junction not found.\n" + e.getMessage());
-		}
+	} catch(ObjectNotFoundException e){
+	    throw new InvalidEventException("Error while creating new vehicle.\n" + e.getMessage(), e);
 	}
-	
-	public static class Builder extends EventBuilder {
-		public static final String TAG = "new_vehicle";
-		
-		public NewVehicleEvent build(IniSection ini) throws InvalidEventException {
-			NewVehicleEvent event;
-			String timeStr, vehicleIDStr, maxSpeedStr, itineraryStr;
-			List<String> itinerary;
+    }
 
-			event = null;
-			if(TAG.equals(ini.getTag())) {
-				try	{ //WHY TRY CATCH?
-					//Check existence of all necessary keys and read the attributes
-					//This ignores other unnecessary keys
-					itinerary = new ArrayList<String>();
-					timeStr = ini.getValue("time");
-					vehicleIDStr = ini.getValue("id");
-					maxSpeedStr = ini.getValue("max_speed");
-					itineraryStr = ini.getValue("itinerary");
+    /**
+     * Builder for this event.
+     */
+    public static class Builder extends EventBuilder {
+	public static final String TAG = "new_vehicle";
 
-					//Parse the attributes
-					checkIDValidity(vehicleIDStr);
+	/**
+	 * Build the event from a given INI section, returns null if the section tag does
+	 * not match the event tag.
+	 *
+	 * @param section The <code>IniSection</code> from which to parse the event.
+	 */
+	@Override
+	public NewVehicleEvent build(IniSection ini) throws InvalidEventException {
+	    NewVehicleEvent event;
+	    String timeStr, vehicleIDStr, maxSpeedStr, itineraryStr;
+	    List<String> itinerary;
 
-					/*THIS DOES NOT CHECK THAT THE JUNCTIONS EXIST.
-					SHOULD THAT BE CHECKED WHEN THE	VEHICLE IS CREATED?*/
-					for(String junctionID : itineraryStr.split(",")) {
-						checkIDValidity(junctionID); 
-						//WE MIGHT NEED TO CHECK WHETHER TWO CONSECUTIVE JUNCTIONS ARE JOINED
-						itinerary.add(junctionID);
-					}
+	    event = null;
+	    if(TAG.equals(ini.getTag())) {
+		try	{
+		    //Check existence of all necessary keys and read the attributes
+		    //This ignores other unnecessary keys
+		    itinerary = new ArrayList<String>();
+		    timeStr = ini.getValue("time");
+		    vehicleIDStr = ini.getValue("id");
+		    maxSpeedStr = ini.getValue("max_speed");
+		    itineraryStr = ini.getValue("itinerary");
+
+		    //Parse the attributes
+		    checkIDValidity(vehicleIDStr);
+
+		    for(String junctionID : itineraryStr.split(",")) {
+			checkIDValidity(junctionID);
+			itinerary.add(junctionID);
+		    }
 					
-					event = new NewVehicleEvent(Integer.parseInt(timeStr), Integer.parseInt(maxSpeedStr),
-							maxSpeedStr, itinerary);
-				} catch(Exception e) {
-					throw new InvalidEventException("Error while parsing event:\n" + e.getMessage());
-				}
-			}
-
-			return event;
+		    event = new NewVehicleEvent(Integer.parseInt(timeStr),
+						Integer.parseInt(maxSpeedStr),
+					        vehicleIDStr, itinerary);
+		} catch(Exception e) {
+		    throw new InvalidEventException("Error while parsing event:\n" + e.getMessage(), e);
 		}
+	    }
+
+	    return event;
 	}
+    }
 }

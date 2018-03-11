@@ -99,8 +99,8 @@ public class JunctionTest {
 		
 		//THIS ASSUMES THE JUNCTION ONLY MOVES ONE CAR AT A TIME
 		report.setValue("time", -1);
-		aux =  "(r1,green,[v1_r1,v2_r1]),(r2,red,[v1_r2]),(r3,red,[v1_r3]),(r4,red,[v1_r4])";
-		report.setValue("incomingRoads", aux);
+		aux =  "(r1,red,[v1_r1,v2_r1]),(r2,red,[v1_r2]),(r3,red,[v1_r3]),(r4,red,[v1_r4])";
+		report.setValue("queues", aux);
 		
 		assertEquals("Report does not match", report, j.report(-1));
 		for(int t = 0; t < 3; t++){
@@ -110,18 +110,18 @@ public class JunctionTest {
 			switch(t){
 				case 0:
 				{
-					aux =  "(r1,red,[v2_r1]),(r2,green,[v1_r2]),(r3,red,[v1_r3]),(r4,red,[v1_r4])";
+					aux =  "(r1,green,[v2_r1]),(r2,red,[v1_r2]),(r3,red,[v1_r3]),(r4,red,[v1_r4])";
 				}break;
 				case 1:
 				{
-					aux =  "(r1,red,[v2_r1]),(r2,red,[]),(r3,green,[v1_r3]),(r4,red,[v1_r4])";
+					aux =  "(r1,red,[v2_r1]),(r2,green,[]),(r3,red,[v1_r3]),(r4,red,[v1_r4])";
 				}break;
 				case 2:
 				{
-					aux =  "(r1,red,[v2_r1]),(r2,red,[]),(r3,red,[]),(r4,green,[v1_r4])";
+					aux =  "(r1,red,[v2_r1]),(r2,red,[]),(r3,green,[]),(r4,red,[v1_r4])";
 				}break;
 			}
-			report.setValue("incomingRoads",aux);
+			report.setValue("queues",aux);
 			assertEquals("Report does not match", report, j.report(t));
 		}
 		
@@ -173,7 +173,7 @@ public class JunctionTest {
 		sec = new IniSection("junction_report");
 		sec.setValue("id", "j");
 		sec.setValue("time", "4");
-		sec.setValue("incomingRoads", "(r2,green,[v1,v3]),(r3,red,[v2])");
+		sec.setValue("queues", "(r2,red,[v1,v3]),(r3,red,[v2])");
 		
 		report = j.report(4);
 		assertEquals("Report does not match", sec, report);

@@ -1,0 +1,19 @@
+package es.ucm.fdi.control;
+
+import java.lang.Exception;
+
+import org.junit.Test;
+import static org.junit.Assert.*;
+
+
+public class ControllerTest {
+
+    @Test
+    public void constructorTest() throws Exception {
+	//File path constructors
+	String inputPathCorrect = "input.ini", inputPathIncorrect = "thisshouldnotexist.ini",
+	    outputPathCorrect = "input.ini.out", outputPathIncorrect = "thisshouldnotexist.ini.out";
+	
+    }
+
+}

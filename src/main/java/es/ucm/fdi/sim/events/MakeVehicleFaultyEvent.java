@@ -84,7 +84,7 @@ public class MakeVehicleFaultyEvent extends Event {
 					vehicles.forEach((id) -> checkIDValidity(id));
 									       							    
 				} catch(Exception e) {
-					throw new InvalidEventException("Error while parsing event:\n" + e.getMessage());
+				    throw new InvalidEventException("Error while parsing event:\n" + e.getMessage(), e);
 				}
 
 				event = new MakeVehicleFaultyEvent(time, vehicles, duration);

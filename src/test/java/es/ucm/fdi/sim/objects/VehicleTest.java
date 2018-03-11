@@ -27,7 +27,9 @@ public class VehicleTest {
 		ArrayList<Junction> it1 = new ArrayList<>(), it2 = new ArrayList<>();
 
 		j1.addOutgoingRoad(r1);
+		j2.addIncomingRoad(r1);
 		j2.addOutgoingRoad(r2);
+		j3.addIncomingRoad(r2);
 		
 		it1.add(j1);
 		it1.add(j2);
