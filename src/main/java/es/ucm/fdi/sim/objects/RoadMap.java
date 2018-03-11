@@ -1,10 +1,11 @@
 package es.ucm.fdi.sim.objects;
 
 import java.util.Map;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Collections;
 
-import es.ucm.fdi.exceptions.ObjectNotFoundException;
 import es.ucm.fdi.exceptions.InvalidIDException;
 import es.ucm.fdi.ini.Ini;
 
@@ -16,7 +17,7 @@ import es.ucm.fdi.ini.Ini;
  */
 public class RoadMap {
     // búsqueda por ids, unicidad
-    private Map<String, SimObject> simObjects;
+    private Map<String, SimObject> simObjects = new HashMap<String, SimObject>();
 
     // listados reales
     private List<Junction> junctions = new ArrayList<>();
@@ -26,7 +27,7 @@ public class RoadMap {
     // listados read-only, via Collections.unmodifiableList();
     private List<Junction> junctionsRO;
     private List<Road> roadsRO;
-    private List<Vehicle> vehiclesRO; 
+    private List<Vehicle> vehiclesRO;
 
     // búsqueda por ids, unicidad
     /**
@@ -35,12 +36,9 @@ public class RoadMap {
      * @param id Identifier of the object.
      * @return The object corresponding to the id.
      */
-    public SimObject getSimObject(String id) throws ObjectNotFoundException{
-	SimObject object = simObjects.get(id);
-	if(object == null) {
-	    throw new ObjectNotFoundException("No object found with id " + id);
-	}
-	return object;
+    public SimObject getSimObject(String id) {
+		SimObject object = simObjects.get(id);
+		return object;
     }
     
     /**
@@ -50,11 +48,11 @@ public class RoadMap {
      * @return The object corresponding to the id.
      */
     public Junction getJunction(String id) {
-	SimObject result = getSimObject(id);
-	if(!(result instanceof Junction)) {
-	    result = null;
-	}
-	return (Junction)result;
+		SimObject result = getSimObject(id);
+		if(!(result instanceof Junction)) {
+		    result = null;
+		}
+		return (Junction)result;
     }
     
     /**
@@ -64,11 +62,11 @@ public class RoadMap {
      * @return The object corresponding to the id.
      */
     public Road getRoad(String id) {
-	SimObject result = getSimObject(id);
-	if(!(result instanceof Road)) {
-	    result = null;
-	}
-	return (Road)result;
+		SimObject result = getSimObject(id);
+		if(!(result instanceof Road)) {
+		    result = null;
+		}
+		return (Road)result;
     }
     
     /**
@@ -78,11 +76,11 @@ public class RoadMap {
      * @return The object corresponding to the id.
      */
     public Vehicle getVehicle(String id) {
-	SimObject result = getSimObject(id);
-	if(!(result instanceof Vehicle)) {
-	    result = null;
-	}
-	return (Vehicle)result;
+		SimObject result = getSimObject(id);
+		if(!(result instanceof Vehicle)) {
+		    result = null;
+		}
+		return (Vehicle)result;
     }
 
     //listado (sólo lectura)
@@ -92,7 +90,7 @@ public class RoadMap {
      * @return Constant list of Junctions.
      */
     public List<Junction> getJunctions() {
-	return junctionsRO;
+    	return junctionsRO;
     }
     
     /**
@@ -101,7 +99,7 @@ public class RoadMap {
      * @return Constant list of Roads.
      */
     public List<Road> getRoads() {
-	return roadsRO;
+    	return roadsRO;
     }
     
     /**
@@ -110,7 +108,7 @@ public class RoadMap {
      * @return Constant list of Vehicles.
      */
     public List<Vehicle> getVehicles() {
-	return vehiclesRO;
+    	return vehiclesRO;
     }
     
     /**
@@ -129,14 +127,14 @@ public class RoadMap {
      * @param j The <code>Junction</code> to add.
      */
     public void addJunction(Junction j) throws InvalidIDException{
-	String id = j.getID();
-	if(checkIdUnicity(id)) {
-	    simObjects.put(id, j);
-	    junctions.add(j);
-	    junctionsRO.add(j);
-	} else {
-	    throw new InvalidIDException("Duplicated id: " + id);
-	}
+		String id = j.getID();
+		if(checkIdUnicity(id)) {
+		    simObjects.put(id, j);
+		    junctions.add(j);
+		    junctionsRO = Collections.unmodifiableList(junctions);
+		} else {
+		    throw new InvalidIDException("Duplicated id: " + id);
+		}
     }
     
     /**
@@ -145,14 +143,14 @@ public class RoadMap {
      * @param j The <code>Road</code> to add.
      */
     public void addRoad(Road r) throws InvalidIDException{
-	String id = r.getID();
-	if(checkIdUnicity(id)) {
-	    simObjects.put(id, r);
-	    roads.add(r);
-	    roadsRO.add(r);
-	} else {
-	    throw new InvalidIDException("Duplicated id: " + id);
-	}
+		String id = r.getID();
+		if(checkIdUnicity(id)) {
+		    simObjects.put(id, r);
+		    roads.add(r);
+		    roadsRO = Collections.unmodifiableList(roads);
+		} else {
+		    throw new InvalidIDException("Duplicated id: " + id);
+		}
     }
 
     /**
@@ -161,14 +159,14 @@ public class RoadMap {
      * @param j The <code>Vehicle</code> to add.
      */
     public void addVehicle(Vehicle v) throws InvalidIDException {
-	String id = v.getID();
-	if(checkIdUnicity(id)) {
-	    simObjects.put(id, v);
-	    vehicles.add(v);
-	    vehiclesRO.add(v);
-	} else {
-	    throw new InvalidIDException("Duplicated id: " + id);
-	}
+		String id = v.getID();
+		if(checkIdUnicity(id)) {
+		    simObjects.put(id, v);
+		    vehicles.add(v);
+		    vehiclesRO = Collections.unmodifiableList(vehicles);
+		} else {
+		    throw new InvalidIDException("Duplicated id: " + id);
+		}
     }
     
     public Ini report(){

@@ -14,6 +14,7 @@ import es.ucm.fdi.ini.IniSection;
 
 import java.util.Map;
 import java.util.List;
+import java.util.ArrayList;
 import java.io.OutputStream;
 import java.io.IOException;
 
@@ -30,9 +31,9 @@ public class Simulator {
     RoadMap roadMap;
     int timeLimit, timer;
 	
-    public Simulator(int limit){
-	eventList = new MultiTreeMap<Integer, Event>(); 
-	timeLimit = limit;
+    public Simulator(){
+	eventList = new MultiTreeMap<Integer, Event>();
+	roadMap = new RoadMap();
 	timer = 0;
     }
 	
@@ -55,7 +56,7 @@ public class Simulator {
 	timeLimit = timer + simulationSteps - 1;
 	while (timer <= timeLimit) {
 	    // 1. ejecutar los eventos correspondientes a ese tiempo
-	    for(Event e : eventList.get(timer)) {
+	    for(Event e : eventList.getOrDefault(timer, new ArrayList<Event>())) {
 		e.execute(roadMap);
 	    }
 		
@@ -95,11 +96,11 @@ public class Simulator {
     public Ini prepareReport()
     {
 	Ini report = new Ini();
-	for(Road r : roadMap.getRoads()) {
-	    report.addsection(r.report(timer));
-	}
 	for(Junction j : roadMap.getJunctions()) {
 	    report.addsection(j.report(timer));
+	}
+	for(Road r : roadMap.getRoads()) {
+	    report.addsection(r.report(timer));
 	}
 	for(Vehicle v : roadMap.getVehicles()) {
 	    report.addsection(v.report(timer));

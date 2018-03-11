@@ -134,7 +134,7 @@ public class Road extends SimObject{
      */
     public void fillReportDetails(IniSection out) {
 	boolean first = true;
-	StringBuilder aux = new StringBuilder(vehicleList.size()*60);
+	StringBuilder aux = new StringBuilder(vehicleList.size()*20);
 		
 	for(Vehicle v : vehicleList.innerValues()){
 	    if(!first){

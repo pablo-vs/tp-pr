@@ -33,18 +33,18 @@ public class Demo {
 
 		ini.addsection(sec);
 
-		File file = new File("resources/output/output.ini");
+		File file = new File("resources/examples/ini/output/output.ini");
 		OutputStream s = new FileOutputStream(file);
 		ini.store(s);
 		s.close();
-		System.out.println("Check out resources/output/output.ini");
+		System.out.println("Check out resources/examples/ini/output/output.ini");
 		System.out.println();
 	}
 
 	public static void read() throws Exception {
 		System.out.println("-> read test");
 
-		File file = new File("resources/examples/ini/input1.ini");
+		File file = new File("resources/examples/ini/input/input1.ini");
 		InputStream s = new FileInputStream(file);
 		Ini ini = new Ini(s);
 
