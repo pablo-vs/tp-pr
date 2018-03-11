@@ -26,6 +26,7 @@ import java.io.IOException;
 public class Simulator {
 
     MultiTreeMap<Integer, Event> eventList; //Ordenados por tiempo y, a igualdad, orden de llegada
+    //ISNT A PRIORITY QUEUE BETTER?
     RoadMap roadMap;
     int timeLimit, timer;
 	

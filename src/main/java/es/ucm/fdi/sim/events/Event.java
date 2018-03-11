@@ -9,7 +9,7 @@ import es.ucm.fdi.exceptions.InvalidIDException;
 import es.ucm.fdi.exceptions.InvalidEventException;
 
 /**
-*	Abstrac parent of all the Events
+*	Abstract parent of all the Events
 */
 public abstract class Event {
 
@@ -33,12 +33,12 @@ public abstract class Event {
 	*/
 	public static abstract class EventBuilder {
 		
-		private Pattern checkID = Pattern.compile("[\\w_]");
+		private static Pattern checkID = Pattern.compile("[\\w_]");
 
 		/**
 		*	Checks the validity of object IDs from the INI file using a Pattern.
 		*/
-		public void checkIDValidity(String id) {
+		public static void checkIDValidity(String id) {
 			Matcher m = checkID.matcher(id);
 			if(!m.matches()) {
 				throw new InvalidIDException(id);
@@ -49,6 +49,6 @@ public abstract class Event {
 		*	Build the event from a given INI section, returns null if the section tag does
 		*	not match the event tag.
 		*/
-		public abstract Event build(IniSection section) throws InvalidEventException;
+		public abstract Event build(IniSection sec) throws InvalidEventException;
 	}
 }

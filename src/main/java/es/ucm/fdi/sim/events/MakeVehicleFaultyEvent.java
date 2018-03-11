@@ -61,7 +61,7 @@ public class MakeVehicleFaultyEvent extends Event {
 		 * @param ini The section from which to build the <code>Event</code>.
 		 * @return A <code>MakeVehicleFaultyEvent</code>, or <code>null</code> if there were parsing errors.
 		 */
-		public MakeVehicleFaultyEvent build(IniSection ini){
+		public MakeVehicleFaultyEvent build(IniSection ini) throws InvalidEventException{
 			MakeVehicleFaultyEvent event;
 			int time, duration;
 			List<String> vehicles;

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import es.ucm.fdi.exceptions.ObjectNotFoundException;
 import es.ucm.fdi.exceptions.InvalidIDException;
+import es.ucm.fdi.ini.Ini;
 
 /**
  * Class that contains all the <code>SimObject</code> objects in the model
@@ -121,8 +122,7 @@ public class RoadMap {
 	return (getSimObject(id) == null);
     }
 
-    // inserción de objetos (package-protected)
-
+    // Object insertion (package-protected.
     /**
      * Adds a <code>Junction</code> to the map.
      *
@@ -169,5 +169,15 @@ public class RoadMap {
 	} else {
 	    throw new InvalidIDException("Duplicated id: " + id);
 	}
+    }
+    
+    public Ini report(){
+    	//First junctions
+    	
+    	//Second roads
+    	
+    	//Third vehciles
+    	
+    	return null;
     }
 }

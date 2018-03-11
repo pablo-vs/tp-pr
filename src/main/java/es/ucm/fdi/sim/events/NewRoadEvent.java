@@ -42,7 +42,7 @@ public class NewRoadEvent extends Event {
 	public static class Builder extends EventBuilder{
 		public static final String TAG = "new_road";
 		
-		public NewRoadEvent build(IniSection ini){
+		public NewRoadEvent build(IniSection ini)throws InvalidEventException{
 			NewRoadEvent event;
 			String timeStr, idStr, iniStr, endStr, maxVelStr, lengthStr;
 			
