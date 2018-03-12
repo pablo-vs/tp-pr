@@ -40,10 +40,10 @@ public class Controller {
      * Empty constructor, sets IO to stdin and stdout.
      */
     public Controller() throws IOException {
-	sim = new Simulator();
-	input = System.in;
-	output = System.out;
-	readEvents();
+    	sim = new Simulator();
+    	input = System.in;
+    	output = System.out;
+    	readEvents();
     }
 
     /**
@@ -53,10 +53,10 @@ public class Controller {
      * @param output An <code>OutputStream</code> to send the reports.
      */
     public Controller(InputStream input, OutputStream output) throws IOException {
-	sim = new Simulator();
-	this.input = input;
-	this.output = output;
-	readEvents();
+    	sim = new Simulator();
+    	this.input = input;
+    	this.output = output;
+    	readEvents();
     }
 
     /**
@@ -65,9 +65,15 @@ public class Controller {
      * @param inputPath The path of the input file.
      */
     public Controller(String inputPath) throws IOException {
-	sim = new Simulator();
-	input = new FileInputStream(inputPath);
-	readEvents();
+    	sim = new Simulator();
+        output = System.out;
+    	try(FileInputStream inputStream = new FileInputStream(inputPath)){
+            input = inputStream;
+            readEvents();  
+        } catch(IOException e) {
+            throw new IOException("Could not open or read file " + inputPath, e);
+        }
+
     }
     
     /**
@@ -77,28 +83,32 @@ public class Controller {
      * @param outputPath The path of the output file.
      */
     public Controller(String inputPath, String outputPath) throws IOException {
-	sim = new Simulator();
-	input = new FileInputStream(inputPath);
-	output = new FileOutputStream(outputPath);
-	readEvents();
+    	sim = new Simulator();
+        try(FileInputStream inputStream = new FileInputStream(inputPath);
+    	   FileOutputStream outputStream = new FileOutputStream(outputPath)) {
+            input = inputStream;
+            output = outputStream;
+            readEvents();
+        } catch(IOException e) {
+            throw new IOException("Could not open or read files", e);
+        }
+    	
     }
 
     /*
       Reads the events from the input stream and inserts them into the simulator queue.
      */
     private void readEvents() throws IOException {
-	Ini events = new Ini(input);
-	for(IniSection sec : events.getSections()) {
-	    Event e = parseEvent(sec);
-	    if(e == null) {
-		throw new InvalidEventException("The tag " + sec.getTag()
-						+ " does not correspond to a valid event");
-	    } else {
-		sim.insertEvent(e);
-	    }
-	}
-	//Input is no longer necessary.
-	input.close();
+    	Ini events = new Ini(input);
+    	for(IniSection sec : events.getSections()) {
+    	    Event e = parseEvent(sec);
+    	    if(e == null) {
+        		throw new InvalidEventException("The tag " + sec.getTag()
+        						+ " does not correspond to a valid event");
+            } else {
+        		  sim.insertEvent(e);
+    	    }  
+    	}
     }
 
     /**
@@ -107,9 +117,7 @@ public class Controller {
      * @param steps The number of ticks to simulate.
      */
     public void run(int steps) throws IOException {
-	sim.execute(steps, output);
-	//output is no longer necessary.
-	output.close();
+	   sim.execute(steps, output);
     }
 
     /*
