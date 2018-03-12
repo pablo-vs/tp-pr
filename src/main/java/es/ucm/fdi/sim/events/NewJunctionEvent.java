@@ -26,8 +26,8 @@ public class NewJunctionEvent extends Event {
      * @param id ID of the junction.
      */
     public NewJunctionEvent(int t, String id){
-	super(t);
-	junctionID = id;
+		super(t);
+		junctionID = id;
     }
 
     /**
@@ -37,9 +37,15 @@ public class NewJunctionEvent extends Event {
      */
     @Override
     public void execute(RoadMap r){
-	r.addJunction(new Junction(junctionID));
+    	r.addJunction(new Junction(junctionID));
     }
 
+    @Override
+    public boolean equals(Object o){
+    	return (o instanceof NewJunctionEvent 
+    			&& junctionID.equals(((NewJunctionEvent)o).junctionID));
+    }
+    
     /**
      * Builder for this event.
      */

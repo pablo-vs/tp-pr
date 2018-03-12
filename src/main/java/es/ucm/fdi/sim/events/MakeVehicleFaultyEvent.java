@@ -37,6 +37,7 @@ public class MakeVehicleFaultyEvent extends Event {
 		this.duration = duration;
 	}
 	
+	@Override
 	public void execute(RoadMap r) throws InvalidEventException{
 		for(String s : vehicles){
 			try{
@@ -45,6 +46,23 @@ public class MakeVehicleFaultyEvent extends Event {
 				throw new InvalidEventException("Error: vehicle not found.\n" + e.getMessage());
 			}
 		}
+	}
+	
+	@Override
+	public boolean equals(Object o){
+		boolean isEqual = false;
+		
+		if(o != null && o instanceof MakeVehicleFaultyEvent){
+    		isEqual = (duration == ((MakeVehicleFaultyEvent)o).duration) && 
+    				(vehicles.size() == ((MakeVehicleFaultyEvent)o).vehicles.size());
+
+    		for(int i = 0; i < vehicles.size() && isEqual; ++i){
+    			isEqual = (vehicles.get(i).equals(((MakeVehicleFaultyEvent)o).vehicles.get(i)));
+    		}
+    		
+    	}
+		
+		return isEqual;
 	}
 
 	/**

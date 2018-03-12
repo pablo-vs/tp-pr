@@ -95,9 +95,7 @@ public class NewVehicleEventTest implements EventTest{
 	
 	@Test
 	public void runTest(){
-		NewVehicleEvent event;
-		
-		//Correct section
+		NewVehicleEvent event;	
 		IniSection sec = new IniSection("new_vehicle"),
 				report = new IniSection("vehicle_report");
 		sec.setValue("time", "0");

@@ -70,6 +70,7 @@ public class NewVehicleEvent extends Event {
     @Override
     public boolean equals(Object o){
     	boolean isEqual = false;
+    	
     	if(o != null && o instanceof NewVehicleEvent){
     		isEqual = (maxSpeed == ((NewVehicleEvent)o).maxSpeed) && 
     				(vehicleID.equals(((NewVehicleEvent)o).vehicleID)) &&
@@ -80,6 +81,7 @@ public class NewVehicleEvent extends Event {
     		}
     		
     	}
+    	
     	return isEqual;
     }
     

@@ -65,7 +65,24 @@ public class NewRoadEvent extends Event {
 	    throw new InvalidEventException("Error: Junction not found.\n" + e.getMessage());
 	}
     }
-	
+
+    
+    @Override
+    public boolean equals(Object o){
+    	boolean isEqual = false;
+    	
+    	if(o != null && o instanceof NewRoadEvent){
+    		isEqual = (roadID.equals(((NewRoadEvent)o).roadID) 
+    				&& ini.equals(((NewRoadEvent)o).ini) 
+    				&& end.equals(((NewRoadEvent)o).end) 
+    				&& length == ((NewRoadEvent)o).length 
+    				&& maxVel == ((NewRoadEvent)o).maxVel);
+    	}
+    	
+    	return isEqual;
+    }
+    
+    
     /**
      * Builder for this event.
      */
