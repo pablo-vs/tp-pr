@@ -32,17 +32,17 @@ public class Vehicle extends SimObject{
      * @param itinerary	Itinerary to follow by the <code>Vehicle</code>
      */
     public Vehicle(String id, int maxVel, List<Junction> itinerary){
-	super(id);
-	this.itinerary = new ArrayList<Junction>(itinerary);
-	this.maxVel = maxVel;
-	currentVel = 0;
-	position = 0;
-	brokenTime = 0;
-	kilometrage = 0;
-	nextJunction = 0; //Points to the position in the itinerary
-	arrived = false;
-	inQueue = false;
-	moveToNextRoad();
+    	super(id);
+    	this.itinerary = new ArrayList<Junction>(itinerary);
+    	this.maxVel = maxVel;
+    	currentVel = 0;
+    	position = 0;
+    	brokenTime = 0;
+    	kilometrage = 0;
+    	nextJunction = 0; //Points to the position in the itinerary
+    	arrived = false;
+    	inQueue = false;
+    	moveToNextRoad();
     }
 	
     /**
@@ -54,22 +54,22 @@ public class Vehicle extends SimObject{
      */
     public void move(){
 		
-	if(brokenTime == 0 && !inQueue){						
-	    if(position + currentVel >= currentRoad.getLength()) {
-		kilometrage += currentRoad.getLength() - position;
-		position = currentRoad.getLength();
-		currentVel = 0;
-		currentRoad.getEnd().vehicleIn(this);
-		inQueue = true;
-							
-	    } else {
-		position += currentVel;
-		kilometrage += currentVel;
-	    }
-			
-	}else if(brokenTime > 0){
-	    brokenTime--;
-	}
+    	if(brokenTime == 0 && !inQueue){						
+    	    if(position + currentVel >= currentRoad.getLength()) {
+        		kilometrage += currentRoad.getLength() - position;
+        		position = currentRoad.getLength();
+        		currentVel = 0;
+        		currentRoad.getEnd().vehicleIn(this);
+        		inQueue = true;
+    							
+        	} else {
+        		position += currentVel;
+        		kilometrage += currentVel;
+    	    }
+    			
+    	}else if(brokenTime > 0){
+    	    brokenTime--;
+    	}
     }
 	
     /**
@@ -78,17 +78,21 @@ public class Vehicle extends SimObject{
      * the next on the itinerary.
      */
     public void moveToNextRoad(){
-	position = 0;
-	inQueue = false;
+    	position = 0;
+    	inQueue = false;
 
-	if(nextJunction == itinerary.size()-1) {
-	    arrived = true;
-	} else {
-	    Junction currentJunction = itinerary.get(nextJunction);
-	    nextJunction++;
-	    currentRoad = currentJunction.getRoadToJunction(itinerary.get(nextJunction));
-	    currentRoad.vehicleIn(this);
+	if(nextJunction > 0) {
+		currentRoad.vehicleOut(this);
 	}
+	
+    	if(nextJunction == itinerary.size()-1) {
+    	    arrived = true;
+    	} else {
+    	    Junction currentJunction = itinerary.get(nextJunction);
+    	    nextJunction++;
+    	    currentRoad = currentJunction.getRoadToJunction(itinerary.get(nextJunction));
+    	    currentRoad.vehicleIn(this);
+    	}
     }
 	
     /**
@@ -97,8 +101,8 @@ public class Vehicle extends SimObject{
      * @param t	Time for this <code>Vehicle</code> to be broken.
      */
     public void setBrokenTime(int t){
-	brokenTime += t;
-	currentVel = 0;
+    	brokenTime += t;
+    	currentVel = 0;
     }
 	
     /**
@@ -107,11 +111,8 @@ public class Vehicle extends SimObject{
      * @param v	New velocity for this <code>Vehicle</code>.
      */
     public void setCurrentVel(int v){
-	if(v <= maxVel){
-	    currentVel = v;	
-	}else{
-	    currentVel = maxVel;
-	}
+        currentVel = v <= maxVel ? v : maxVel;
+        currentVel = brokenTime > 0 ? 0 : currentVel;
     }
 	
     /**
@@ -121,7 +122,7 @@ public class Vehicle extends SimObject{
      */
     //NECESSARY?
     public void setMaxVel(int v){
-	maxVel = v;
+	   maxVel = v;
     }
 	
     /**
@@ -130,7 +131,7 @@ public class Vehicle extends SimObject{
      * @return Current <code>Road</code>'s position.
      */
     public int getPosition(){
-	return position;
+	   return position;
     }
 
     /**
@@ -139,7 +140,7 @@ public class Vehicle extends SimObject{
      * @return Current <code>Road</code>.
      */
     public Road getRoad() {
-	return currentRoad;
+	   return currentRoad;
     }
 	
     /**
@@ -148,11 +149,11 @@ public class Vehicle extends SimObject{
      * @return true if this <code>Vehicle</code> is faulty, false otherwise.
      */
     public boolean isFaulty() {
-	boolean faulty = false;
-	if(brokenTime > 0){
-	    faulty = true;
-	}
-	return faulty;
+    	boolean faulty = false;
+    	if(brokenTime > 0){
+    	    faulty = true;
+    	}
+    	return faulty;
     }
 	
     /**
@@ -161,18 +162,18 @@ public class Vehicle extends SimObject{
      * @param out Map to store the report.
      */
     public void fillReportDetails(IniSection out) {
-	out.setValue("speed", Integer.toString(currentVel));
-	out.setValue("kilometrage", Integer.toString(kilometrage));
-	if(brokenTime > 0){
-	    out.setValue("faulty", "1");
-	}else{
-	    out.setValue("faulty", "0");
-	}
-	if(arrived){
-	    out.setValue("location", "arrived");
-	}else{
-	    out.setValue("location", "(" + currentRoad.getID() + "," + position + ")");
-	}
+    	out.setValue("speed", Integer.toString(currentVel));
+    	out.setValue("kilometrage", Integer.toString(kilometrage));
+    	if(brokenTime > 0){
+    	    out.setValue("faulty", brokenTime);
+    	}else{
+    	    out.setValue("faulty", "0");
+    	}
+    	if(arrived){
+    	    out.setValue("location", "arrived");
+    	}else{
+    	    out.setValue("location", "(" + currentRoad.getID() + "," + position + ")");
+    	}
     }
 
     /**
@@ -181,6 +182,6 @@ public class Vehicle extends SimObject{
      * @return The header as a <code>String</code>
      */
     public String getReportHeader() {
-	return report_header;
+	   return report_header;
     }
 }

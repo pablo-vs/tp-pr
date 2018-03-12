@@ -1,11 +1,15 @@
 package es.ucm.fdi.sim.objects;
 
+import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.io.InputStream;
+import org.apache.commons.io.IOUtils;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+import es.ucm.fdi.ini.Ini;
 import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.control.Controller;
 
@@ -19,8 +23,29 @@ public class VehicleTest {
 	 */
 	@Test
 	public void buildReportTest() throws Exception {
-		IniSection v1Report, v2Report;
-		IniSection report;
+		String [] expReportStr =
+			{"[vehicle_report]",
+			 "id = v1",
+			 "time = 5",
+			 "speed = 0",
+			 "kilometrage = 0",
+			 "faulty = 0",
+			 "location = (r1,0)",
+			 "",
+			 "[vehicle_report]",
+			 "id = v2",
+			 "time = 8",
+			 "speed = 0",
+			 "kilometrage = 0",
+			 "faulty = 0",
+			 "location = (r2,0)"};
+			
+		List<IniSection> expReport =
+			new Ini(IOUtils.toInputStream(String.join("\n", expReportStr) ,"UTF-8"))
+			.getSections();
+		
+		IniSection v1Report = expReport.get(0), v2Report = expReport.get(1), report;
+		
 		Junction j1 = new Junction("j1"), j2 = new Junction("j2"), j3 = new Junction("j3");
 		Road r1 = new Road("r1", 2, 2, j1, j2);
 		Road r2 = new Road("r2", 5, 3, j2, j3);
@@ -31,21 +56,6 @@ public class VehicleTest {
 		it2.add(j2);
 		it2.add(j3);
 		it1.add(j1);
-		
-		v1Report = new IniSection("vehicle_report");
-		v1Report.setValue("id", "v1");
-		v1Report.setValue("time", "5");
-		v1Report.setValue("speed", "0");
-		v1Report.setValue("kilometrage", "0");
-		v1Report.setValue("faulty", "0");
-		v1Report.setValue("location", "(r1,0)");
-		v2Report = new IniSection("vehicle_report");
-		v2Report.setValue("id", "v2");
-		v2Report.setValue("time", "8");
-		v2Report.setValue("speed", "0");
-		v2Report.setValue("kilometrage", "0");
-		v2Report.setValue("faulty", "0");
-		v2Report.setValue("location", "(r2,0)");
 		
 		Vehicle v1 = new Vehicle("v1", 2, it1), v2 = new Vehicle("v2", 30, it2);
 		report = v1.report(5);
@@ -61,51 +71,63 @@ public class VehicleTest {
 	
 	@Test
 	public void completeItineraryTest() throws Exception {
-		IniSection report;
-		IniSection v1Report1, v1Report2, v1Report3, v1Report4, v1Report5, v1Report6;
+		String [] expReportStr =
+			{"[vehicle_report]",
+			 "id = v1",
+			 "time = 5",
+			 "speed = 0",
+			 "kilometrage = 0",
+			 "faulty = 0",
+			 "location = (r1,0)",
+			 "",
+			 "[vehicle_report]",
+			 "id = v1",
+			 "time = 6",
+			 "speed = 2",
+			 "kilometrage = 2",
+			 "faulty = 0",
+			 "location = (r1,2)",
+			 "",
+			 "[vehicle_report]",
+			 "id = v1",
+			 "time = 7",
+			 "speed = 0",
+			 "kilometrage = 3",
+			 "faulty = 0",
+			 "location = (r1,3)",
+			 "",
+			 "[vehicle_report]",
+			 "id = v1",
+			 "time = 8",
+			 "speed = 0",
+			 "kilometrage = 3",
+			 "faulty = 0",
+			 "location = (r2,0)",
+			 "",
+			 "[vehicle_report]",
+			 "id = v1",
+			 "time = 9",
+			 "speed = 3",
+			 "kilometrage = 6",
+			 "faulty = 0",
+			 "location = (r2,3)",
+			 "",
+			 "[vehicle_report]",
+			 "id = v1",
+			 "time = 10",
+			 "speed = 0",
+			 "kilometrage = 8",
+			 "faulty = 0",
+			 "location = arrived"};
+
+		List<IniSection> expReport =
+			new Ini(IOUtils.toInputStream(String.join("\n", expReportStr),"UTF-8"))
+			.getSections();
 		
-		v1Report1 = new IniSection("vehicle_report");
-		v1Report1.setValue("id", "v1");
-		v1Report1.setValue("time", "5");
-		v1Report1.setValue("speed", "0");
-		v1Report1.setValue("kilometrage", "0");
-		v1Report1.setValue("faulty", "0");
-		v1Report1.setValue("location", "(r1,0)");
-		v1Report2 = new IniSection("vehicle_report");
-		v1Report2.setValue("id", "v1");
-		v1Report2.setValue("time", "6");
-		v1Report2.setValue("speed", "2");
-		v1Report2.setValue("kilometrage", "2");
-		v1Report2.setValue("faulty", "0");
-		v1Report2.setValue("location", "(r1,2)");
-		v1Report3 = new IniSection("vehicle_report");
-		v1Report3.setValue("id", "v1");
-		v1Report3.setValue("time", "7");
-		v1Report3.setValue("speed", "0");
-		v1Report3.setValue("kilometrage", "3");
-		v1Report3.setValue("faulty", "0");
-		v1Report3.setValue("location", "(r1,3)");
-		v1Report4 = new IniSection("vehicle_report");
-		v1Report4.setValue("id", "v1");
-		v1Report4.setValue("time", "8");
-		v1Report4.setValue("speed", "0");
-		v1Report4.setValue("kilometrage", "3");
-		v1Report4.setValue("faulty", "0");
-		v1Report4.setValue("location", "(r2,0)");
-		v1Report5 = new IniSection("vehicle_report");
-		v1Report5.setValue("id", "v1");
-		v1Report5.setValue("time", "9");
-		v1Report5.setValue("speed", "3");
-		v1Report5.setValue("kilometrage", "6");
-		v1Report5.setValue("faulty", "0");
-		v1Report5.setValue("location", "(r2,3)");
-		v1Report6 = new IniSection("vehicle_report");
-		v1Report6.setValue("id", "v1");
-		v1Report6.setValue("time", "10");
-		v1Report6.setValue("speed", "0");
-		v1Report6.setValue("kilometrage", "8");
-		v1Report6.setValue("faulty", "0");
-		v1Report6.setValue("location", "arrived");
+		IniSection report;
+		IniSection v1Report1 = expReport.get(0), v1Report2 = expReport.get(1),
+			v1Report3 = expReport.get(2), v1Report4 = expReport.get(3),
+			v1Report5 = expReport.get(4), v1Report6 = expReport.get(5);
 		
 		Junction j1 = new Junction("j1"), j2 = new Junction("j2"), j3 = new Junction("j3");
 		Road r1 = new Road("r1", 3, 2, j1, j2);
@@ -130,6 +152,7 @@ public class VehicleTest {
 		assertEquals("Report does not match", v1Report3, report);
 
 		j2.move();
+		j2.move();
 		report = v1.report(8);
 		assertEquals("Report does not match", v1Report4, report);
 		
@@ -138,6 +161,7 @@ public class VehicleTest {
 		assertEquals("Report does not match", v1Report5, report);
 		
 		r2.move();
+		j3.move();
 		j3.move();
 		report = v1.report(10);
 		assertEquals("Report does not match", v1Report6, report);

@@ -32,9 +32,9 @@ public class Simulator {
     int timeLimit, timer;
 	
     public Simulator(){
-	eventList = new MultiTreeMap<Integer, Event>();
-	roadMap = new RoadMap();
-	timer = 0;
+		eventList = new MultiTreeMap<Integer, Event>();
+		roadMap = new RoadMap();
+		timer = 0;
     }
 	
     /**
@@ -43,7 +43,7 @@ public class Simulator {
      * @param e The <code>Event</code> to insert.
      */
     public void insertEvent(Event e){
-	eventList.putValue(e.getTime(), e);
+		eventList.putValue(e.getTime(), e);
     }
 	
     /**
@@ -53,37 +53,37 @@ public class Simulator {
      * @param outputFIle <code>OutputStream</code> to store the reports.
      */
     public void execute(int simulationSteps, OutputStream outputFile) throws IOException {
-	timeLimit = timer + simulationSteps - 1;
-	while (timer <= timeLimit) {
-	    // 1. ejecutar los eventos correspondientes a ese tiempo
-	    for(Event e : eventList.getOrDefault(timer, new ArrayList<Event>())) {
-		e.execute(roadMap);
-	    }
-		
-	    // 2. invocar al método avanzar de las carreteras
-	    for(Road r : roadMap.getRoads()) {
-		r.move();
-	    }
+		timeLimit = timer + simulationSteps - 1;
+		while (timer <= timeLimit) {
+		    // 1. ejecutar los eventos correspondientes a ese tiempo
+		    for(Event e : eventList.getOrDefault(timer, new ArrayList<Event>())) {
+				e.execute(roadMap);
+		    }
 			
-	    // 3. invocar al método avanzar de los cruces
-	    for(Junction j : roadMap.getJunctions()) {
-		j.move();
-	    }
-			
-	    // 4. this.contadorTiempo++;
-	    this.timer++;
-			
-	    // 5. esciribir un informe en OutputStream
-	    // en caso de que no sea null
-	    if(outputFile != null) {
-		try {
-		    prepareReport().store(outputFile);
+		    // 2. invocar al método avanzar de las carreteras
+		    for(Road r : roadMap.getRoads()) {
+				r.move();
+		    }
+				
+		    // 3. invocar al método avanzar de los cruces
+		    for(Junction j : roadMap.getJunctions()) {
+				j.move();
+		    }
+				
+		    // 4. this.contadorTiempo++;
+		    this.timer++;
+				
+		    // 5. esciribir un informe en OutputStream
+		    // en caso de que no sea null
+		    if(outputFile != null) {
+				try {
+				    prepareReport().store(outputFile);
+				}
+				catch(IOException e) {
+				    throw new IOException("Error while writing report", e);
+				}
+		    }
 		}
-		catch(IOException e) {
-		    throw new IOException("Error while writing report", e);
-		}
-	    }
-	}
     }
 	
     /**
@@ -93,18 +93,17 @@ public class Simulator {
      *
      * @return An <code>Ini</code> object storing the report
      */
-    public Ini prepareReport()
-    {
-	Ini report = new Ini();
-	for(Junction j : roadMap.getJunctions()) {
-	    report.addsection(j.report(timer));
-	}
-	for(Road r : roadMap.getRoads()) {
-	    report.addsection(r.report(timer));
-	}
-	for(Vehicle v : roadMap.getVehicles()) {
-	    report.addsection(v.report(timer));
-	}
-	return report;
+    public Ini prepareReport() {
+		Ini report = new Ini();
+		for(Junction j : roadMap.getJunctions()) {
+		    report.addsection(j.report(timer));
+		}
+		for(Road r : roadMap.getRoads()) {
+		    report.addsection(r.report(timer));
+		}
+		for(Vehicle v : roadMap.getVehicles()) {
+		    report.addsection(v.report(timer));
+		}
+		return report;
     }
 }

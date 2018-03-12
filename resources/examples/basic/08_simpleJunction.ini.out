@@ -98,7 +98,7 @@ queues = (r2,green,[])
 [road_report]
 id = r1
 time = 3
-state = 
+state = (v2,50)
 
 [road_report]
 id = r2

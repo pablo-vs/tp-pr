@@ -42,7 +42,7 @@ public class MakeVehicleFaultyEvent extends Event {
 		for(String s : vehicles){
 			try{
 				r.getVehicle(s).setBrokenTime(duration);
-			}catch(ObjectNotFoundException e){
+			} catch(ObjectNotFoundException e) {
 				throw new InvalidEventException("Error: vehicle not found.\n" + e.getMessage());
 			}
 		}

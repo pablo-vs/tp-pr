@@ -26,10 +26,10 @@ import es.ucm.fdi.exceptions.InvalidEventException;
 public class Controller {
     
     private static final Event.EventBuilder [] AVAILABLE_EVENTS = {
-	new NewVehicleEvent.Builder(),
-	new NewRoadEvent.Builder(),
-	new NewJunctionEvent.Builder(),
-	new MakeVehicleFaultyEvent.Builder()
+    	new NewVehicleEvent.Builder(),
+    	new NewRoadEvent.Builder(),
+    	new NewJunctionEvent.Builder(),
+    	new MakeVehicleFaultyEvent.Builder()
     };
 
     private Simulator sim;

@@ -20,29 +20,32 @@ import es.ucm.fdi.ini.Ini;
 
 public class ControllerTest {
 
-    @Test
-    public void constructorTest() throws Exception {
+	@Test
+	public void constructorTest() throws Exception {
 		//File path constructors
-		String inputPathCorrect = "resources/examples/sim/input1.ini", inputPathIncorrect = "thisshouldnotexist.ini",
-		    outputPath = "input.ini.out";
+		String inputPathCorrect = "resources/examples/sim/input1.ini",
+			inputPathIncorrect = "thisshouldnotexist.ini",
+			outputPath = "input.ini.out";
 
 		Controller c;
 		c = new Controller(inputPathCorrect);
 		c = new Controller(inputPathCorrect, outputPath);
 
 		try {
-		    //This should throw an exception
-		    c = new Controller(inputPathIncorrect);
-		    throw new Exception("Either the incorrect path " + inputPathIncorrect +
-					" does exist, or there are errors in the code");
+			//This should throw an exception
+			c = new Controller(inputPathIncorrect);
+			throw new Exception("Either the incorrect path " + inputPathIncorrect +
+					    " does exist, or there are errors in the code");
 		} catch (IOException e) {
 			System.err.println("Exception caught correctly, the path is not valid.");
 		}
-    }
+	}
 
-    @Test
-    public void simulatorIOTest() throws Exception {
-		String inputPath = "resources/examples/sim/input1.ini", expectedOutputPath = inputPath + ".eout";
+	@Test
+	public void simulatorIOTest() throws Exception {
+		String inputPath = "resources/examples/sim/input1.ini",
+			expectedOutputPath = inputPath + ".eout";
+		
 		FileInputStream inputStream = new FileInputStream(inputPath);
 		Ini output, expectedOutput = new Ini(expectedOutputPath);
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -54,17 +57,10 @@ public class ControllerTest {
 		ByteArrayInputStream redirectToIniStream = new ByteArrayInputStream(outputStream.toByteArray());
 		
 		output = new Ini(redirectToIniStream);
-		/*
-		List<IniSection> outSections = output.getSections(), expSections = expectedOutput.getSections();
-		for(int i = 0; i < outSections.size(); ++i) {
-		    System.err.println(outSections.get(i));
-		    System.err.println(expSections.get(i));
-		    System.err.println(outSections.get(i).equals(expSections.get(i)));
-		}*/
 		
 		assertEquals("Output does not match expected", output, expectedOutput);
 
 		System.out.println("God's in his heaven, all's right with the world");
-    }
+	}
 
 }

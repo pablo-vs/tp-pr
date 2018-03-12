@@ -3,10 +3,13 @@ package es.ucm.fdi.sim.objects;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.io.InputStream;
+import org.apache.commons.io.IOUtils;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+import es.ucm.fdi.ini.Ini;
 import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.sim.objects.Junction;
 import es.ucm.fdi.sim.objects.Road;
@@ -31,7 +34,7 @@ public class JunctionTest {
 		j4 = new Junction("j4");
 		j = new Junction("j");
 		
-		r1 = new Road("r1", 50, 50, j1, j);
+		r1 = new Road("r1", 20, 50, j1, j);
 		r2 = new Road("r2", 50, 100, j2, j);
 		r3 = new Road("r3", 50, 50, j3, j);
 		r4 = new Road("r4", 50, 50, j4, j);
@@ -67,44 +70,32 @@ public class JunctionTest {
 		itinerary.add(j);
 		itinerary.add(j2);
 		v1_r4 = new Vehicle("v1_r4", 50, itinerary);
-		
-		report = new IniSection("junction_report");
-		report.setValue("id", "j");
+
+		String [] reportString =
+			{"[junction_report]",
+			 "id = j",
+			 "time = ",
+			 "queues = "},
+			queuesString =
+			{"(r1,red,[v1_r1,v2_r1]),(r2,red,[v1_r2]),(r3,red,[v1_r3]),(r4,red,[v1_r4])",
+			 "(r1,green,[v1_r1,v2_r1]),(r2,red,[v1_r2]),(r3,red,[v1_r3]),(r4,red,[v1_r4])",
+			 "(r1,red,[v2_r1]),(r2,green,[v1_r2]),(r3,red,[v1_r3]),(r4,red,[v1_r4])",
+			 "(r1,red,[v2_r1]),(r2,red,[]),(r3,green,[v1_r3]),(r4,red,[v1_r4])"};
 		
 		r1.move();
 		r2.move();
 		r3.move();
 		r4.move();
-		
-		//THIS ASSUMES THE JUNCTION ONLY MOVES ONE CAR AT A TIME
-		report.setValue("time", -1);
-		aux =  "(r1,red,[v1_r1,v2_r1]),(r2,red,[v1_r2]),(r3,red,[v1_r3]),(r4,red,[v1_r4])";
-		report.setValue("queues", aux);
-		
-		assertEquals("Report does not match", report, j.report(-1));
-		for(int t = 0; t < 3; t++){
-			report.setValue("time", t);
-			j.move();
+
+		for(int i = 0; i < 4; ++i) {
+			reportString[2] = "time = " + i;
+			reportString[3] = "queues = " + queuesString[i];
+			report = new Ini(IOUtils.toInputStream(String.join("\n", reportString), "UTF-8"))
+				.getSections().get(0);
 			
-			switch(t){
-				case 0:
-				{
-					aux =  "(r1,green,[v2_r1]),(r2,red,[v1_r2]),(r3,red,[v1_r3]),(r4,red,[v1_r4])";
-				}break;
-				case 1:
-				{
-					aux =  "(r1,red,[v2_r1]),(r2,green,[]),(r3,red,[v1_r3]),(r4,red,[v1_r4])";
-				}break;
-				case 2:
-				{
-					aux =  "(r1,red,[v2_r1]),(r2,red,[]),(r3,green,[]),(r4,red,[v1_r4])";
-				}break;
-			}
-			report.setValue("queues",aux);
-			assertEquals("Report does not match", report, j.report(t));
+			assertEquals("Report does not match", report, j.report(i));
+			j.move();
 		}
-		
-		
 	}
 	
 	@Test
