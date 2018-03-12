@@ -58,8 +58,6 @@ public class NewRoadEvent extends Event {
 	    endJ = r.getJunction(end);
 	    Road newRoad = new Road(roadID, length, maxVel, iniJ, endJ);
 	    r.addRoad(newRoad);
-	    iniJ.addOutgoingRoad(newRoad);
-	    endJ.addIncomingRoad(newRoad);
 			
 	} catch (ObjectNotFoundException e){
 	    throw new InvalidEventException("Error: Junction not found.\n" + e.getMessage());

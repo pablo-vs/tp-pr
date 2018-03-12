@@ -81,6 +81,10 @@ public class Vehicle extends SimObject{
     	position = 0;
     	inQueue = false;
 
+	if(nextJunction > 0) {
+		currentRoad.vehicleOut(this);
+	}
+	
     	if(nextJunction == itinerary.size()-1) {
     	    arrived = true;
     	} else {

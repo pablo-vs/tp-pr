@@ -31,7 +31,7 @@ public class JunctionTest {
 		j4 = new Junction("j4");
 		j = new Junction("j");
 		
-		r1 = new Road("r1", 50, 50, j1, j);
+		r1 = new Road("r1", 20, 50, j1, j);
 		r2 = new Road("r2", 50, 100, j2, j);
 		r3 = new Road("r3", 50, 50, j3, j);
 		r4 = new Road("r4", 50, 50, j4, j);

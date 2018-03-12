@@ -158,7 +158,7 @@ state = (v1,0)
 [road_report]
 id = r3
 time = 3
-state = 
+state = (v2,50)
 
 [road_report]
 id = r4

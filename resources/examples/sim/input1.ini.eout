@@ -68,7 +68,7 @@ queues = (r3,green,[])
 [road_report]
 id = r1
 time = 2
-state = 
+state = (v1,40)
 
 [road_report]
 id = r2
@@ -118,7 +118,7 @@ queues = (r3,green,[])
 [road_report]
 id = r1
 time = 3
-state = (v2,20)
+state = (v2,11)
 
 [road_report]
 id = r2
@@ -146,8 +146,8 @@ location = (r3,0)
 [vehicle_report]
 id = v2
 time = 3
-speed = 20
-kilometrage = 20
+speed = 11
+kilometrage = 11
 faulty = 0
-location = (r1,20)
+location = (r1,11)
 

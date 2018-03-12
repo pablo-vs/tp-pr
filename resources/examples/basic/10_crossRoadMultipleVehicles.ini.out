@@ -180,7 +180,7 @@ queues = (r4,green,[])
 [road_report]
 id = r1
 time = 3
-state = 
+state = (v3,50)
 
 [road_report]
 id = r2
@@ -190,7 +190,7 @@ state = (v1,0)
 [road_report]
 id = r3
 time = 3
-state = 
+state = (v2,50),(v4,50)
 
 [road_report]
 id = r4
@@ -257,7 +257,7 @@ queues = (r4,green,[])
 [road_report]
 id = r1
 time = 4
-state = 
+state = (v3,50)
 
 [road_report]
 id = r2
@@ -267,7 +267,7 @@ state = (v1,20)
 [road_report]
 id = r3
 time = 4
-state = 
+state = (v4,50)
 
 [road_report]
 id = r4
@@ -344,7 +344,7 @@ state = (v1,40),(v3,0)
 [road_report]
 id = r3
 time = 5
-state = 
+state = (v4,50)
 
 [road_report]
 id = r4
