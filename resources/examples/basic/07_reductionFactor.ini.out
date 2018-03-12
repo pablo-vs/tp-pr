@@ -39,9 +39,9 @@ state = (v1,10)
 [vehicle_report]
 id = v1
 time = 2
-speed = 10
+speed = 0
 kilometrage = 10
-faulty = 1
+faulty = 2
 location = (r1,10)
 
 [junction_report]
@@ -62,7 +62,7 @@ state = (v1,10),(v2,10)
 [vehicle_report]
 id = v1
 time = 3
-speed = 10
+speed = 0
 kilometrage = 10
 faulty = 1
 location = (r1,10)
@@ -93,7 +93,7 @@ state = (v1,10),(v2,10)
 [vehicle_report]
 id = v1
 time = 4
-speed = 10
+speed = 0
 kilometrage = 10
 faulty = 0
 location = (r1,10)
@@ -101,9 +101,9 @@ location = (r1,10)
 [vehicle_report]
 id = v2
 time = 4
-speed = 10
+speed = 0
 kilometrage = 10
-faulty = 1
+faulty = 2
 location = (r1,10)
 
 [junction_report]
@@ -132,7 +132,7 @@ location = (r1,20)
 [vehicle_report]
 id = v2
 time = 5
-speed = 10
+speed = 0
 kilometrage = 10
 faulty = 1
 location = (r1,10)
@@ -171,7 +171,7 @@ location = (r1,30)
 [vehicle_report]
 id = v2
 time = 6
-speed = 10
+speed = 0
 kilometrage = 10
 faulty = 0
 location = (r1,10)

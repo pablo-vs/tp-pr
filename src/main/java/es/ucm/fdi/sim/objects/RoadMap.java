@@ -169,13 +169,4 @@ public class RoadMap {
 		}
     }
     
-    public Ini report(){
-    	//First junctions
-    	
-    	//Second roads
-    	
-    	//Third vehciles
-    	
-    	return null;
-    }
 }

@@ -34,12 +34,12 @@ public class Road extends SimObject{
      * @param end	Ending <code>Junction</code> of the current <code>Road</code>.
      */
     public Road(String id, int l, int maxV, Junction ini, Junction end){
-	super(id);
-	length = l;
-	maxVel = maxV;
-	this.ini = ini;
-	this.end = end;
-	vehicleList = new MultiTreeMap<Integer, Vehicle>((Integer a, Integer b) -> b-a);
+    	super(id);
+    	length = l;
+    	maxVel = maxV;
+    	this.ini = ini;
+    	this.end = end;
+    	vehicleList = new MultiTreeMap<Integer, Vehicle>((Integer a, Integer b) -> b-a);
     }
 	
     /**
@@ -48,7 +48,7 @@ public class Road extends SimObject{
      * @param v	<code>Vehicle</code> to insert in the current <code>Road</code>.
      */
     public void vehicleIn(Vehicle v){
-	vehicleList.putValue(0, v);
+	   vehicleList.putValue(0, v);
     }
 	
     /**
@@ -57,7 +57,7 @@ public class Road extends SimObject{
      * @param The vehicle to remove
      */
     public void vehicleOut(Vehicle v){
-	vehicleList.removeValue(length, v);
+	   vehicleList.removeValue(length, v);
     }
 	
     /**
@@ -65,30 +65,31 @@ public class Road extends SimObject{
      */
     //Invoked by Simulator
     public void move(){
-	int baseSpeed = Math.min(maxVel, maxVel/(Math.max(vehicleList.size(), 1)) + 1),
-	    reductionFactor = 1,
-	    faultyPos = 0;
+    	int baseSpeed = Math.min(maxVel, maxVel/(Math.max((int)vehicleList.sizeOfValues(), 1)) + 1),
+    	    reductionFactor = 1,
+    	    faultyPos = 0;
 
-	//Store the vehicles in a new map to avoid messing the iterator
-	MultiTreeMap newVehicleList = new MultiTreeMap<Integer, Vehicle>((Integer a, Integer b) -> b-a);
-	for(Vehicle v : vehicleList.innerValues()){
-	    //Check if vehicle is behind a faulty vehicle
-	    //All vehicles further in the list will also be behind it
-	    if(v.getPosition() < faultyPos){
-		reductionFactor = 2;
-	    }
-	    //If the vehicle is faulty, we need to slow down all vehicles whose
-	    //position is STRICTLY lower than v's
-	    if(faultyPos == 0 && v.isFaulty()) {
-		faultyPos = v.getPosition();
-	    }
-	    v.setCurrentVel(baseSpeed/reductionFactor);
-	    v.move();
-	    if(v.getPosition() < length) {
-		newVehicleList.putValue(v.getPosition(), v);
-	    }
-	}
-	vehicleList = newVehicleList;
+    	//Store the vehicles in a new map to avoid messing the iterator
+    	MultiTreeMap newVehicleList = new MultiTreeMap<Integer, Vehicle>((Integer a, Integer b) -> b-a);
+    	for(Vehicle v : vehicleList.innerValues()){
+    	    //Check if vehicle is behind a faulty vehicle
+    	    //All vehicles further in the list will also be behind it
+    	    if(v.getPosition() < faultyPos){
+                System.out.println(v.getPosition() + " " + faultyPos);
+    		  reductionFactor = 2;
+    	    }
+    	    //If the vehicle is faulty, we need to slow down all vehicles whose
+    	    //position is STRICTLY lower than v's
+    	    if(faultyPos == 0 && v.isFaulty()) {
+    	   	   faultyPos = v.getPosition();
+    	    }
+    	    v.setCurrentVel(baseSpeed/reductionFactor);
+            v.move();
+    	    if(v.getPosition() < length) {
+    		  newVehicleList.putValue(v.getPosition(), v);
+    	    }
+    	}
+    	vehicleList = newVehicleList;
     }
 	
     /**

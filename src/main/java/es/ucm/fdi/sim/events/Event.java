@@ -62,7 +62,7 @@ public abstract class Event {
 	public void checkIDValidity(String id) {
 	    Matcher m = checkID.matcher(id);
 	    if(!m.matches()) {
-		throw new InvalidIDException("Not a valid id: " + id);
+		  throw new InvalidIDException("Not a valid id: " + id);
 	    }
 	}
 
