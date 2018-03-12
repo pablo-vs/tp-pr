@@ -25,11 +25,6 @@ public class VehicleTest {
 		Road r1 = new Road("r1", 2, 2, j1, j2);
 		Road r2 = new Road("r2", 5, 3, j2, j3);
 		ArrayList<Junction> it1 = new ArrayList<>(), it2 = new ArrayList<>();
-
-		j1.addOutgoingRoad(r1);
-		j2.addIncomingRoad(r1);
-		j2.addOutgoingRoad(r2);
-		j3.addIncomingRoad(r2);
 		
 		it1.add(j1);
 		it1.add(j2);
@@ -116,11 +111,6 @@ public class VehicleTest {
 		Road r1 = new Road("r1", 3, 2, j1, j2);
 		Road r2 = new Road("r2", 5, 3, j2, j3);
 		ArrayList<Junction> it1 = new ArrayList<>();
-
-		j1.addOutgoingRoad(r1);
-		j2.addIncomingRoad(r1);
-		j2.addOutgoingRoad(r2);
-		j3.addIncomingRoad(r2);
 		
 		it1.add(j1);
 		it1.add(j2);

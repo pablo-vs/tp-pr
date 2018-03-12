@@ -41,27 +41,6 @@ public class JunctionTest {
 		or3 = new Road("or3", 50, 50, j, j3);
 		or4 = new Road("or4", 50, 50, j, j4);
 		
-		j.addIncomingRoad(r1);
-		j.addIncomingRoad(r2);
-		j.addIncomingRoad(r3);
-		j.addIncomingRoad(r4);
-		j.addOutgoingRoad(or1);
-		j.addOutgoingRoad(or2);
-		j.addOutgoingRoad(or3);
-		j.addOutgoingRoad(or4);
-		
-		j1.addIncomingRoad(or1);
-		j1.addOutgoingRoad(r1);
-		
-		j2.addIncomingRoad(or2);
-		j2.addOutgoingRoad(r2);
-
-		j3.addIncomingRoad(or3);
-		j3.addOutgoingRoad(r3);
-		
-		j4.addIncomingRoad(or4);
-		j4.addOutgoingRoad(r4);
-		
 		//it v1_r1
 		itinerary = new ArrayList<Junction>();
 		itinerary.add(j1);
@@ -153,16 +132,7 @@ public class JunctionTest {
 		r2 = new Road("r2", 50, 100, j2, j);
 		r3 = new Road("r3", 50, 50, j3, j);
 		r4 = new Road("r4", 50, 50, j, j3);
-		
-		j.addIncomingRoad(r2);
-		j.addIncomingRoad(r3);
-		j.addOutgoingRoad(r1);
-		j.addOutgoingRoad(r4);
-		j2.addIncomingRoad(r1);
-		j2.addOutgoingRoad(r2);
-		j3.addIncomingRoad(r4);
-		j3.addOutgoingRoad(r3);
-		
+
 		v1 = new Vehicle("v1", 100, it1);
 		r2.move();
 		v2 = new Vehicle("v2", 50, it2);
