@@ -33,10 +33,10 @@ public class NewVehicleEvent extends Event {
      * @param it Itinerary of the vehicle.
      */
     public NewVehicleEvent(int t, int v, String id, List<String> it){
-	super(t);
-	maxSpeed = v;
-	vehicleID = id;
-	itinerary = it;
+		super(t);
+		maxSpeed = v;
+		vehicleID = id;
+		itinerary = it;
     }
 	
     /**
@@ -46,72 +46,89 @@ public class NewVehicleEvent extends Event {
      */
     @Override
     public void execute(RoadMap r) throws InvalidEventException {	
-	List<Junction> it = new ArrayList<Junction>();
-		
-	try{
-	    it.add(r.getJunction(itinerary.get(0)));
-	    for(int i = 1; i < itinerary.size(); ++i){
-		Junction j = r.getJunction(itinerary.get(i));
-		if(j == null) {
-		    throw new ObjectNotFoundException("No junction with id: " + itinerary.get(i));
-		}
-		if(it.get(i-1).getRoadToJunction(j) != null) {
-		    it.add(j);
-		}
-	    }
-	    r.addVehicle(new Vehicle(vehicleID, maxSpeed, it));
+		List<Junction> it = new ArrayList<Junction>();
 			
-	} catch(ObjectNotFoundException e){
-	    throw new InvalidEventException("Error while creating new vehicle.\n" + e.getMessage(), e);
-	}
+		try{
+		    it.add(r.getJunction(itinerary.get(0)));
+		    for(int i = 1; i < itinerary.size(); ++i){
+			Junction j = r.getJunction(itinerary.get(i));
+			if(j == null) {
+			    throw new ObjectNotFoundException("No junction with id: " + itinerary.get(i));
+			}
+			if(it.get(i-1).getRoadToJunction(j) != null) {
+			    it.add(j);
+			}
+		    }
+		    r.addVehicle(new Vehicle(vehicleID, maxSpeed, it));
+				
+		} catch(ObjectNotFoundException e){
+		    throw new InvalidEventException("Error while creating new vehicle.\n" + e.getMessage(), e);
+		}
     }
 
+    
+    @Override
+    public boolean equals(Object o){
+    	boolean isEqual = false;
+    	if(o != null && o instanceof NewVehicleEvent){
+    		isEqual = (maxSpeed == ((NewVehicleEvent)o).maxSpeed) && 
+    				(vehicleID.equals(((NewVehicleEvent)o).vehicleID)) &&
+    				(itinerary.size() == ((NewVehicleEvent)o).itinerary.size());
+
+    		for(int i = 0; i < itinerary.size() && isEqual; ++i){
+    			isEqual = (itinerary.get(i).equals(((NewVehicleEvent)o).itinerary.get(i)));
+    		}
+    		
+    	}
+    	return isEqual;
+    }
+    
     /**
      * Builder for this event.
      */
     public static class Builder extends EventBuilder {
-	public static final String TAG = "new_vehicle";
+		public static final String TAG = "new_vehicle";
 
-	/**
-	 * Build the event from a given INI section, returns null if the section tag does
-	 * not match the event tag.
-	 *
-	 * @param section The <code>IniSection</code> from which to parse the event.
-	 */
-	@Override
-	public NewVehicleEvent build(IniSection ini) throws InvalidEventException {
-	    NewVehicleEvent event;
-	    String timeStr, vehicleIDStr, maxSpeedStr, itineraryStr;
-	    List<String> itinerary;
-
-	    event = null;
-	    if(TAG.equals(ini.getTag())) {
-		try	{
-		    //Check existence of all necessary keys and read the attributes
-		    //This ignores other unnecessary keys
-		    itinerary = new ArrayList<String>();
-		    timeStr = ini.getValue("time");
-		    vehicleIDStr = ini.getValue("id");
-		    maxSpeedStr = ini.getValue("max_speed");
-		    itineraryStr = ini.getValue("itinerary");
-
-		    //Parse the attributes
-		    checkIDValidity(vehicleIDStr);
-
-		    for(String junctionID : itineraryStr.split(",")) {
-			checkIDValidity(junctionID);
-			itinerary.add(junctionID);
+		/**
+		 * Build the event from a given INI section, returns null if the section tag does
+		 * not match the event tag.
+		 *
+		 * @param section The <code>IniSection</code> from which to parse the event.
+		 */
+		@Override
+		public NewVehicleEvent build(IniSection ini) throws InvalidEventException {
+		    NewVehicleEvent event;
+		    String timeStr, vehicleIDStr, maxSpeedStr, itineraryStr;
+		    List<String> itinerary;
+	
+		    event = null;
+		    if(TAG.equals(ini.getTag())) {
+			try	{
+			    //Check existence of all necessary keys and read the attributes
+			    //This ignores other unnecessary keys
+			    itinerary = new ArrayList<String>();
+			    timeStr = ini.getValue("time");
+			    vehicleIDStr = ini.getValue("id");
+			    maxSpeedStr = ini.getValue("max_speed");
+			    itineraryStr = ini.getValue("itinerary");
+	
+			    //Parse the attributes
+			    checkIDValidity(vehicleIDStr);
+	
+			    for(String junctionID : itineraryStr.split(",")) {
+				checkIDValidity(junctionID);
+				itinerary.add(junctionID);
+			    }
+						
+			    event = new NewVehicleEvent(Integer.parseInt(timeStr),
+							Integer.parseInt(maxSpeedStr),
+						        vehicleIDStr, itinerary);
+			} catch(Exception e) {
+			    throw new InvalidEventException("Error while parsing event:\n" + e.getMessage(), e);
+			}
 		    }
-					
-		    event = new NewVehicleEvent(Integer.parseInt(timeStr),
-						Integer.parseInt(maxSpeedStr),
-					        vehicleIDStr, itinerary);
-		} catch(Exception e) {
-		    throw new InvalidEventException("Error while parsing event:\n" + e.getMessage(), e);
+	
+		    return event;
 		}
-	    }
-
-	    return event;
-	}
     }
 }

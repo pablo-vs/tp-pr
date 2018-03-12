@@ -39,6 +39,8 @@ public class Road extends SimObject{
     	maxVel = maxV;
     	this.ini = ini;
     	this.end = end;
+    	ini.addOutgoingRoad(this);
+    	end.addIncomingRoad(this);
     	vehicleList = new MultiTreeMap<Integer, Vehicle>((Integer a, Integer b) -> b-a);
     }
 	

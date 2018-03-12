@@ -10,6 +10,7 @@ public class NewRoadEventTest implements EventTest {
 	public void parseTest(){
 		NewRoadEvent event;
 		
+		/*
 		//Wrong section 1 - Wrong title
 		IniSection sec = new IniSection("wrong_title");
 		
@@ -27,7 +28,7 @@ public class NewRoadEventTest implements EventTest {
 		event = new NewRoadEvent.Builder().build(sec);
 		
 		//Correct section
-		sec = new IniSection("new_vehicle");
+		sec = new IniSection("new_vehicle");*/
 	}
 	
 	@Test

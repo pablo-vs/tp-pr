@@ -36,7 +36,7 @@ public class ControllerTest {
 		    throw new Exception("Either the incorrect path " + inputPathIncorrect +
 					" does exist, or there are errors in the code");
 		} catch (IOException e) {
-		    assertTrue(e instanceof FileNotFoundException);
+			System.err.println("Exception caught correctly, the path is not valid.");
 		}
     }
 

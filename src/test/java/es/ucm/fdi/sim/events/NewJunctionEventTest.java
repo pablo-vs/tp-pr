@@ -10,6 +10,7 @@ public class NewJunctionEventTest implements EventTest {
 	public void parseTest(){
 		NewJunctionEvent event;
 		
+		/*
 		//Wrong section 1 - Wrong title
 		IniSection sec = new IniSection("wrong_title");
 		
@@ -27,7 +28,7 @@ public class NewJunctionEventTest implements EventTest {
 		event = new NewJunctionEvent.Builder().build(sec);
 		
 		//Correct section
-		sec = new IniSection("new_vehicle");
+		sec = new IniSection("new_vehicle");*/
 	}
 	
 	@Test
