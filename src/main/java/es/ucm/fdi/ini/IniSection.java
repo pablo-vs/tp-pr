@@ -48,9 +48,9 @@ public class IniSection {
 	}
 
 	private void checkKeyValidity(String key) {
-		/*if (key.isEmpty()) {
+		if (key.isEmpty()) {
 			throw new IniError("Invalid key: " + key);
-		} ON HOLD FOR NOW */
+		}
 	}
 
 	/**

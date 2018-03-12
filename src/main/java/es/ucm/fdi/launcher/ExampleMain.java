@@ -1,6 +1,8 @@
 package es.ucm.fdi.launcher;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -60,46 +62,46 @@ public class ExampleMain {
     }
 
     private static Options buildOptions() {
-	Options cmdLineOptions = new Options();
+		Options cmdLineOptions = new Options();
 
-	cmdLineOptions.addOption(Option.builder("h").longOpt("help").desc("Print this message").build());
-	cmdLineOptions.addOption(Option.builder("i").longOpt("input").hasArg().desc("Events input file").build());
-	cmdLineOptions.addOption(
-				 Option.builder("o").longOpt("output").hasArg().desc("Output file, where reports are written.").build());
-	cmdLineOptions.addOption(Option.builder("t").longOpt("ticks").hasArg()
-				 .desc("Ticks to execute the simulator's main loop (default value is " + _timeLimitDefaultValue + ").")
-				 .build());
+		cmdLineOptions.addOption(Option.builder("h").longOpt("help").desc("Print this message").build());
+		cmdLineOptions.addOption(Option.builder("i").longOpt("input").hasArg().desc("Events input file").build());
+		cmdLineOptions.addOption(
+					 Option.builder("o").longOpt("output").hasArg().desc("Output file, where reports are written.").build());
+		cmdLineOptions.addOption(Option.builder("t").longOpt("ticks").hasArg()
+					 .desc("Ticks to execute the simulator's main loop (default value is " + _timeLimitDefaultValue + ").")
+					 .build());
 
-	return cmdLineOptions;
+		return cmdLineOptions;
     }
 
     private static void parseHelpOption(CommandLine line, Options cmdLineOptions) {
-	if (line.hasOption("h")) {
-	    HelpFormatter formatter = new HelpFormatter();
-	    formatter.printHelp(ExampleMain.class.getCanonicalName(), cmdLineOptions, true);
-	    System.exit(0);
-	}
+		if (line.hasOption("h")) {
+		    HelpFormatter formatter = new HelpFormatter();
+		    formatter.printHelp(ExampleMain.class.getCanonicalName(), cmdLineOptions, true);
+		    System.exit(0);
+		}
     }
 
     private static void parseInFileOption(CommandLine line) throws ParseException {
-	_inFile = line.getOptionValue("i");
-	if (_inFile == null) {
-	    throw new ParseException("An events file is missing");
-	}
+		_inFile = line.getOptionValue("i");
+		if (_inFile == null) {
+		    throw new ParseException("An events file is missing");
+		}
     }
 
     private static void parseOutFileOption(CommandLine line) throws ParseException {
-	_outFile = line.getOptionValue("o");
+		_outFile = line.getOptionValue("o");
     }
 
     private static void parseStepsOption(CommandLine line) throws ParseException {
-	String t = line.getOptionValue("t", _timeLimitDefaultValue.toString());
-	try {
-	    _timeLimit = Integer.parseInt(t);
-	    assert (_timeLimit < 0);
-	} catch (Exception e) {
-	    throw new ParseException("Invalid value for time limit: " + t);
-	}
+		String t = line.getOptionValue("t", _timeLimitDefaultValue.toString());
+		try {
+		    _timeLimit = Integer.parseInt(t);
+		    assert (_timeLimit < 0);
+		} catch (Exception e) {
+		    throw new ParseException("Invalid value for time limit: " + t);
+		}
     }
 
     /**
@@ -112,33 +114,33 @@ public class ExampleMain {
      */
     private static void test(String path) throws IOException {
 
-	File dir = new File(path);
+		File dir = new File(path);
 
-	if ( !dir.exists() ) {
-	    throw new FileNotFoundException(path);
-	}
-		
-	File[] files = dir.listFiles(new FilenameFilter() {
-		@Override
-		public boolean accept(File dir, String name) {
-		    return name.endsWith(".ini");
+		if ( !dir.exists() ) {
+		    throw new FileNotFoundException(path);
 		}
-	    });
+			
+		File[] files = dir.listFiles(new FilenameFilter() {
+			@Override
+			public boolean accept(File dir, String name) {
+			    return name.endsWith(".ini");
+			}
+		    });
 
-	for (File file : files) {
-	    test(file.getAbsolutePath(), file.getAbsolutePath() + ".out", file.getAbsolutePath() + ".eout",3);
-	}
+		for (File file : files) {
+		    test(file.getAbsolutePath(), file.getAbsolutePath() + ".out", file.getAbsolutePath() + ".eout",10);
+		}
 
     }
 
     private static void test(String inFile, String outFile, String expectedOutFile, int timeLimit) throws IOException {
-	_outFile = outFile;
-	_inFile = inFile;
-	_timeLimit = timeLimit;
-	startBatchMode();
-	boolean equalOutput = (new Ini(_outFile)).equals(new Ini(expectedOutFile));
-	System.out.println("Result for: '" + _inFile + "' : "
-			   + (equalOutput ? "OK!" : ("not equal to expected output +'" + expectedOutFile + "'")));
+		_outFile = outFile;
+		_inFile = inFile;
+		_timeLimit = timeLimit;
+		startBatchMode();
+		boolean equalOutput = (new Ini(_outFile)).equals(new Ini(expectedOutFile));
+		System.out.println("Result for: '" + _inFile + "' : "
+				   + (equalOutput ? "OK!" : ("not equal to expected output +'" + expectedOutFile + "'")));
     }
 
     /**
@@ -147,24 +149,19 @@ public class ExampleMain {
      * @throws IOException
      */
     private static void startBatchMode() throws IOException {
-	Controller control = null;
-	
-	if(_outFile == null) {
-	    control = new Controller(_inFile);
-	} else {
-	    control = new Controller(_inFile, _outFile);
-	}
+		Controller control = new Controller(
+			new FileInputStream(_inFile), _outFile == null ? System.out : new FileOutputStream(_outFile));
 
-	if(_timeLimit == null) {
-	    _timeLimit = _timeLimitDefaultValue;
-	}
-	
-	control.run(_timeLimit);
+		if(_timeLimit == null) {
+		    _timeLimit = _timeLimitDefaultValue;
+		}
+		
+		control.run(_timeLimit);
     }
 
     private static void start(String[] args) throws IOException {
-	parseArgs(args);
-	startBatchMode();
+		parseArgs(args);
+		startBatchMode();
     }
 
     public static void main(String[] args) throws IOException, InvocationTargetException, InterruptedException {
@@ -180,10 +177,10 @@ public class ExampleMain {
 
 	// Call test in order to test the simulator on all examples in a directory.
 	//
-	test("resources/examples/sim/");
+	test("resources/examples/basic/");
 
 	// Call start to start the simulator from command line, etc.
-	//start(args);
+	start(args);
 
     }
 
