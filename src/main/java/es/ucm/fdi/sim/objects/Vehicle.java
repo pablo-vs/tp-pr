@@ -13,7 +13,7 @@ import es.ucm.fdi.sim.objects.Junction;
  *	Class that controls the general behavior of <code>Vehicles</code> in the simulation. 
  *	Allows basic dynamics such as movement between <code>Roads</code> and <code>Junctions</code>.
  *
- *	@version 26.02.2018
+ *	@version 13.03.2018
  */
 public class Vehicle extends SimObject{
 	
@@ -120,11 +120,28 @@ public class Vehicle extends SimObject{
      * 
      * @param v New maximum velocity for this <code>Vehicle</code>.
      */
-    //NECESSARY?
     public void setMaxVel(int v){
 	   maxVel = v;
     }
 	
+    /**
+     * Getter method for {@link Vehicle#maxVel}
+     * 
+     * @return Current <code>Vehicle</code>'s velocity.
+     */
+    public int getMaxVel(){
+ 	   return maxVel;
+     }
+    
+    /**
+     * Getter method for {@link Vehicle#currentVel}.
+     * 
+     * @return Current <code>Vehicle</code>'s velocity.
+     */
+    public int getCurrentVelocity(){
+    	return currentVel;
+    }
+    
     /**
      * Getter method for {@link Vehicle#position}.
      * 
