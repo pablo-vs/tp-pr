@@ -13,7 +13,7 @@ import es.ucm.fdi.sim.objects.Junction;
 /**
  * Class that models the general behavior of <code>Roads</code> in the simulation.
  * 
- * @version 26.02.2018
+ * @version 13.03.2018
  */
 public class Road extends SimObject{
 	
@@ -54,7 +54,7 @@ public class Road extends SimObject{
 	}
 	
 	/**
-	 * Removes the given vehicle from the end of the road.
+	 * Removes the given <code>Vehicle</code> from the end of the road.
 	 * 
 	 * @param The vehicle to remove
 	 */
@@ -63,20 +63,42 @@ public class Road extends SimObject{
 	}
 	
 	/**
+	 * Calculates the <code>baseSpeed</code> based on the formula
+	 * 
+	 * @return The <code>baseSpeed</code> for this <code>Road</code>.
+	 */
+	public int calculateBaseSpeed(){
+		return Math.min(maxVel, maxVel/(Math.max((int)vehicleList.sizeOfValues(), 1)) + 1);
+	}
+	
+	/**
+	 * Calculates the <code>reductionFactor</code> for this <code>Road</code>
+	 * 
+	 * @return The <code>reductionFactor</code> for this <code>Road</code>.
+	 */
+	public int calculateReductionFactor(int brokenVehicles){
+		if(brokenVehicles == 0){
+			return 1;
+		}else{
+			return 2;
+		}
+	}
+	
+	/**
 	 * Executes a <code>move</code> operation for every object in this <code>Road</code>.
 	 */
 	//Invoked by Simulator
 	public void move(){
-		int baseSpeed = Math.min(maxVel, maxVel/(Math.max((int)vehicleList.sizeOfValues(), 1)) + 1),
-			reductionFactor = 1;
+		int baseSpeed = calculateBaseSpeed(), reductionFactor, counter = 0;
 
 		//Store the vehicles in a new map to avoid messing the iterator
 		MultiTreeMap newVehicleList = new MultiTreeMap<Integer, Vehicle>((Integer a, Integer b) -> b-a);
 		for(Vehicle v : vehicleList.innerValues()){
 			//Check if there is a faulty vehicle
 			//All vehicles further in the list will be slowed down
+			reductionFactor = calculateReductionFactor(counter);
 			if(v.isFaulty()) {
-				reductionFactor = 2;
+				counter++;
 			}
 			if(v.getPosition() < length) {
 				v.setCurrentVel(baseSpeed/reductionFactor);
@@ -85,6 +107,15 @@ public class Road extends SimObject{
 			newVehicleList.putValue(v.getPosition(), v);
 		}
 		vehicleList = newVehicleList;
+	}
+	
+	/**
+	 * Getter method for {@link Road#vehicleList}
+	 * 
+//	 * @return Current <code>Road</code>'s <code>vehicleList</code>.
+	 */
+	public MultiTreeMap<Integer, Vehicle> getVehicles(){
+		return vehicleList;
 	}
 	
 	/**
