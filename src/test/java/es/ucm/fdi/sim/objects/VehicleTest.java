@@ -70,7 +70,7 @@ public class VehicleTest {
 	 */
 	
 	@Test
-	public void completeItineraryTest() throws Exception {
+	public void dynamicsTest() throws Exception {
 		String [] expReportStr =
 			{"[vehicle_report]",
 			 "id = v1",

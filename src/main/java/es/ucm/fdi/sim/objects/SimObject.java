@@ -11,14 +11,16 @@ import es.ucm.fdi.ini.IniSection;
  */
 public abstract class SimObject {
 	private String id;
+	private String report_header;
 	
 	/**
 	 * Constructor.
 	 * 
 	 * @param id	ID of the current object.
 	 */
-	public SimObject(String id){
+	public SimObject(String id, String header){
 		this.id = id;
+		report_header = header;
 	}
 	
 	/**
@@ -68,7 +70,7 @@ public abstract class SimObject {
 	 * @param out Reference to a map where the report will be stored.
 	 */
 	public IniSection report(int t) {
-		IniSection out = new IniSection(getReportHeader());
+		IniSection out = new IniSection(report_header);
 		out.setValue("id", id);
 		out.setValue("time", Integer.toString(t));
 		fillReportDetails(out);
@@ -82,12 +84,4 @@ public abstract class SimObject {
 	* @param out Map to store the report.
 	*/
 	public abstract void fillReportDetails(IniSection out);
-
-	/**
-	* Returns the header for the object report.
-	*
-	* @return The header as a <code>String</code>
-	*/
-	public abstract String getReportHeader();
-	//DEFAULT IMPLEMENTATION??
 }

@@ -19,7 +19,7 @@ import es.ucm.fdi.control.Controller;
 public class JunctionTest {
 	
 	@Test
-	public void completeMovementTest() throws Exception {
+	public void dynamicsTest() throws Exception {
 		Junction j1, j2, j3, j4, j;
 		Road r1,r2,r3,r4;
 		Road or1,or2,or3,or4;

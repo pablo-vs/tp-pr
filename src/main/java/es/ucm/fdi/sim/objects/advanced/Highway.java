@@ -1,9 +1,13 @@
-package es.ucm.fdi.sim.objects;
+package es.ucm.fdi.sim.objects.advanced;
+
+import es.ucm.fdi.ini.IniSection;
+import es.ucm.fdi.sim.objects.Junction;
+import es.ucm.fdi.sim.objects.Road;
 
 /**
  * Class that models the behavior of <code>Highways</code> in the simulation.
  * 
- * @version 13.03.2018
+ * @version 15.03.2018
  */
 public class Highway extends Road{
 	int lanes;
@@ -37,4 +41,10 @@ public class Highway extends Road{
 			return 2;
 		}
 	}
+	
+	@Override
+	public void fillReportDetails(IniSection out) {
+    	super.fillReportDetails(out);
+    	out.setValue("type", "lanes");
+    }
 }

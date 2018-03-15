@@ -16,8 +16,7 @@ import es.ucm.fdi.sim.objects.Junction;
  *	@version 13.03.2018
  */
 public class Vehicle extends SimObject{
-	
-    private static String report_header = "vehicle_report";
+	private static String vehicle_header = "vehicle_report";
     private Road currentRoad;
     private List<Junction> itinerary;
     private int maxVel, currentVel, position, brokenTime, kilometrage, nextJunction;
@@ -32,7 +31,7 @@ public class Vehicle extends SimObject{
      * @param itinerary	Itinerary to follow by the <code>Vehicle</code>
      */
     public Vehicle(String id, int maxVel, List<Junction> itinerary){
-    	super(id);
+    	super(id, vehicle_header);
     	this.itinerary = new ArrayList<Junction>(itinerary);
     	this.maxVel = maxVel;
     	currentVel = 0;
@@ -181,24 +180,11 @@ public class Vehicle extends SimObject{
     public void fillReportDetails(IniSection out) {
     	out.setValue("speed", Integer.toString(currentVel));
     	out.setValue("kilometrage", Integer.toString(kilometrage));
-    	if(brokenTime > 0){
-    	    out.setValue("faulty", brokenTime);
-    	}else{
-    	    out.setValue("faulty", "0");
-    	}
+    	out.setValue("faulty", brokenTime);
     	if(arrived){
     	    out.setValue("location", "arrived");
     	}else{
     	    out.setValue("location", "(" + currentRoad.getID() + "," + position + ")");
     	}
-    }
-
-    /**
-     * Returns the header for the object report.
-     *
-     * @return The header as a <code>String</code>
-     */
-    public String getReportHeader() {
-	   return report_header;
     }
 }

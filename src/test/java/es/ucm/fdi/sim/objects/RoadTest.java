@@ -16,7 +16,7 @@ import es.ucm.fdi.control.Controller;
 public class RoadTest {
 	
 	@Test
-	public void completeMovementTest() throws Exception {
+	public void dynamicsTest() throws Exception {
 		Road r;
 		Junction ini, end;
 		Vehicle v1,v2,v3,v4;

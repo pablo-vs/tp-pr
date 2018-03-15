@@ -20,7 +20,7 @@ import es.ucm.fdi.exceptions.UnreachableJunctionException;
  */
 public class Junction extends SimObject{
 	
-	private static String report_header = "junction_report";
+	private static String junction_header = "junction_report";
 	private int time, currentOpenQueue;
 	private List<IncomingRoad> incomingRoads;
 	private List<Road> outgoingRoads;
@@ -80,7 +80,7 @@ public class Junction extends SimObject{
 	 * @param id	ID of current <code>Junction</code>.
 	 */
 	public Junction(String id) {
-		super(id);
+		super(id, junction_header);
 		incomingRoads = new ArrayList<IncomingRoad>();
 		outgoingRoads = new ArrayList<Road>();
 		roadToQueueMap = new HashMap<Road, IncomingRoad>();
@@ -97,7 +97,7 @@ public class Junction extends SimObject{
 	 * @param outgoing	List of the outgoing <code>Roads</code> of this <code>Junction</code>.
 	 */
 	public Junction(String id, List<Road> incoming, List<Road> outgoing){
-		super(id);
+		super(id, junction_header);
 		incomingRoads = new ArrayList<IncomingRoad>(incoming.size());
 		currentOpenQueue = -1;
 		for(int i = 0; i < incoming.size(); ++i) {
@@ -113,7 +113,7 @@ public class Junction extends SimObject{
 	/**
 	 * Sets the trafficLights to its next state.
 	 */
-	private void updateTrafficLights() {
+	protected void updateTrafficLights() {
 		if(currentOpenQueue == -1 && incomingRoads.size() > 0) {
 			currentOpenQueue = 0;
 			incomingRoads.get(0).setTrafficLight(true);
@@ -198,15 +198,6 @@ public class Junction extends SimObject{
 		outgoingRoads.add(r);
 		junctionToRoadMap.put(r.getEnd(), r);
 	}	
-
-	/**
-	 * Returns the header for the object report.
-	 *
-	 * @return The header as a <code>String</code>
-	 */
-	public String getReportHeader() {
-		return report_header;
-	}
 
 	/**
 	 * Fills the given map with the details of the state of the object.

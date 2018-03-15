@@ -17,7 +17,7 @@ import es.ucm.fdi.sim.objects.Junction;
  */
 public class Road extends SimObject{
 	
-	private static String report_header = "road_report";
+	private static String road_header = "road_report";
 	//VehicleList: Position -> List of vehicles
 	//VehicleList is inversely ordered
 	private MultiTreeMap<Integer, Vehicle> vehicleList;
@@ -34,7 +34,7 @@ public class Road extends SimObject{
 	 * @param end	Ending <code>Junction</code> of the current <code>Road</code>.
 	 */
 	public Road(String id, int l, int maxV, Junction ini, Junction end){
-		super(id);
+		super(id, road_header);
 		length = l;
 		maxVel = maxV;
 		this.ini = ini;
@@ -177,14 +177,5 @@ public class Road extends SimObject{
 			aux.append(")");
 		}
 		out.setValue("state", aux.toString());
-	}
-
-	/**
-	 * Returns the header for the object report.
-	 *
-	 * @return The header as a <code>String</code>
-	 */
-	public String getReportHeader() {
-		return report_header;
 	}
 }

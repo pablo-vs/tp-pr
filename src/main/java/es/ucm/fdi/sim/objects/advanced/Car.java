@@ -1,7 +1,11 @@
-package es.ucm.fdi.sim.objects;
+package es.ucm.fdi.sim.objects.advanced;
 
 import java.util.List;
 import java.util.Random;
+
+import es.ucm.fdi.ini.IniSection;
+import es.ucm.fdi.sim.objects.Junction;
+import es.ucm.fdi.sim.objects.Vehicle;
 
 /**
  * 
@@ -34,6 +38,25 @@ public class Car extends Vehicle {
 	
 	/**
 	 * 
+	 * @param id
+	 * @param maxVel
+	 * @param itinerary
+	 * @param resistance
+	 * @param faultyDuration
+	 * @param prob
+	 */
+	public Car(String id, int maxVel, List<Junction> itinerary, int resistance, 
+			int faultyDuration, double prob){
+		super(id, maxVel, itinerary);
+		resistanceKM = resistance;
+		maxFaultyDuration = faultyDuration;
+		faultyProbability = prob;
+	    prng = new Random(System.currentTimeMillis()); //VS DOING IT IN EVENTS
+		lastTraveled = 0;
+	}
+	
+	/**
+	 * 
 	 */
 	@Override
     public void move(){
@@ -55,4 +78,10 @@ public class Car extends Vehicle {
 		super.setBrokenTime(t);
 			lastTraveled = 0;
 	}
+	
+	@Override
+	public void fillReportDetails(IniSection out) {
+    	super.fillReportDetails(out);
+    	out.setValue("type", "car");
+    }
 }

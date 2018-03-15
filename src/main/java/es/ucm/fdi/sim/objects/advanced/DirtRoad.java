@@ -1,9 +1,13 @@
-package es.ucm.fdi.sim.objects;
+package es.ucm.fdi.sim.objects.advanced;
+
+import es.ucm.fdi.ini.IniSection;
+import es.ucm.fdi.sim.objects.Junction;
+import es.ucm.fdi.sim.objects.Road;
 
 /**
  * Class that models the behavior of <code>DirtRoad</code> in the simulation.
  * 
- * @version 13.03.2018
+ * @version 15.03.2018
  */
 public class DirtRoad extends Road{
 
@@ -30,4 +34,10 @@ public class DirtRoad extends Road{
 	public int calculateBaseSpeed(){
 		return getMaxVel();
 	}
+	
+	@Override
+	public void fillReportDetails(IniSection out) {
+    	super.fillReportDetails(out);
+    	out.setValue("type", "dirt");
+    }
 }
