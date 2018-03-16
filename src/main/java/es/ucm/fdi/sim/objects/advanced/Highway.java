@@ -10,7 +10,7 @@ import es.ucm.fdi.sim.objects.Road;
  * @version 15.03.2018
  */
 public class Highway extends Road{
-	int lanes;
+	private int lanes;
 	
 	public Highway(String id, int l, int maxV, Junction ini, Junction end, int nLanes){
 		super(id,l,maxV,ini,end);
@@ -42,6 +42,9 @@ public class Highway extends Road{
 		}
 	}
 	
+	/**
+	 * Adapted method that adds the type to the report.
+	 */
 	@Override
 	public void fillReportDetails(IniSection out) {
     	super.fillReportDetails(out);

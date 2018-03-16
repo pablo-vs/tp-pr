@@ -7,7 +7,7 @@ import es.ucm.fdi.sim.objects.Junction;
 import es.ucm.fdi.sim.objects.Road;
 
 public class RoundRobin extends Junction {
-	int minTimeSlice, maxTimeSlice;
+	private int minTimeSlice, maxTimeSlice;
 	
 	public RoundRobin(String id, List<Road> incoming, List<Road> outgoing, 
 			int min, int max){

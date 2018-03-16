@@ -8,23 +8,24 @@ import es.ucm.fdi.sim.objects.Junction;
 import es.ucm.fdi.sim.objects.Vehicle;
 
 /**
- * 
- *
+ *	Class that models the behavior of <code>Cars</code> in the simulation.
  */
 public class Car extends Vehicle {
-	double faultyProbability;
-	int resistanceKM, maxFaultyDuration, lastTraveled; 
-	Random prng;
+	private double faultyProbability;
+	private int resistanceKM, maxFaultyDuration, lastTraveled; 
+	private Random prng;
 	
 	/**
+	 * Constructor for the class.
 	 * 
-	 * @param id
-	 * @param maxVel
-	 * @param itinerary
-	 * @param resistance
-	 * @param faultyDuration
-	 * @param prob
-	 * @param seed
+	 * @param id				ID of this <code>Car</code>.
+	 * @param maxVel			Maximum velocity of this <code>Car</code>.
+	 * @param itinerary			Itinerary of this <code>Car</code>.
+	 * @param resistance		KM this <code>Car</code> must cover before possibly being 
+	 * 							faulty.
+	 * @param faultyDuration	Time this <code>Car</code> spends broken when it breaks.
+	 * @param prob				Probability for this <code>Car</code> to break.
+	 * @param seed				Seed for the PRNG.
 	 */
 	public Car(String id, int maxVel, List<Junction> itinerary, int resistance, 
 			int faultyDuration, double prob, long seed){
@@ -56,7 +57,7 @@ public class Car extends Vehicle {
 	}
 	
 	/**
-	 * 
+	 * Adapted method that checks whether this <code>Car</code> can break this step.
 	 */
 	@Override
     public void move(){
@@ -71,7 +72,7 @@ public class Car extends Vehicle {
 	}
 	
 	/**
-	 * 
+	 * 	Adapted setter method for {@link Vehicle#brokenTime}.
 	 */
 	@Override
     public void setBrokenTime(int t){
@@ -79,6 +80,9 @@ public class Car extends Vehicle {
 			lastTraveled = 0;
 	}
 	
+	/**
+	 * Adapted method that adds the type to the report.
+	 */
 	@Override
 	public void fillReportDetails(IniSection out) {
     	super.fillReportDetails(out);

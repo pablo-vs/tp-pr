@@ -35,6 +35,9 @@ public class DirtRoad extends Road{
 		return getMaxVel();
 	}
 	
+	/**
+	 * Adapted method that adds the type field to the report.
+	 */
 	@Override
 	public void fillReportDetails(IniSection out) {
     	super.fillReportDetails(out);

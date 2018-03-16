@@ -7,7 +7,7 @@ import es.ucm.fdi.sim.objects.Junction;
 import es.ucm.fdi.sim.objects.Road;
 
 public class MostCrowed extends Junction{
-	int timeInterval, usedTimeUnits;
+	private int timeInterval, usedTimeUnits;
 	
 	public MostCrowed(String id, List<Road> incoming, List<Road> outgoing){
 		super(id,incoming,outgoing);
