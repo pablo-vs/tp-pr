@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.io.OutputStream;
 import java.io.IOException;
 
-
 /**
  * Contains the complete simulator model.
  *
@@ -26,7 +25,7 @@ import java.io.IOException;
  */
 public class Simulator {
 
-    MultiTreeMap<Integer, Event> eventList; //Ordenados por tiempo y, a igualdad, orden de llegada
+    MultiTreeMap<Integer, Event> eventList; //Ordered by time and arrival time.
     RoadMap roadMap;
     int timeLimit, timer;
 	
@@ -57,26 +56,25 @@ public class Simulator {
     public void execute(int simulationSteps, OutputStream outputFile) throws IOException {
 		timeLimit = timer + simulationSteps - 1;
 		while (timer <= timeLimit) {
-		    // 1. ejecutar los eventos correspondientes a ese tiempo
+		    // 1. Execute corresponding events
 		    for(Event e : eventList.getOrDefault(timer, new ArrayList<Event>())) {
 				e.execute(roadMap);
 		    }
 			
-		    // 2. invocar al método avanzar de las carreteras
+		    // 2. Invoke advance method for every Road
 		    for(Road r : roadMap.getRoads()) {
 				r.move();
 		    }
 				
-		    // 3. invocar al método avanzar de los cruces
+		    // 3. Invoke advance method for every Junction
 		    for(Junction j : roadMap.getJunctions()) {
 				j.move();
 		    }
 				
-		    // 4. this.contadorTiempo++;
+		    // 4. Advance timer
 		    this.timer++;
 				
-		    // 5. esciribir un informe en OutputStream
-		    // en caso de que no sea null
+		    // 5. Write report in OutputStream (if it is not null)
 		    if(outputFile != null) {
 				try {
 				    prepareReport().store(outputFile);
@@ -89,9 +87,9 @@ public class Simulator {
     }
 	
     /**
-     * Prepares a report of all the objects in the simulation,
-     * first the roads, then the junctions and then the vehicles,
-     * by order of insertion.
+     * Prepares a report of all the objects in the simulation, first the <code>Roads</code>,
+     * then the <code>Junctions</code> and finally the <code>vehicles</code>, by order of
+     * insertion.
      *
      * @return An <code>Ini</code> object storing the report
      */

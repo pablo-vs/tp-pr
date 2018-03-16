@@ -36,12 +36,12 @@ public class NewRoadEvent extends Event {
      * @param l Length of the road.
      */
     public NewRoadEvent(int t, String id, String ini, String end, int v, int l){
-	super(t);
-	roadID = id;
-	this.ini = ini;
-	this.end = end;
-	maxVel = v;
-	length = l;
+		super(t);
+		roadID = id;
+		this.ini = ini;
+		this.end = end;
+		maxVel = v;
+		length = l;
     }
 
     /**
@@ -56,8 +56,12 @@ public class NewRoadEvent extends Event {
 	try{
 	    iniJ = r.getJunction(ini);
 	    endJ = r.getJunction(end);
-	    if(iniJ == null) throw new ObjectNotFoundException("Error: no junction with id " + ini);
-	    if(endJ == null) throw new ObjectNotFoundException("Error: no junction with id " + end);
+	    if(iniJ == null){
+	    	throw new ObjectNotFoundException("Error: no junction with id " + ini);
+	    }
+	    if(endJ == null){
+	    	throw new ObjectNotFoundException("Error: no junction with id " + end);
+	    }
 	    Road newRoad = new Road(roadID, length, maxVel, iniJ, endJ);
 	    r.addRoad(newRoad);
 			
@@ -104,23 +108,23 @@ public class NewRoadEvent extends Event {
 	    if(TAG.equals(ini.getTag()))
 		{
 		    try{
-			timeStr = ini.getValue("time");
-			idStr = ini.getValue("id");
-			iniStr = ini.getValue("src");
-			endStr = ini.getValue("dest");
-			maxVelStr = ini.getValue("max_speed");
-			lengthStr = ini.getValue("length");
-					
-			checkIDValidity(idStr);
-			checkIDValidity(iniStr);
-			checkIDValidity(endStr);
-					
-			//event = NewRoadEvent.this; ^^
-			event = new NewRoadEvent(Integer.parseInt(timeStr), idStr, iniStr,
-						 endStr, Integer.parseInt(maxVelStr),
-						 Integer.parseInt(lengthStr));
+				timeStr = ini.getValue("time");
+				idStr = ini.getValue("id");
+				iniStr = ini.getValue("src");
+				endStr = ini.getValue("dest");
+				maxVelStr = ini.getValue("max_speed");
+				lengthStr = ini.getValue("length");
+						
+				checkIDValidity(idStr);
+				checkIDValidity(iniStr);
+				checkIDValidity(endStr);
+						
+				//event = NewRoadEvent.this; ^^
+				event = new NewRoadEvent(Integer.parseInt(timeStr), idStr, iniStr,
+							 endStr, Integer.parseInt(maxVelStr),
+							 Integer.parseInt(lengthStr));
 		    } catch (Exception e){
-			throw new IllegalArgumentException("Error while parsing event:\n" + e.getMessage(), e);
+		    	throw new IllegalArgumentException("Error while parsing event:\n" + e.getMessage(), e);
 		    }	
 		}
 

@@ -1,13 +1,12 @@
 package es.ucm.fdi.sim.objects;
 
 import java.util.Map;
-import java.util.HashMap;
 import java.util.List;
+import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Collections;
 
 import java.lang.IllegalArgumentException;
-import es.ucm.fdi.ini.Ini;
 
 /**
  * Class that contains all the <code>SimObject</code> objects in the model
@@ -16,20 +15,19 @@ import es.ucm.fdi.ini.Ini;
  * @version 26.02.2018
  */
 public class RoadMap {
-    // búsqueda por ids, unicidad
+    // ID Search, unicity
     private Map<String, SimObject> simObjects = new HashMap<String, SimObject>();
 
-    // listados reales
+    // Real lists
     private List<Junction> junctions = new ArrayList<>();
     private List<Road> roads = new ArrayList<>();
     private List<Vehicle> vehicles = new ArrayList<>();
 
-    // listados read-only, via Collections.unmodifiableList();
+    // Read-only Lists, via Collections.unmodifiableList();
     private List<Junction> junctionsRO;
     private List<Road> roadsRO;
     private List<Vehicle> vehiclesRO;
 
-    // búsqueda por ids, unicidad
     /**
      * Gets the object with the given identifier.
      *
@@ -44,7 +42,7 @@ public class RoadMap {
     /**
      * Gets the <code>Junction</code> with the given identifier.
      *
-     * @param id Identifier of the Junciton.
+     * @param id Identifier of the <code>Junction</code>.
      * @return The object corresponding to the id.
      */
     public Junction getJunction(String id) {
@@ -58,7 +56,7 @@ public class RoadMap {
     /**
      * Gets the <code>Road</code> with the given identifier.
      *
-     * @param id Identifier of the Road.
+     * @param id Identifier of the <code>Road</code>.
      * @return The object corresponding to the id.
      */
     public Road getRoad(String id) {
@@ -72,7 +70,7 @@ public class RoadMap {
     /**
      * Gets the <code>Vehicle</code> with the given identifier.
      *
-     * @param id Identifier of the Vehicle.
+     * @param id Identifier of the <code>Vehicle</code>.
      * @return The object corresponding to the id.
      */
     public Vehicle getVehicle(String id) {
@@ -83,11 +81,11 @@ public class RoadMap {
 		return (Vehicle)result;
     }
 
-    //listado (sólo lectura)
+    //List (Read-only)
     /**
      * Returns a list containing all the <code>Junctions</code> in the map.
      *
-     * @return Constant list of Junctions.
+     * @return Constant list of <code>Junctions</code>.
      */
     public List<Junction> getJunctions() {
     	return junctionsRO;
@@ -105,7 +103,7 @@ public class RoadMap {
     /**
      * Returns a list containing all the <code>Vehicles</code> in the map.
      *
-     * @return Constant list of Vehicles.
+     * @return Constant list of <code>Vehicles</code>.
      */
     public List<Vehicle> getVehicles() {
     	return vehiclesRO;
@@ -120,7 +118,7 @@ public class RoadMap {
 	return (getSimObject(id) == null);
     }
 
-    // Object insertion (package-protected.
+    // Object insertion (package-protected)
     /**
      * Adds a <code>Junction</code> to the map.
      *

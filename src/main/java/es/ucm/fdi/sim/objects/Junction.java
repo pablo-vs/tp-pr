@@ -1,22 +1,19 @@
 package es.ucm.fdi.sim.objects;
 
 import java.util.List;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Queue;
-import java.util.ArrayDeque;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.ArrayDeque;
 
 import es.ucm.fdi.ini.IniSection;
-import es.ucm.fdi.sim.objects.Vehicle;
 import es.ucm.fdi.sim.objects.Road;
+import es.ucm.fdi.sim.objects.Vehicle;
 import es.ucm.fdi.exceptions.UnreachableJunctionException;
 
 /**
  *	Class that models the general behavior for <code>Junctions</code> in the simulation.
  *
- *	@version 26.02.2018
+ *	@version 16.03.2018
  */
 public class Junction extends SimObject{
 	
@@ -60,7 +57,7 @@ public class Junction extends SimObject{
 		}
 		
 		/**
-		 * Adapted removeFirst method that updates the number of <code>Vehicles</code> 
+		 * Adapted {@link ArrayDeque#removeFirst} method that updates the number of <code>Vehicles</code> 
 		 * waiting.
 		 */
 		@Override
@@ -144,7 +141,7 @@ public class Junction extends SimObject{
 	}
 
 	/**
-	 * Sets the trafficLights to its next state.
+	 * Sets the traffic lights to their next state.
 	 */
 	protected void updateTrafficLights() {
 		if(incomingRoads.size() > 0) {		
@@ -161,7 +158,6 @@ public class Junction extends SimObject{
 	 * 
 	 * @param v	<code>Vehicle</code> to insert into this <code>Junction</code>.
 	 */
-	//Invocado por Vehicles -> Ordenados por orden de llegada
 	public void vehicleIn(Vehicle v){
 		IncomingRoad queue = roadToQueueMap.get(v.getRoad());
 		

@@ -32,6 +32,7 @@ public class BicycleTest {
 		r.addRoad(new Road("r2", 200, 20, it.get(1), it.get(2)));		
 		r.addVehicle(new Bicycle("b", 20, it));
 		
+		
 		current = r.getRoad("r1");
 		current.move();
 			

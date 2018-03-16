@@ -2,12 +2,11 @@ package es.ucm.fdi.sim.objects;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Map;
 
 import es.ucm.fdi.ini.IniSection;
-import es.ucm.fdi.sim.objects.SimObject;
 import es.ucm.fdi.sim.objects.Road;
 import es.ucm.fdi.sim.objects.Junction;
+import es.ucm.fdi.sim.objects.SimObject;
 
 /**
  *	Class that controls the general behavior of <code>Vehicles</code> in the simulation. 
@@ -107,7 +106,7 @@ public class Vehicle extends SimObject{
 		if(nextJunction > 0) {
 			currentRoad.vehicleOut(this);
 		}
-	
+		
 		if(nextJunction == itinerary.size()-1) {
 			arrived = true;
 		} else {
@@ -127,7 +126,7 @@ public class Vehicle extends SimObject{
 		brokenTime += t;
 		currentVel = 0;
 	}
-	
+        
 	/**
 	 * Setter method for {@link Vehicle#currentVel}.
 	 * 

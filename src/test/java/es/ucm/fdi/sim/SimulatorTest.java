@@ -6,22 +6,22 @@ import java.lang.IllegalArgumentException;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-import es.ucm.fdi.launcher.ExampleMain;
+import es.ucm.fdi.launcher.Main;
 
 public class SimulatorTest{
 
 	@Test
 	public void basicTest() throws Exception {
-		ExampleMain.test("resources/examples/basic");
+		Main.test("resources/examples/basic");
 	}
 
 	//@Test
 	public void advancedTest() throws Exception {
-		ExampleMain.test("resources/examples/advanced");
+		Main.test("resources/examples/advanced");
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void errorTest() throws Exception {
-		ExampleMain.test("resources/examples/err");
+		Main.test("resources/examples/err");
 	}
 }
