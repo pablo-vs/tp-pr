@@ -20,9 +20,10 @@ import es.ucm.fdi.exceptions.UnreachableJunctionException;
  */
 public class Junction extends SimObject{
 	
-	private static String junction_header = "junction_report";
+	protected List<IncomingRoad> incomingRoads;
+	
+	private static String junction_header = "junction_report";	
 	private int time, currentOpenQueue;
-	private List<IncomingRoad> incomingRoads;
 	private List<Road> outgoingRoads;
 	private HashMap<Road, IncomingRoad> roadToQueueMap;
 	private HashMap<Junction, Road> junctionToRoadMap;
@@ -31,9 +32,10 @@ public class Junction extends SimObject{
 	 * Private class representing a <code>Road</code> with its respective queue of 
 	 * <code>Vehicles</code> and traffic light.
 	 */
-	private class IncomingRoad extends ArrayDeque<Vehicle> {
+	protected class IncomingRoad extends ArrayDeque<Vehicle> {
 		private Road road;
 		private boolean trafficLight;
+		private int waiting;
 
 		/**
 		 * Constructor.
@@ -44,8 +46,39 @@ public class Junction extends SimObject{
 			super();
 			this.road = road;
 			trafficLight = false;
+			waiting = 0;
 		}
-
+		
+		/**
+		 * Adapted add method that updates the number of <code>Vehicles</code> waiting.
+		 */
+		@Override
+		public boolean add(Vehicle v){
+			boolean ret = super.add(v);
+			if(ret) waiting++;
+			return ret;
+		}
+		
+		/**
+		 * Adapted removeFirst method that updates the number of <code>Vehicles</code> 
+		 * waiting.
+		 */
+		@Override
+		public Vehicle removeFirst(){
+			Vehicle v = super.removeFirst();
+			waiting--;
+			return v;
+		}
+		
+		/**
+		 * Getter method for {@link IncomingRoad#waiting}.
+		 * 
+		 * @return	The number of <code>Vehicles</code> waiting in this queue.
+		 */
+		public int getWaiting(){
+			return waiting;
+		}
+		
 		/**
 		 * Getter method for {@link IncomingRoad#road}.
 		 * 
@@ -114,8 +147,7 @@ public class Junction extends SimObject{
 	 * Sets the trafficLights to its next state.
 	 */
 	protected void updateTrafficLights() {
-		if(incomingRoads.size() > 0) {
-			
+		if(incomingRoads.size() > 0) {		
 			if(currentOpenQueue != -1) {
 				incomingRoads.get(currentOpenQueue).setTrafficLight(false);
 			}
@@ -147,6 +179,25 @@ public class Junction extends SimObject{
 		return (currentOpenQueue == -1 || incomingRoads.size() == 0 ||
 			incomingRoads.get(currentOpenQueue).size() == 0) ?
 			null : incomingRoads.get(currentOpenQueue).removeFirst();
+	}
+	
+	/**
+	 * Getter method for {@link Junction#currentOpenQueue}.
+	 * 
+	 * @return	The index of the <code>Road</code> that currently has the traffic light set to
+	 * green.
+	 */
+	public int getCurrentOpenQueue(){
+		return currentOpenQueue;
+	}
+	
+	/**
+	 * Setter method for {@link Junction#currentOpenQueue}.
+	 * 
+	 * @param t	New value for the open queue.
+	 */
+	public void setCurrentOpenQueue(int t){
+		currentOpenQueue = t;
 	}
 	
 	/**
