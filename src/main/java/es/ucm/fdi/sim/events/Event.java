@@ -47,30 +47,30 @@ public abstract class Event {
     public abstract void execute(RoadMap r);
 
     /**
-     *	Abstract parent of all the EventBuilders
+     *	Abstract parent of all the <code>EventBuilders</code>
      */
-    public static abstract class EventBuilder {
-		
-	private Pattern checkID = Pattern.compile("[\\w]+");
-
-	/**
-	 * Checks the validity of object IDs from the INI file using a Pattern.
-	 *
-	 * @param id The ID to check.
-	 */
-	public void checkIDValidity(String id) {
-	    Matcher m = checkID.matcher(id);
-	    if(!m.matches()) {
-		  throw new IllegalArgumentException("Not a valid id: " + id);
-	    }
-	}
-
-	/**
-	 * Build the event from a given INI section, returns null if the section tag does
-	 * not match the event tag.
-	 *
-	 * @param section The <code>IniSection</code> from which to parse the event.
-	 */
-	public abstract Event build(IniSection section) throws IllegalArgumentException;
+    public static abstract class EventBuilder {		
+		private Pattern checkID = Pattern.compile("[\\w]+");
+	
+		/**
+		 * Checks the validity of object IDs from the <Code>Ini</code> file using a 
+		 * <code>Pattern</code>.
+		 *
+		 * @param id The ID to check.
+		 */
+		public void checkIDValidity(String id) {
+		    Matcher m = checkID.matcher(id);
+		    if(!m.matches()) {
+			  throw new IllegalArgumentException("Not a valid id: " + id);
+		    }
+		}
+	
+		/**
+		 * Build the event from a given <code>IniSection</code>, returns null if the section tag
+		 * does not match the event tag.
+		 *
+		 * @param section The <code>IniSection</code> from which to parse the event.
+		 */
+		public abstract Event build(IniSection section) throws IllegalArgumentException;
     }
 }

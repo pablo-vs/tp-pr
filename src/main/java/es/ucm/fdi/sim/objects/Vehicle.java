@@ -2,12 +2,11 @@ package es.ucm.fdi.sim.objects;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Map;
 
 import es.ucm.fdi.ini.IniSection;
-import es.ucm.fdi.sim.objects.SimObject;
 import es.ucm.fdi.sim.objects.Road;
 import es.ucm.fdi.sim.objects.Junction;
+import es.ucm.fdi.sim.objects.SimObject;
 
 /**
  *	Class that controls the general behavior of <code>Vehicles</code> in the simulation. 
@@ -80,10 +79,10 @@ public class Vehicle extends SimObject{
     	position = 0;
     	inQueue = false;
 
-	if(nextJunction > 0) {
-		currentRoad.vehicleOut(this);
-	}
-	
+		if(nextJunction > 0) {
+			currentRoad.vehicleOut(this);
+		}
+		
     	if(nextJunction == itinerary.size()-1) {
     	    arrived = true;
     	} else {
@@ -92,7 +91,7 @@ public class Vehicle extends SimObject{
     	    currentRoad = currentJunction.getRoadToJunction(itinerary.get(nextJunction));
     	    currentRoad.vehicleIn(this);
     	}
-    }
+	}
 	
     /**
      * Setter method for {@link Vehicle#brokenTime}.
@@ -110,8 +109,8 @@ public class Vehicle extends SimObject{
      * @param v	New velocity for this <code>Vehicle</code>.
      */
     public void setCurrentVel(int v){
-        currentVel = v <= maxVel ? v : maxVel;
-        currentVel = brokenTime > 0 ? 0 : currentVel;
+	    currentVel = v <= maxVel ? v : maxVel;
+	    currentVel = brokenTime > 0 ? 0 : currentVel;
     }
 	
     /**
@@ -120,7 +119,7 @@ public class Vehicle extends SimObject{
      * @param v New maximum velocity for this <code>Vehicle</code>.
      */
     public void setMaxVel(int v){
-	   maxVel = v;
+    	maxVel = v;
     }
 	
     /**
@@ -129,8 +128,8 @@ public class Vehicle extends SimObject{
      * @return Current <code>Vehicle</code>'s velocity.
      */
     public int getMaxVel(){
- 	   return maxVel;
-     }
+    	return maxVel;
+    }
     
     /**
      * Getter method for {@link Vehicle#currentVel}.
@@ -147,7 +146,7 @@ public class Vehicle extends SimObject{
      * @return Current <code>Road</code>'s position.
      */
     public int getPosition(){
-	   return position;
+    	return position;
     }
 
     /**
@@ -156,7 +155,7 @@ public class Vehicle extends SimObject{
      * @return Current <code>Road</code>.
      */
     public Road getRoad() {
-	   return currentRoad;
+    	return currentRoad;
     }
 	
     /**
@@ -165,11 +164,11 @@ public class Vehicle extends SimObject{
      * @return true if this <code>Vehicle</code> is faulty, false otherwise.
      */
     public boolean isFaulty() {
-    	boolean faulty = false;
-    	if(brokenTime > 0){
-    	    faulty = true;
-    	}
-    	return faulty;
+		boolean faulty = false;
+		if(brokenTime > 0){
+		    faulty = true;
+		}
+		return faulty;
     }
 	
     /**

@@ -3,7 +3,6 @@ package es.ucm.fdi.sim.events;
 import java.util.List;
 import java.util.Arrays;
 import java.util.ArrayList;
-import java.util.Collections;
 
 import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.sim.objects.RoadMap;
@@ -11,7 +10,7 @@ import java.lang.IllegalArgumentException;
 import es.ucm.fdi.exceptions.ObjectNotFoundException;
 
 /**
- * Represents a Make Vehicle Faulty <code>Event</code>.
+ * Represents an <code>Event</code> that sets a list of <code>Vehicles</code> to faulty.
  *
  * @version 28.02.2018
  */
@@ -76,7 +75,7 @@ public class MakeVehicleFaultyEvent extends Event {
 		/**
 		 * Attempts to build a <code>MakeVehicleFaultyEvent</code> from the given <code>IniSection</code>.
 		 *
-		 * @param ini The section from which to build the <code>Event</code>.
+		 * @param ini The <code>IniSection</code> from which to build the <code>Event</code>.
 		 * @return A <code>MakeVehicleFaultyEvent</code>, or <code>null</code> if there were parsing errors.
 		 */
 		public MakeVehicleFaultyEvent build(IniSection ini) throws IllegalArgumentException{

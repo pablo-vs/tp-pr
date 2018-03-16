@@ -22,7 +22,6 @@ import java.lang.IllegalArgumentException;
  *
  * @version 10.03.2018
  */
-
 public class Controller {
     
     private static final Event.EventBuilder [] AVAILABLE_EVENTS = {
@@ -95,7 +94,7 @@ public class Controller {
     	
     }
 
-    /*
+    /**
       Reads the events from the input stream and inserts them into the simulator queue.
      */
     private void readEvents() throws IOException {
@@ -120,9 +119,9 @@ public class Controller {
 	   sim.execute(steps, output);
     }
 
-    /*
-      Attempts to create an Event from que given IniSection.
-      Returns null if the section tag is not known.
+    /**
+      Attempts to create an <code>Event</code> from the given IniSection.
+      Returns null if the section tag is unknown.
      */
     private Event parseEvent(IniSection section) {
 	Event result = null;
@@ -133,8 +132,8 @@ public class Controller {
 	    builder = AVAILABLE_EVENTS[i];
 	    Event e = builder.build(section);
 	    if(e != null) {
-		found = true;
-		result = e;
+			found = true;
+			result = e;
 	    }
 	    ++i;
 	}

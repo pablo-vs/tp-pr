@@ -12,11 +12,13 @@ import es.ucm.fdi.exceptions.ObjectNotFoundException;
 
 /**
  * Represents the New Vehicle event.
+ * 
+ * @version 16.03.2018
  */
 public class NewVehicleEvent extends Event {
     private int maxSpeed;
     private String vehicleID;
-    private List<String> itinerary; //BETTER TO USE LIST AND INSTANTIATE ARRAYASLIST LATER?
+    private List<String> itinerary;
 
     /**
      * Empty constructor.
@@ -65,7 +67,10 @@ public class NewVehicleEvent extends Event {
 		}
     }
 
-    
+    /**
+     * Extended {@link Object#equals(Object)} method for this type of <code>Event</code>. For
+     * testing purposes. 
+     */
     @Override
     public boolean equals(Object o){
     	boolean isEqual = false;
@@ -104,29 +109,25 @@ public class NewVehicleEvent extends Event {
 	
 		    event = null;
 		    if(TAG.equals(ini.getTag())) {
-			try	{
-			    //Check existence of all necessary keys and read the attributes
-			    //This ignores other unnecessary keys
-			    itinerary = new ArrayList<String>();
-			    timeStr = ini.getValue("time");
-			    vehicleIDStr = ini.getValue("id");
-			    maxSpeedStr = ini.getValue("max_speed");
-			    itineraryStr = ini.getValue("itinerary");
-	
-			    //Parse the attributes
-			    checkIDValidity(vehicleIDStr);
-	
-			    for(String junctionID : itineraryStr.split(",")) {
-				checkIDValidity(junctionID);
-				itinerary.add(junctionID);
-			    }
-						
-			    event = new NewVehicleEvent(Integer.parseInt(timeStr),
-							Integer.parseInt(maxSpeedStr),
-						        vehicleIDStr, itinerary);
-			} catch(Exception e) {
-			    throw new IllegalArgumentException("Error while parsing event:\n" + e.getMessage(), e);
-			}
+				try	{
+				    itinerary = new ArrayList<String>();
+				    timeStr = ini.getValue("time");
+				    vehicleIDStr = ini.getValue("id");
+				    maxSpeedStr = ini.getValue("max_speed");
+				    itineraryStr = ini.getValue("itinerary");
+				    checkIDValidity(vehicleIDStr);
+		
+				    for(String junctionID : itineraryStr.split(",")) {
+						checkIDValidity(junctionID);
+						itinerary.add(junctionID);
+				    }
+							
+				    event = new NewVehicleEvent(Integer.parseInt(timeStr),
+								Integer.parseInt(maxSpeedStr),
+							        vehicleIDStr, itinerary);
+				} catch(Exception e) {
+				    throw new IllegalArgumentException("Error while parsing event:\n" + e.getMessage(), e);
+				}
 		    }
 	
 		    return event;

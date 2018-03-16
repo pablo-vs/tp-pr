@@ -1,11 +1,11 @@
 package es.ucm.fdi.launcher;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.FilenameFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileNotFoundException;
-import java.io.FilenameFilter;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
 import org.apache.commons.cli.CommandLine;
@@ -19,7 +19,7 @@ import org.apache.commons.cli.ParseException;
 import es.ucm.fdi.ini.Ini;
 import es.ucm.fdi.control.Controller;
 
-public class ExampleMain {
+public class Main {
 
     private final static Integer _timeLimitDefaultValue = 10;
     private static Integer _timeLimit = null;
@@ -78,7 +78,7 @@ public class ExampleMain {
     private static void parseHelpOption(CommandLine line, Options cmdLineOptions) {
 		if (line.hasOption("h")) {
 		    HelpFormatter formatter = new HelpFormatter();
-		    formatter.printHelp(ExampleMain.class.getCanonicalName(), cmdLineOptions, true);
+		    formatter.printHelp(Main.class.getCanonicalName(), cmdLineOptions, true);
 		    System.exit(0);
 		}
     }
