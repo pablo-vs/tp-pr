@@ -12,6 +12,17 @@ import es.ucm.fdi.sim.objects.Road;
  */
 public class MostCrowed extends Junction{
 	private int timeInterval, usedTimeUnits;
+
+	/**
+	 * Constructor for the class.
+	 * 
+	 * @param id		ID of the <code>Junction</code>.
+	 */
+	public MostCrowed(String id){
+		super(id);
+		timeInterval = 0;
+		usedTimeUnits = 0;
+	}
 	
 	/**
 	 * Constructor for the class.
@@ -33,7 +44,7 @@ public class MostCrowed extends Junction{
 	 */
 	public int findRoadToUpdate(){ //Assumes list isn't empty
 		int max = 0;
-		for(int i=1;i<incomingRoads.size();++i){
+		for(int i=0;i<incomingRoads.size();++i){
 			if(incomingRoads.get(i).getWaiting() > incomingRoads.get(max).getWaiting()){
 				max = i;
 			}
@@ -47,15 +58,16 @@ public class MostCrowed extends Junction{
 	 */
 	@Override
 	protected void updateTrafficLights(){
-		if(incomingRoads.size() > 0){
+		if(incomingRoads.size() > 0 && timeInterval == usedTimeUnits){
 			if(super.getCurrentOpenQueue() != -1) {
 				incomingRoads.get(super.getCurrentOpenQueue()).setTrafficLight(false);
 			}
 			super.setCurrentOpenQueue(findRoadToUpdate());
 			incomingRoads.get(super.getCurrentOpenQueue()).setTrafficLight(true);
 			timeInterval = Math.max(
-					incomingRoads.get(super.getCurrentOpenQueue()).getWaiting(),
+					incomingRoads.get(super.getCurrentOpenQueue()).getWaiting()/2,
 					1);
+			usedTimeUnits = 0;
 		}
 	}
 	
@@ -64,11 +76,8 @@ public class MostCrowed extends Junction{
 	 */
 	@Override
 	public void move(){
-		if(usedTimeUnits == timeInterval){
-			super.move();
-		}else{
-			usedTimeUnits++;
-		}
+		usedTimeUnits++;
+		super.move();
 	}
 	
 	/**
@@ -76,7 +85,25 @@ public class MostCrowed extends Junction{
 	 */
 	@Override
 	public void fillReportDetails(IniSection out) {
-    	super.fillReportDetails(out);
-    	out.setValue("type", "mc");
-    }
+		super.fillReportDetails(out);
+		out.setValue("type", "mc");
+	}
+
+	/**
+	 * Get time interval, for testing.
+	 *
+	 * @return The current time interval.
+	 */
+	public int getTimeInterval() {
+		return timeInterval;
+	}
+
+	/**
+	 * Get the used time, for testing.
+	 *
+	 * @return The current used time units.
+	 */
+	public int getUsedTimeUnits() {
+		return usedTimeUnits;
+	}
 }
