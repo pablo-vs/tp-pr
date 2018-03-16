@@ -5,8 +5,7 @@ import java.util.regex.Matcher;
 
 import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.sim.objects.RoadMap;
-import es.ucm.fdi.exceptions.InvalidIDException;
-import es.ucm.fdi.exceptions.InvalidEventException;
+import java.lang.IllegalArgumentException;
 
 /**
  * Abstract parent of all the Events
@@ -62,7 +61,7 @@ public abstract class Event {
 	public void checkIDValidity(String id) {
 	    Matcher m = checkID.matcher(id);
 	    if(!m.matches()) {
-		  throw new InvalidIDException("Not a valid id: " + id);
+		  throw new IllegalArgumentException("Not a valid id: " + id);
 	    }
 	}
 
@@ -72,6 +71,6 @@ public abstract class Event {
 	 *
 	 * @param section The <code>IniSection</code> from which to parse the event.
 	 */
-	public abstract Event build(IniSection section) throws InvalidEventException;
+	public abstract Event build(IniSection section) throws IllegalArgumentException;
     }
 }

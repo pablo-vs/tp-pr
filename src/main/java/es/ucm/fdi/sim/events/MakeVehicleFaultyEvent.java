@@ -7,7 +7,7 @@ import java.util.Collections;
 
 import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.sim.objects.RoadMap;
-import es.ucm.fdi.exceptions.InvalidEventException;
+import java.lang.IllegalArgumentException;
 import es.ucm.fdi.exceptions.ObjectNotFoundException;
 
 /**
@@ -38,12 +38,12 @@ public class MakeVehicleFaultyEvent extends Event {
 	}
 	
 	@Override
-	public void execute(RoadMap r) throws InvalidEventException{
+	public void execute(RoadMap r) throws IllegalArgumentException{
 		for(String s : vehicles){
 			try{
 				r.getVehicle(s).setBrokenTime(duration);
 			} catch(ObjectNotFoundException e) {
-				throw new InvalidEventException("Error: vehicle not found.\n" + e.getMessage());
+				throw new IllegalArgumentException("Error: vehicle " + s + " not found.\n" + e.getMessage());
 			}
 		}
 	}
@@ -79,7 +79,7 @@ public class MakeVehicleFaultyEvent extends Event {
 		 * @param ini The section from which to build the <code>Event</code>.
 		 * @return A <code>MakeVehicleFaultyEvent</code>, or <code>null</code> if there were parsing errors.
 		 */
-		public MakeVehicleFaultyEvent build(IniSection ini) throws InvalidEventException{
+		public MakeVehicleFaultyEvent build(IniSection ini) throws IllegalArgumentException{
 			MakeVehicleFaultyEvent event;
 			int time, duration;
 			List<String> vehicles;
@@ -102,7 +102,7 @@ public class MakeVehicleFaultyEvent extends Event {
 					vehicles.forEach((id) -> checkIDValidity(id));
 									       							    
 				} catch(Exception e) {
-				    throw new InvalidEventException("Error while parsing event:\n" + e.getMessage(), e);
+				    throw new IllegalArgumentException("Error while parsing event:\n" + e.getMessage(), e);
 				}
 
 				event = new MakeVehicleFaultyEvent(time, vehicles, duration);

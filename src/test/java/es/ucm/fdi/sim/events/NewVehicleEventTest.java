@@ -11,7 +11,7 @@ import es.ucm.fdi.sim.objects.Road;
 import es.ucm.fdi.sim.objects.Junction;
 import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.sim.objects.RoadMap;
-import es.ucm.fdi.exceptions.InvalidEventException;
+import java.lang.IllegalArgumentException;
 
 public class NewVehicleEventTest implements EventTest{
 
@@ -47,7 +47,7 @@ public class NewVehicleEventTest implements EventTest{
 				event = new NewVehicleEvent.Builder().build(sec);	
 				Assert.fail("Missing fields ignored.");
 				
-			}catch(InvalidEventException e){
+			}catch(IllegalArgumentException e){
 				System.err.println("[Test 1] - "
 						+ "Missing field caught successfully on step " + i + "!");
 			}	
@@ -72,7 +72,7 @@ public class NewVehicleEventTest implements EventTest{
 				event = new NewVehicleEvent.Builder().build(sec);	
 				Assert.fail("Missing fields ignored.");
 				
-			}catch(InvalidEventException e){
+			}catch(IllegalArgumentException e){
 				System.err.println("[Test 2] - " 
 			+ "Wrong format field caught successfully on step " + i + "!");
 			}	

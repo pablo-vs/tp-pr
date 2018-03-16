@@ -7,8 +7,7 @@ import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.sim.objects.Vehicle;
 import es.ucm.fdi.sim.objects.RoadMap;
 import es.ucm.fdi.sim.objects.Junction;
-import es.ucm.fdi.exceptions.InvalidIDException;
-import es.ucm.fdi.exceptions.InvalidEventException;
+import java.lang.IllegalArgumentException;
 import es.ucm.fdi.exceptions.ObjectNotFoundException;
 
 /**
@@ -45,7 +44,7 @@ public class NewVehicleEvent extends Event {
      * @param r The <code>RoadMap</code> of the current simulation.
      */
     @Override
-    public void execute(RoadMap r) throws InvalidEventException {	
+    public void execute(RoadMap r) throws IllegalArgumentException {	
 		List<Junction> it = new ArrayList<Junction>();
 			
 		try{
@@ -62,7 +61,7 @@ public class NewVehicleEvent extends Event {
 		    r.addVehicle(new Vehicle(vehicleID, maxSpeed, it));
 				
 		} catch(ObjectNotFoundException e){
-		    throw new InvalidEventException("Error while creating new vehicle.\n" + e.getMessage(), e);
+			throw new IllegalArgumentException("Error: could not create vehicle " + vehicleID + " at time " + getTime() + ".\n" + e.getMessage(), e);
 		}
     }
 
@@ -98,7 +97,7 @@ public class NewVehicleEvent extends Event {
 		 * @param section The <code>IniSection</code> from which to parse the event.
 		 */
 		@Override
-		public NewVehicleEvent build(IniSection ini) throws InvalidEventException {
+		public NewVehicleEvent build(IniSection ini) throws IllegalArgumentException {
 		    NewVehicleEvent event;
 		    String timeStr, vehicleIDStr, maxSpeedStr, itineraryStr;
 		    List<String> itinerary;
@@ -126,7 +125,7 @@ public class NewVehicleEvent extends Event {
 							Integer.parseInt(maxSpeedStr),
 						        vehicleIDStr, itinerary);
 			} catch(Exception e) {
-			    throw new InvalidEventException("Error while parsing event:\n" + e.getMessage(), e);
+			    throw new IllegalArgumentException("Error while parsing event:\n" + e.getMessage(), e);
 			}
 		    }
 	

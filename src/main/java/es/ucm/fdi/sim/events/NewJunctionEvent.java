@@ -1,6 +1,6 @@
 package es.ucm.fdi.sim.events;
 
-import es.ucm.fdi.exceptions.InvalidEventException;
+import java.lang.IllegalArgumentException;
 import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.sim.objects.RoadMap;
 import es.ucm.fdi.sim.objects.Junction;
@@ -74,7 +74,7 @@ public class NewJunctionEvent extends Event {
 					
 			event = new NewJunctionEvent(Integer.parseInt(tStr), idStr);	
 		    } catch(Exception e){
-			throw new InvalidEventException("Error while parsing event:\n" + e.getMessage(), e);
+			throw new IllegalArgumentException("Error while parsing event:\n" + e.getMessage(), e);
 		    }	
 		}
 			

@@ -15,7 +15,7 @@ import es.ucm.fdi.sim.events.MakeVehicleFaultyEvent;
 import es.ucm.fdi.sim.Simulator;
 import es.ucm.fdi.ini.Ini;
 import es.ucm.fdi.ini.IniSection;
-import es.ucm.fdi.exceptions.InvalidEventException;
+import java.lang.IllegalArgumentException;
 
 /**
  * Controller for the simulator, acts as an interface.
@@ -103,7 +103,7 @@ public class Controller {
     	for(IniSection sec : events.getSections()) {
     	    Event e = parseEvent(sec);
     	    if(e == null) {
-        		throw new InvalidEventException("The tag " + sec.getTag()
+        		throw new IllegalArgumentException("The tag " + sec.getTag()
         						+ " does not correspond to a valid event");
             } else {
         		  sim.insertEvent(e);

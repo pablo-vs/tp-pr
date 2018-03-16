@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import es.ucm.fdi.exceptions.InvalidIDException;
+import java.lang.IllegalArgumentException;
 import es.ucm.fdi.ini.Ini;
 
 /**
@@ -126,14 +126,14 @@ public class RoadMap {
      *
      * @param j The <code>Junction</code> to add.
      */
-    public void addJunction(Junction j) throws InvalidIDException{
+    public void addJunction(Junction j) throws IllegalArgumentException{
 		String id = j.getID();
 		if(checkIdUnicity(id)) {
 		    simObjects.put(id, j);
 		    junctions.add(j);
 		    junctionsRO = Collections.unmodifiableList(junctions);
 		} else {
-		    throw new InvalidIDException("Duplicated id: " + id);
+		    throw new IllegalArgumentException("Duplicated id: " + id);
 		}
     }
     
@@ -142,14 +142,14 @@ public class RoadMap {
      *
      * @param j The <code>Road</code> to add.
      */
-    public void addRoad(Road r) throws InvalidIDException{
+    public void addRoad(Road r) throws IllegalArgumentException{
 		String id = r.getID();
 		if(checkIdUnicity(id)) {
 		    simObjects.put(id, r);
 		    roads.add(r);
 		    roadsRO = Collections.unmodifiableList(roads);
 		} else {
-		    throw new InvalidIDException("Duplicated id: " + id);
+		    throw new IllegalArgumentException("Duplicated id: " + id);
 		}
     }
 
@@ -158,14 +158,14 @@ public class RoadMap {
      *
      * @param j The <code>Vehicle</code> to add.
      */
-    public void addVehicle(Vehicle v) throws InvalidIDException {
+    public void addVehicle(Vehicle v) throws IllegalArgumentException {
 		String id = v.getID();
 		if(checkIdUnicity(id)) {
 		    simObjects.put(id, v);
 		    vehicles.add(v);
 		    vehiclesRO = Collections.unmodifiableList(vehicles);
 		} else {
-		    throw new InvalidIDException("Duplicated id: " + id);
+		    throw new IllegalArgumentException("Duplicated id: " + id);
 		}
     }
     

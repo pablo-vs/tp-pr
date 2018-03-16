@@ -8,7 +8,7 @@ import es.ucm.fdi.sim.objects.Road;
 import es.ucm.fdi.sim.objects.RoadMap;
 import es.ucm.fdi.sim.objects.Vehicle;
 import es.ucm.fdi.sim.objects.Junction;
-import es.ucm.fdi.exceptions.InvalidEventException;
+import java.lang.IllegalArgumentException;
 import es.ucm.fdi.exceptions.ObjectNotFoundException;
 
 /**
@@ -50,17 +50,19 @@ public class NewRoadEvent extends Event {
      * @param r The <code>RoadMap</code> of the current simulation.
      */
     @Override
-    public void execute(RoadMap r) throws InvalidEventException{
+    public void execute(RoadMap r) throws IllegalArgumentException{
 	Junction iniJ, endJ;
 		
 	try{
 	    iniJ = r.getJunction(ini);
 	    endJ = r.getJunction(end);
+	    if(iniJ == null) throw new ObjectNotFoundException("Error: no junction with id " + ini);
+	    if(endJ == null) throw new ObjectNotFoundException("Error: no junction with id " + end);
 	    Road newRoad = new Road(roadID, length, maxVel, iniJ, endJ);
 	    r.addRoad(newRoad);
 			
 	} catch (ObjectNotFoundException e){
-	    throw new InvalidEventException("Error: Junction not found.\n" + e.getMessage());
+		throw new IllegalArgumentException("Error: Could not create road " + roadID + " at time " + getTime() + ".\n" + e.getMessage(), e);
 	}
     }
 
@@ -118,7 +120,7 @@ public class NewRoadEvent extends Event {
 						 endStr, Integer.parseInt(maxVelStr),
 						 Integer.parseInt(lengthStr));
 		    } catch (Exception e){
-			throw new InvalidEventException("Error while parsing event:\n" + e.getMessage(), e);
+			throw new IllegalArgumentException("Error while parsing event:\n" + e.getMessage(), e);
 		    }	
 		}
 
