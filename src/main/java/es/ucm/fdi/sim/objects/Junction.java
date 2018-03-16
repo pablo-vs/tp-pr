@@ -114,11 +114,11 @@ public class Junction extends SimObject{
 	 * Sets the trafficLights to its next state.
 	 */
 	protected void updateTrafficLights() {
-		if(currentOpenQueue == -1 && incomingRoads.size() > 0) {
-			currentOpenQueue = 0;
-			incomingRoads.get(0).setTrafficLight(true);
-		} else if(currentOpenQueue > -1) {
-			incomingRoads.get(currentOpenQueue).setTrafficLight(false);
+		if(incomingRoads.size() > 0) {
+			
+			if(currentOpenQueue != -1) {
+				incomingRoads.get(currentOpenQueue).setTrafficLight(false);
+			}
 			currentOpenQueue = (currentOpenQueue + 1) % incomingRoads.size();
 			incomingRoads.get(currentOpenQueue).setTrafficLight(true);
 		}
