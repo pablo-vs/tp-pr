@@ -5,7 +5,7 @@ import org.junit.Test;
 import es.ucm.fdi.ini.IniSection;
 
 
-interface EventTest{ //Package-protected
+public interface EventTest{ //Package-protected
 	@Test
 	public void parseTest();
 	
