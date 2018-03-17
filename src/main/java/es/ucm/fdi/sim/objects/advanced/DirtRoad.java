@@ -11,8 +11,24 @@ import es.ucm.fdi.sim.objects.Road;
  */
 public class DirtRoad extends Road{
 
+	/**
+	 * Constructor.
+	 *
+	 * @param id 	ID of the current object.
+	 * @param l	Length of the current <code>Road</code>.
+	 * @param maxV	Maximum velocity of the current <code>Road</code>.
+	 * @param ini	Initial <code>Junction</code> of the current <code>Road</code>.
+	 * @param end	Ending <code>Junction</code> of the current <code>Road</code>.
+	 */
 	public DirtRoad(String id, int l, int maxV, Junction ini, Junction end){
 		super(id,l,maxV,ini,end);
+	}
+
+	/**
+	 * Constructor from Road.
+	 */
+	public DirtRoad(Road r) {
+		super(r);
 	}
 	
 	/**

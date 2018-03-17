@@ -128,6 +128,8 @@ public class Junction extends SimObject{
 	 */
 	public Junction(String id, List<Road> incoming, List<Road> outgoing){
 		super(id, junction_header);
+		roadToQueueMap = new HashMap<Road, IncomingRoad>();
+		junctionToRoadMap = new HashMap<Junction, Road>();
 		incomingRoads = new ArrayList<IncomingRoad>(incoming.size());
 		currentOpenQueue = -1;
 		for(int i = 0; i < incoming.size(); ++i) {
@@ -140,6 +142,17 @@ public class Junction extends SimObject{
 		}
 	}
 
+	/**
+	 * Copy constructor.
+	 */
+	public Junction(Junction j) {
+		super(j.getID(), junction_header);
+		this.incomingRoads = new ArrayList<IncomingRoad>(j.incomingRoads);
+		this.outgoingRoads = new ArrayList<Road>(j.outgoingRoads);
+		roadToQueueMap = new HashMap<Road, IncomingRoad>();
+		junctionToRoadMap = new HashMap<Junction, Road>();
+	}
+	
 	/**
 	 * Sets the traffic lights to their next state.
 	 */

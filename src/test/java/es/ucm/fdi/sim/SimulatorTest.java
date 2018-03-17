@@ -15,8 +15,9 @@ public class SimulatorTest{
 		Main.test("resources/examples/basic");
 	}
 
-	//@Test
+	@Test
 	public void advancedTest() throws Exception {
+		System.err.println("HOLA");
 		Main.test("resources/examples/advanced");
 	}
 

@@ -14,6 +14,7 @@ public class Car extends Vehicle {
 	private double faultyProbability;
 	private int resistanceKM, maxFaultyDuration, lastTraveled; 
 	private Random prng;
+	private long seed;
 	
 	/**
 	 * Constructor for the class.
@@ -28,12 +29,13 @@ public class Car extends Vehicle {
 	 * @param seed				Seed for the PRNG.
 	 */
 	public Car(String id, int maxVel, List<Junction> itinerary, int resistance, 
-			int faultyDuration, double prob, long seed){
+		   int faultyDuration, double prob, long seed){
 		super(id, maxVel, itinerary);
 		resistanceKM = resistance;
 		maxFaultyDuration = faultyDuration;
 		faultyProbability = prob;
-	    prng = new Random(seed);
+		this.seed = seed;
+		prng = new Random(seed);
 		lastTraveled = 0;
 	}
 	
@@ -47,12 +49,26 @@ public class Car extends Vehicle {
 	 * @param prob
 	 */
 	public Car(String id, int maxVel, List<Junction> itinerary, int resistance, 
-			int faultyDuration, double prob){
+		   int faultyDuration, double prob){
 		super(id, maxVel, itinerary);
 		resistanceKM = resistance;
 		maxFaultyDuration = faultyDuration;
 		faultyProbability = prob;
-	    prng = new Random(System.currentTimeMillis()); //VS DOING IT IN EVENTS
+		seed = System.currentTimeMillis(); //VS DOING IT IN EVENTS
+		prng = new Random(seed);
+		lastTraveled = 0;
+	}
+
+	/**
+	 * Constructor from Vehicle.
+	 */
+	public Car(Vehicle v, int resistance, int faultyDuration, double prob, long seed) {
+	        super(v);
+		resistanceKM = resistance;
+		maxFaultyDuration = faultyDuration;
+		faultyProbability = prob;
+		this.seed = seed;
+		prng = new Random(seed);
 		lastTraveled = 0;
 	}
 	
@@ -60,9 +76,9 @@ public class Car extends Vehicle {
 	 * Adapted method that checks whether this <code>Car</code> can break this step.
 	 */
 	@Override
-    public void move(){
+	public void move(){
 		if(!isFaulty() && resistanceKM < lastTraveled 
-				&& prng.nextDouble() < faultyProbability){
+		   && prng.nextDouble() < faultyProbability){
 			setBrokenTime(1+prng.nextInt(maxFaultyDuration-1));
 		}
 		super.move();
@@ -75,17 +91,25 @@ public class Car extends Vehicle {
 	 * 	Adapted setter method for {@link Vehicle#brokenTime}.
 	 */
 	@Override
-    public void setBrokenTime(int t){
+	public void setBrokenTime(int t){
 		super.setBrokenTime(t);
-			lastTraveled = 0;
+		lastTraveled = 0;
 	}
-	
+
+	public void setFaultProbability(double prob) {
+		if(0 < prob || prob > 1) {
+			throw new IllegalArgumentException("Seed must be in [0,1]");
+		} else {
+			faultyProbability = prob;
+		}
+	}
+
 	/**
 	 * Adapted method that adds the type to the report.
 	 */
 	@Override
 	public void fillReportDetails(IniSection out) {
-    	super.fillReportDetails(out);
-    	out.setValue("type", "car");
-    }
+		super.fillReportDetails(out);
+		out.setValue("type", "car");
+	}
 }

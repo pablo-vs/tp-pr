@@ -60,7 +60,7 @@ public class ControllerTest {
 		
 		assertEquals("Output does not match expected", output, expectedOutput);
 
-		System.out.println("God's in his heaven, all's right with the world");
+		System.err.println("God's in his heaven, all's right with the world");
 	}
 
 }

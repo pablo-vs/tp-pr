@@ -53,6 +53,19 @@ public class RoundRobin extends Junction {
 		fullyUsed = notUsed = false;
 		intervals = new ArrayList<Integer>();
 	}
+
+	/**
+	 * Constructor from Junction.
+	 */
+	public RoundRobin(Junction j, int min, int max) {
+		super(j);
+		minTimeSlice = min;
+		maxTimeSlice = max;
+		currentIntervalTime = 0;
+		timeConsumed = 0;
+		fullyUsed = notUsed = false;
+		intervals = new ArrayList<Integer>();
+	}
 	
 	/**
 	 * Lets the next <code>Vehicle</code> waiting in the open lane move to the next <code>Road</code>

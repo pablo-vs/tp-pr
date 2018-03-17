@@ -13,44 +13,55 @@ import es.ucm.fdi.sim.objects.Junction;
  * @version 10.03.2018
  */
 public class NewJunctionEvent extends Event {
-    private String junctionID;
+	private String junctionID;
 
-    /**
-     * Empty constructor.
-     */
-    public NewJunctionEvent(){}
+	/**
+	 * Empty constructor.
+	 */
+	public NewJunctionEvent(){}
 
-    /**
-     * Full constructor.
-     *
-     * @param t Time of the event.
-     * @param id ID of the junction.
-     */
-    public NewJunctionEvent(int t, String id){
+	/**
+	 * Full constructor.
+	 *
+	 * @param t Time of the event.
+	 * @param id ID of the junction.
+	 */
+	public NewJunctionEvent(int t, String id){
 		super(t);
 		junctionID = id;
-    }
+	}
 
-    /**
-     * Instantiates a new junction, given the parameters are valid.
-     *
-     * @param r The <code>RoadMap</code> of the current simulation.
-     */
-    @Override
-    public void execute(RoadMap r){
-    	r.addJunction(new Junction(junctionID));
-    }
+	/**
+	 * Copy constructor.
+	 */
+	public NewJunctionEvent(NewJunctionEvent e) {
+		this(e.getTime(), e.junctionID);
+	}
 
-    @Override
-    public boolean equals(Object o){
-    	return (o instanceof NewJunctionEvent 
+	/**
+	 * Instantiates a new junction, given the parameters are valid.
+	 *
+	 * @param r The <code>RoadMap</code> of the current simulation.
+	 */
+	@Override
+	public void execute(RoadMap r){
+		r.addJunction(createJunction());
+	}
+
+	public Junction createJunction() {
+		return new Junction(junctionID);
+	}
+
+	@Override
+	public boolean equals(Object o){
+		return (o instanceof NewJunctionEvent 
     			&& junctionID.equals(((NewJunctionEvent)o).junctionID));
-    }
+	}
     
-    /**
-     * Builder for this event.
-     */
-    public static class Builder extends EventBuilder{
+	/**
+	 * Builder for this event.
+	 */
+	public static class Builder extends EventBuilder{
 		public static final String TAG = "new_junction";
 	
 		/**
@@ -61,24 +72,24 @@ public class NewJunctionEvent extends Event {
 		 */
 		@Override
 		public NewJunctionEvent build(IniSection ini){
-		    NewJunctionEvent event;
-		    String tStr, idStr;
-				
-		    event = null;
-		    if(TAG.equals(ini.getTag()))
-			{
-			    try{
-					tStr = ini.getValue("time");
-					idStr = ini.getValue("id");
-					checkIDValidity(idStr);
+			NewJunctionEvent event = null;
+			String id;
+			int time;
+			        
+			if(TAG.equals(ini.getTag()))
+				{
+					try{
+						id = parseID(ini, "id");
+						time = parseTime(ini);
 							
-					event = new NewJunctionEvent(Integer.parseInt(tStr), idStr);	
-			    } catch(Exception e){
-			    	throw new IllegalArgumentException("Error while parsing event:\n" + e.getMessage(), e);
-			    }	
-			}
+						event = new NewJunctionEvent(time, id);
+						
+					} catch(Exception e){
+						throw new IllegalArgumentException("Error while parsing event:\n" + e.getMessage(), e);
+					}	
+				}
 				
-		    return event;
+			return event;
 		}
-    }
+	}
 }

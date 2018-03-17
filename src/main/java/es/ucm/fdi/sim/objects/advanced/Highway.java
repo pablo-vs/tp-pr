@@ -11,10 +11,28 @@ import es.ucm.fdi.sim.objects.Road;
  */
 public class Highway extends Road{
 	private int lanes;
-	
+
+	/**
+	 * Constructor.
+	 *
+	 * @param id 	ID of the current object.
+	 * @param l     Length of the current <code>Road</code>.
+	 * @param maxV	Maximum velocity of the current <code>Road</code>.
+	 * @param ini	Initial <code>Junction</code> of the current <code>Road</code>.
+	 * @param end	Ending <code>Junction</code> of the current <code>Road</code>.
+	 * @param nLanes Number of lanes of the <code>Highway</code>
+	 */
 	public Highway(String id, int l, int maxV, Junction ini, Junction end, int nLanes){
 		super(id,l,maxV,ini,end);
 		lanes = nLanes;
+	}
+
+	/**
+	 * Constructor from Road.
+	 */
+	public Highway(Road r, int nLanes) {
+		super(r);
+	        lanes = nLanes;
 	}
 	
 	/**

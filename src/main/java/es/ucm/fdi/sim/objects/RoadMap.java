@@ -15,156 +15,156 @@ import java.lang.IllegalArgumentException;
  * @version 26.02.2018
  */
 public class RoadMap {
-    // ID Search, unicity
-    private Map<String, SimObject> simObjects = new HashMap<String, SimObject>();
+	// ID Search, unicity
+	private Map<String, SimObject> simObjects = new HashMap<String, SimObject>();
 
-    // Real lists
-    private List<Junction> junctions = new ArrayList<>();
-    private List<Road> roads = new ArrayList<>();
-    private List<Vehicle> vehicles = new ArrayList<>();
+	// Real lists
+	private List<Junction> junctions = new ArrayList<>();
+	private List<Road> roads = new ArrayList<>();
+	private List<Vehicle> vehicles = new ArrayList<>();
 
-    // Read-only Lists, via Collections.unmodifiableList();
-    private List<Junction> junctionsRO;
-    private List<Road> roadsRO;
-    private List<Vehicle> vehiclesRO;
+	// Read-only Lists, via Collections.unmodifiableList();
+	private List<Junction> junctionsRO = Collections.unmodifiableList(junctions);
+	private List<Road> roadsRO = Collections.unmodifiableList(roads);
+	private List<Vehicle> vehiclesRO = Collections.unmodifiableList(vehicles);
 
-    /**
-     * Gets the object with the given identifier.
-     *
-     * @param id Identifier of the object.
-     * @return The object corresponding to the id.
-     */
-    public SimObject getSimObject(String id) {
+	/**
+	 * Gets the object with the given identifier.
+	 *
+	 * @param id Identifier of the object.
+	 * @return The object corresponding to the id.
+	 */
+	public SimObject getSimObject(String id) {
 		SimObject object = simObjects.get(id);
 		return object;
-    }
+	}
     
-    /**
-     * Gets the <code>Junction</code> with the given identifier.
-     *
-     * @param id Identifier of the <code>Junction</code>.
-     * @return The object corresponding to the id.
-     */
-    public Junction getJunction(String id) {
+	/**
+	 * Gets the <code>Junction</code> with the given identifier.
+	 *
+	 * @param id Identifier of the <code>Junction</code>.
+	 * @return The object corresponding to the id.
+	 */
+	public Junction getJunction(String id) {
 		SimObject result = getSimObject(id);
 		if(!(result instanceof Junction)) {
-		    result = null;
+			result = null;
 		}
 		return (Junction)result;
-    }
+	}
     
-    /**
-     * Gets the <code>Road</code> with the given identifier.
-     *
-     * @param id Identifier of the <code>Road</code>.
-     * @return The object corresponding to the id.
-     */
-    public Road getRoad(String id) {
+	/**
+	 * Gets the <code>Road</code> with the given identifier.
+	 *
+	 * @param id Identifier of the <code>Road</code>.
+	 * @return The object corresponding to the id.
+	 */
+	public Road getRoad(String id) {
 		SimObject result = getSimObject(id);
 		if(!(result instanceof Road)) {
-		    result = null;
+			result = null;
 		}
 		return (Road)result;
-    }
+	}
     
-    /**
-     * Gets the <code>Vehicle</code> with the given identifier.
-     *
-     * @param id Identifier of the <code>Vehicle</code>.
-     * @return The object corresponding to the id.
-     */
-    public Vehicle getVehicle(String id) {
+	/**
+	 * Gets the <code>Vehicle</code> with the given identifier.
+	 *
+	 * @param id Identifier of the <code>Vehicle</code>.
+	 * @return The object corresponding to the id.
+	 */
+	public Vehicle getVehicle(String id) {
 		SimObject result = getSimObject(id);
 		if(!(result instanceof Vehicle)) {
-		    result = null;
+			result = null;
 		}
 		return (Vehicle)result;
-    }
+	}
 
-    //List (Read-only)
-    /**
-     * Returns a list containing all the <code>Junctions</code> in the map.
-     *
-     * @return Constant list of <code>Junctions</code>.
-     */
-    public List<Junction> getJunctions() {
-    	return junctionsRO;
-    }
+	//List (Read-only)
+	/**
+	 * Returns a list containing all the <code>Junctions</code> in the map.
+	 *
+	 * @return Constant list of <code>Junctions</code>.
+	 */
+	public List<Junction> getJunctions() {
+		return junctionsRO;
+	}
     
-    /**
-     * Returns a list containing all the <code>Roads</code> in the map.
-     *
-     * @return Constant list of Roads.
-     */
-    public List<Road> getRoads() {
-    	return roadsRO;
-    }
+	/**
+	 * Returns a list containing all the <code>Roads</code> in the map.
+	 *
+	 * @return Constant list of Roads.
+	 */
+	public List<Road> getRoads() {
+		return roadsRO;
+	}
     
-    /**
-     * Returns a list containing all the <code>Vehicles</code> in the map.
-     *
-     * @return Constant list of <code>Vehicles</code>.
-     */
-    public List<Vehicle> getVehicles() {
-    	return vehiclesRO;
-    }
+	/**
+	 * Returns a list containing all the <code>Vehicles</code> in the map.
+	 *
+	 * @return Constant list of <code>Vehicles</code>.
+	 */
+	public List<Vehicle> getVehicles() {
+		return vehiclesRO;
+	}
     
-    /**
-     * Checks whether an id is in the map.
-     * 
-     * @param id The id to check.
-     */
-    private boolean checkIdUnicity(String id) {
-	return (getSimObject(id) == null);
-    }
+	/**
+	 * Checks whether an id is in the map.
+	 * 
+	 * @param id The id to check.
+	 */
+	private boolean checkIdUnicity(String id) {
+		return (getSimObject(id) == null);
+	}
 
-    // Object insertion (package-protected)
-    /**
-     * Adds a <code>Junction</code> to the map.
-     *
-     * @param j The <code>Junction</code> to add.
-     */
-    public void addJunction(Junction j) throws IllegalArgumentException{
+	// Object insertion (package-protected)
+	/**
+	 * Adds a <code>Junction</code> to the map.
+	 *
+	 * @param j The <code>Junction</code> to add.
+	 */
+	public void addJunction(Junction j) throws IllegalArgumentException{
 		String id = j.getID();
 		if(checkIdUnicity(id)) {
-		    simObjects.put(id, j);
-		    junctions.add(j);
-		    junctionsRO = Collections.unmodifiableList(junctions);
+			simObjects.put(id, j);
+			junctions.add(j);
+			junctionsRO = Collections.unmodifiableList(junctions);
 		} else {
-		    throw new IllegalArgumentException("Duplicated id: " + id);
+			throw new IllegalArgumentException("Duplicated id: " + id);
 		}
-    }
+	}
     
-    /**
-     * Adds a <code>Road</code> to the map.
-     *
-     * @param j The <code>Road</code> to add.
-     */
-    public void addRoad(Road r) throws IllegalArgumentException{
+	/**
+	 * Adds a <code>Road</code> to the map.
+	 *
+	 * @param j The <code>Road</code> to add.
+	 */
+	public void addRoad(Road r) throws IllegalArgumentException{
 		String id = r.getID();
 		if(checkIdUnicity(id)) {
-		    simObjects.put(id, r);
-		    roads.add(r);
-		    roadsRO = Collections.unmodifiableList(roads);
+			simObjects.put(id, r);
+			roads.add(r);
+			roadsRO = Collections.unmodifiableList(roads);
 		} else {
-		    throw new IllegalArgumentException("Duplicated id: " + id);
+			throw new IllegalArgumentException("Duplicated id: " + id);
 		}
-    }
+	}
 
-    /**
-     * Adds a <code>Vehicle</code> to the map.
-     *
-     * @param j The <code>Vehicle</code> to add.
-     */
-    public void addVehicle(Vehicle v) throws IllegalArgumentException {
+	/**
+	 * Adds a <code>Vehicle</code> to the map.
+	 *
+	 * @param j The <code>Vehicle</code> to add.
+	 */
+	public void addVehicle(Vehicle v) throws IllegalArgumentException {
 		String id = v.getID();
 		if(checkIdUnicity(id)) {
-		    simObjects.put(id, v);
-		    vehicles.add(v);
-		    vehiclesRO = Collections.unmodifiableList(vehicles);
+			simObjects.put(id, v);
+			vehicles.add(v);
+			vehiclesRO = Collections.unmodifiableList(vehicles);
 		} else {
-		    throw new IllegalArgumentException("Duplicated id: " + id);
+			throw new IllegalArgumentException("Duplicated id: " + id);
 		}
-    }
+	}
     
 }
