@@ -125,7 +125,7 @@ public class NewVehicleEvent extends Event {
 		 * @param section The <code>IniSection</code> from which to parse the event.
 		 */
 		@Override
-		public NewVehicleEvent build(IniSection ini) throws IllegalArgumentException {
+		public NewVehicleEvent build(IniSection ini) {
 			NewVehicleEvent event;
 		        int time, maxSpeed;
 		        String vehicleID;
@@ -141,10 +141,8 @@ public class NewVehicleEvent extends Event {
 						throw new IllegalArgumentException("Error: itinerary must be at least of length 2");
 					}
 					vehicleID = parseID(ini, "id");
-					maxSpeed = parsePositiveInt(ini, "max_speed");
-					
-					event = new NewVehicleEvent(time, maxSpeed,
-								    vehicleID, itinerary);
+					maxSpeed = parsePositiveInt(ini, "max_speed");					
+					event = new NewVehicleEvent(time, maxSpeed, vehicleID, itinerary);
 					
 				} catch(IllegalArgumentException e) {
 					throw new IllegalArgumentException("Error while parsing event:\n" + e.getMessage(), e);

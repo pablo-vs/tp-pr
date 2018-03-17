@@ -82,8 +82,7 @@ public class NewJunctionEvent extends Event {
 						id = parseID(ini, "id");
 						time = parseTime(ini);
 							
-						event = new NewJunctionEvent(time, id);
-						
+						event = new NewJunctionEvent(time, id);						
 					} catch(Exception e){
 						throw new IllegalArgumentException("Error while parsing event:\n" + e.getMessage(), e);
 					}	

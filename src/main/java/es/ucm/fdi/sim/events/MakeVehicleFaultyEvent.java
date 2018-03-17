@@ -82,22 +82,13 @@ public class MakeVehicleFaultyEvent extends Event {
 			MakeVehicleFaultyEvent event;
 			int time, duration;
 			List<String> vehicles;
-			String timeStr, vehiclesIdStr, durationStr;
 			
 			event = null;
 			if(TAG.equals(ini.getTag())) {
 				try	{
-					//Check existence of all necessary keys and read the attributes
-					//This ignores other unnecessary keys
-					timeStr = ini.getValue("time");
-					vehiclesIdStr = ini.getValue("vehicles");
-					durationStr = ini.getValue("duration");
-
-					//Parse the attributes
-				    time = Integer.parseInt(timeStr);
-					duration = Integer.parseInt(durationStr);
-
-					vehicles = Arrays.asList(vehiclesIdStr.split(","));
+				    time = parseTime(ini);
+					duration = parsePositiveInt(ini, "duration");
+					vehicles = parseIDList(ini, "vehicles");
 					vehicles.forEach((id) -> checkIDValidity(id));
 									       							    
 				} catch(Exception e) {
