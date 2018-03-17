@@ -28,7 +28,7 @@ public class Road extends SimObject{
 	 * Constructor.
 	 * 
 	 * @param id 	ID of the current object.
-	 * @param l		Length of the current <code>Road</code>.
+	 * @param l	Length of the current <code>Road</code>.
 	 * @param maxV	Maximum velocity of the current <code>Road</code>.
 	 * @param ini	Initial <code>Junction</code> of the current <code>Road</code>.
 	 * @param end	Ending <code>Junction</code> of the current <code>Road</code>.
@@ -42,6 +42,13 @@ public class Road extends SimObject{
 		ini.addOutgoingRoad(this);
 		end.addIncomingRoad(this);
 		vehicleList = new MultiTreeMap<Integer, Vehicle>((Integer a, Integer b) -> b-a);
+	}
+
+	/**
+	 * Copy constructor.
+	 */
+	public Road(Road r) {
+		this(r.getID(), r.length, r.maxVel, r.ini, r.end);
 	}
 	
 	/**

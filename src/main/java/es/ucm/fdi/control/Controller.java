@@ -9,8 +9,14 @@ import java.io.IOException;
 
 import es.ucm.fdi.sim.events.Event;
 import es.ucm.fdi.sim.events.NewVehicleEvent;
+import es.ucm.fdi.sim.events.advanced.NewCarEvent;
+import es.ucm.fdi.sim.events.advanced.NewBicycleEvent;
 import es.ucm.fdi.sim.events.NewRoadEvent;
+import es.ucm.fdi.sim.events.advanced.NewHighwayEvent;
+import es.ucm.fdi.sim.events.advanced.NewDirtRoadEvent;
 import es.ucm.fdi.sim.events.NewJunctionEvent;
+import es.ucm.fdi.sim.events.advanced.NewRoundRobinEvent;
+import es.ucm.fdi.sim.events.advanced.NewMostCrowedEvent;
 import es.ucm.fdi.sim.events.MakeVehicleFaultyEvent;
 import es.ucm.fdi.sim.Simulator;
 import es.ucm.fdi.ini.Ini;
@@ -24,120 +30,126 @@ import java.lang.IllegalArgumentException;
  */
 public class Controller {
     
-    private static final Event.EventBuilder [] AVAILABLE_EVENTS = {
-    	new NewVehicleEvent.Builder(),
-    	new NewRoadEvent.Builder(),
-    	new NewJunctionEvent.Builder(),
-    	new MakeVehicleFaultyEvent.Builder()
-    };
+	private static final Event.EventBuilder [] AVAILABLE_EVENTS = {
+		new NewHighwayEvent.Builder(),
+		new NewDirtRoadEvent.Builder(),
+		new NewCarEvent.Builder(),
+		new NewBicycleEvent.Builder(),
+		new NewRoundRobinEvent.Builder(),
+		new NewMostCrowedEvent.Builder(),
+		new NewVehicleEvent.Builder(),
+		new NewRoadEvent.Builder(),
+		new NewJunctionEvent.Builder(),
+		new MakeVehicleFaultyEvent.Builder()
+	};
 
-    private Simulator sim;
-    private InputStream input;
-    private OutputStream output;
+	private Simulator sim;
+	private InputStream input;
+	private OutputStream output;
 
-    /**
-     * Empty constructor, sets IO to stdin and stdout.
-     */
-    public Controller() throws IOException {
-    	sim = new Simulator();
-    	input = System.in;
-    	output = System.out;
-    	readEvents();
-    }
-
-    /**
-     * Constructor with streams, allows IO to/from resources other than files.
-     *
-     * @param input An <code>InputStream</code> to read the events from.
-     * @param output An <code>OutputStream</code> to send the reports.
-     */
-    public Controller(InputStream input, OutputStream output) throws IOException {
-    	sim = new Simulator();
-    	this.input = input;
-    	this.output = output;
-    	readEvents();
-    }
-
-    /**
-     * Constructor with input file path and output to stdout.
-     *
-     * @param inputPath The path of the input file.
-     */
-    public Controller(String inputPath) throws IOException {
-    	sim = new Simulator();
-        output = System.out;
-    	try(FileInputStream inputStream = new FileInputStream(inputPath)){
-            input = inputStream;
-            readEvents();  
-        } catch(IOException e) {
-            throw new IOException("Could not open or read file " + inputPath, e);
-        }
-
-    }
-    
-    /**
-     * Constructor with file paths.
-     *
-     * @param inputPath The path of the input file.
-     * @param outputPath The path of the output file.
-     */
-    public Controller(String inputPath, String outputPath) throws IOException {
-    	sim = new Simulator();
-        try(FileInputStream inputStream = new FileInputStream(inputPath);
-    	   FileOutputStream outputStream = new FileOutputStream(outputPath)) {
-            input = inputStream;
-            output = outputStream;
-            readEvents();
-        } catch(IOException e) {
-            throw new IOException("Could not open or read files", e);
-        }
-    	
-    }
-
-    /**
-      Reads the events from the input stream and inserts them into the simulator queue.
-     */
-    private void readEvents() throws IOException {
-    	Ini events = new Ini(input);
-    	for(IniSection sec : events.getSections()) {
-    	    Event e = parseEvent(sec);
-    	    if(e == null) {
-        		throw new IllegalArgumentException("The tag " + sec.getTag()
-        						+ " does not correspond to a valid event");
-            } else {
-        		  sim.insertEvent(e);
-    	    }  
-    	}
-    }
-
-    /**
-     * Runs the simulation for the given number of steps.
-     *
-     * @param steps The number of ticks to simulate.
-     */
-    public void run(int steps) throws IOException {
-	   sim.execute(steps, output);
-    }
-
-    /**
-      Attempts to create an <code>Event</code> from the given IniSection.
-      Returns null if the section tag is unknown.
-     */
-    private Event parseEvent(IniSection section) {
-	Event result = null;
-	Event.EventBuilder builder;
-	int i = 0;
-	boolean found = false;
-	while(!found && i < AVAILABLE_EVENTS.length) {
-	    builder = AVAILABLE_EVENTS[i];
-	    Event e = builder.build(section);
-	    if(e != null) {
-			found = true;
-			result = e;
-	    }
-	    ++i;
+	/**
+	 * Empty constructor, sets IO to stdin and stdout.
+	 */
+	public Controller() throws IOException {
+		sim = new Simulator();
+		input = System.in;
+		output = System.out;
+		readEvents();
 	}
-	return result;
-    }
+
+	/**
+	 * Constructor with streams, allows IO to/from resources other than files.
+	 *
+	 * @param input An <code>InputStream</code> to read the events from.
+	 * @param output An <code>OutputStream</code> to send the reports.
+	 */
+	public Controller(InputStream input, OutputStream output) throws IOException {
+		sim = new Simulator();
+		this.input = input;
+		this.output = output;
+		readEvents();
+	}
+
+	/**
+	 * Constructor with input file path and output to stdout.
+	 *
+	 * @param inputPath The path of the input file.
+	 */
+	public Controller(String inputPath) throws IOException {
+		sim = new Simulator();
+		output = System.out;
+		try(FileInputStream inputStream = new FileInputStream(inputPath)){
+			input = inputStream;
+			readEvents();  
+		} catch(IOException e) {
+			throw new IOException("Could not open or read file " + inputPath, e);
+		}
+
+	}
+    
+	/**
+	 * Constructor with file paths.
+	 *
+	 * @param inputPath The path of the input file.
+	 * @param outputPath The path of the output file.
+	 */
+	public Controller(String inputPath, String outputPath) throws IOException {
+		sim = new Simulator();
+		try(FileInputStream inputStream = new FileInputStream(inputPath);
+		    FileOutputStream outputStream = new FileOutputStream(outputPath)) {
+			input = inputStream;
+			output = outputStream;
+			readEvents();
+		} catch(IOException e) {
+			throw new IOException("Could not open or read files", e);
+		}
+    	
+	}
+
+	/**
+	   Reads the events from the input stream and inserts them into the simulator queue.
+	*/
+	private void readEvents() throws IOException {
+		Ini events = new Ini(input);
+		for(IniSection sec : events.getSections()) {
+			Event e = parseEvent(sec);
+			if(e == null) {
+				throw new IllegalArgumentException("The tag " + sec.getTag()
+								   + " does not correspond to a valid event");
+			} else {
+				sim.insertEvent(e);
+			}  
+		}
+	}
+
+	/**
+	 * Runs the simulation for the given number of steps.
+	 *
+	 * @param steps The number of ticks to simulate.
+	 */
+	public void run(int steps) throws IOException {
+		sim.execute(steps, output);
+	}
+
+	/**
+	   Attempts to create an <code>Event</code> from the given IniSection.
+	   Returns null if the section tag is unknown.
+	*/
+	private Event parseEvent(IniSection section) {
+		Event result = null;
+		Event.EventBuilder builder;
+		int i = 0;
+		boolean found = false;
+		while(!found && i < AVAILABLE_EVENTS.length) {
+			builder = AVAILABLE_EVENTS[i];
+			Event e = builder.build(section);
+			if(e != null) {
+				found = true;
+				result = e;
+			}
+			++i;
+		}
+		return result;
+	}
     
 }

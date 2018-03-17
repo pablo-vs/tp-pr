@@ -66,6 +66,13 @@ public class Vehicle extends SimObject{
 		inQueue = false;
 		moveToNextRoad();
 	}
+
+	/**
+	 * Copy constructor
+	 */
+	public Vehicle(Vehicle v) {
+		this(v.getID(), v.maxVel, v.itinerary);
+	}
 	
 	/**
 	 * Moves this <code>Vehicle</code> in the current road if it is not broken or waiting

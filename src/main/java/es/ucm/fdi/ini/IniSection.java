@@ -109,7 +109,6 @@ public class IniSection {
 	 * @return Value for key
 	 */
 	public String getValue(String key) {
-		checkKeyValidity(key);
 		return _attr.get(key);
 	}
 

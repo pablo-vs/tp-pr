@@ -36,6 +36,13 @@ public class MostCrowed extends Junction{
 		timeInterval = 0;
 		usedTimeUnits = 0;
 	}
+
+	/**
+	 * Constructor from Junction.
+	 */
+	public MostCrowed(Junction j) {
+		super(j);
+	}
 	
 	/**
 	 * Finds the next road up for traffic light updating.
