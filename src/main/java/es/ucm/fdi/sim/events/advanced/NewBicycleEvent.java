@@ -41,6 +41,16 @@ public class NewBicycleEvent extends NewVehicleEvent {
        	public NewBicycleEvent(NewVehicleEvent e) {
 		super(e);
 	}
+       	
+    /**
+     * 
+     */
+    @Override
+    public boolean equals(Object o){
+    	return (o.getClass() == this.getClass() && 
+    			(super.equals(o))
+    			);
+    }
 	
 	/**
 	 * Instantiates a new car, given the parameters are valid.
