@@ -11,7 +11,7 @@ import es.ucm.fdi.sim.objects.Vehicle;
 public class MostCrowedTest {
 
 	@Test
-	public void trafficLightTest() {
+	public void dynamicsTest() {
 
 		MostCrowed cr = new MostCrowed("cr");
 	

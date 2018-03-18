@@ -4,6 +4,7 @@ import java.util.List;
 import java.lang.String;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Collections;
 
 import es.ucm.fdi.util.MultiTreeMap;
 import es.ucm.fdi.ini.IniSection;

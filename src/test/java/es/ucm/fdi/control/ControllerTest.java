@@ -13,6 +13,7 @@ import java.io.OutputStream;
 
 
 import org.junit.Test;
+import org.junit.Assert;
 import static org.junit.Assert.*;
 
 import es.ucm.fdi.ini.IniSection;
@@ -34,7 +35,7 @@ public class ControllerTest {
 		try {
 			//This should throw an exception
 			c = new Controller(inputPathIncorrect);
-			throw new Exception("Either the incorrect path " + inputPathIncorrect +
+			Assert.fail("Either the incorrect path " + inputPathIncorrect +
 					    " does exist, or there are errors in the code");
 		} catch (IOException e) {
 			System.err.println("Exception caught correctly, the path is not valid.");
