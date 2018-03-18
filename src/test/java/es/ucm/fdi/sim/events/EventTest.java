@@ -2,7 +2,6 @@ package es.ucm.fdi.sim.events;
 
 import org.junit.Test;
 
-import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.sim.objects.Road;
 import es.ucm.fdi.sim.objects.RoadMap;
 import es.ucm.fdi.sim.objects.Junction;

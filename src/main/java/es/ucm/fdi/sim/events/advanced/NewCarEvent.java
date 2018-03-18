@@ -1,16 +1,11 @@
 package es.ucm.fdi.sim.events.advanced;
 
 import java.util.List;
-import java.util.ArrayList;
 import java.lang.IllegalArgumentException;
 
 import es.ucm.fdi.ini.IniSection;
-import es.ucm.fdi.sim.objects.Vehicle;
 import es.ucm.fdi.sim.objects.RoadMap;
-import es.ucm.fdi.sim.objects.Junction;
 import es.ucm.fdi.sim.objects.advanced.Car;
-import es.ucm.fdi.exceptions.ObjectNotFoundException;
-import es.ucm.fdi.sim.events.Event;
 import es.ucm.fdi.sim.events.NewVehicleEvent;
 
 /**

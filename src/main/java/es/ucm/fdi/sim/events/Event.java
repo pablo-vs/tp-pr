@@ -139,7 +139,7 @@ public abstract class Event {
 				throw new IllegalArgumentException("Error: + " + key
 									   + " not found");
 			}
-			ArrayList<String> result = new ArrayList(Arrays.asList(str.split(",")));
+			ArrayList<String> result = new ArrayList<String>(Arrays.asList(str.split(",")));
 			result.forEach((o) -> checkIDValidity(o));
 			return result;
 		}

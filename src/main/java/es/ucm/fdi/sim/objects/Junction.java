@@ -30,6 +30,10 @@ public class Junction extends SimObject{
 	 * <code>Vehicles</code> and traffic light.
 	 */
 	protected class IncomingRoad extends ArrayDeque<Vehicle> {
+		/**
+		 * Generated UID.
+		 */
+		private static final long serialVersionUID = 4467738671085074265L;
 		private Road road;
 		private boolean trafficLight;
 		private int waiting;

@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.junit.Test;
-import org.junit.Assert;
 
 import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.sim.objects.RoadMap;

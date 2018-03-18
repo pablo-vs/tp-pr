@@ -1,10 +1,6 @@
 package es.ucm.fdi.sim.objects;
 
-import java.util.List;
 import java.lang.String;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Collections;
 
 import es.ucm.fdi.util.MultiTreeMap;
 import es.ucm.fdi.ini.IniSection;
@@ -100,7 +96,8 @@ public class Road extends SimObject{
 		int baseSpeed = calculateBaseSpeed(), reductionFactor, counter = 0;
 
 		//Store the vehicles in a new map to avoid messing the iterator
-		MultiTreeMap newVehicleList = new MultiTreeMap<Integer, Vehicle>((Integer a, Integer b) -> b-a);
+		MultiTreeMap<Integer, Vehicle> newVehicleList = 
+				new MultiTreeMap<Integer, Vehicle>((Integer a, Integer b) -> b-a);
 		for(Vehicle v : vehicleList.innerValues()){
 			//Check if there is a faulty vehicle
 			//All vehicles further in the list will be slowed down

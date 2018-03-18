@@ -1,6 +1,5 @@
 package es.ucm.fdi.sim.objects;
 
-import java.util.Map;
 
 import es.ucm.fdi.ini.IniSection;
 

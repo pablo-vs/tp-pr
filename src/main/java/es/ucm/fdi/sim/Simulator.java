@@ -1,19 +1,13 @@
 package es.ucm.fdi.sim;
 
-
-import es.ucm.fdi.util.MultiTreeMap;
 import es.ucm.fdi.sim.events.Event;
-import es.ucm.fdi.sim.objects.SimObject;
 import es.ucm.fdi.sim.objects.Road;
+import es.ucm.fdi.util.MultiTreeMap;
 import es.ucm.fdi.sim.objects.Junction;
 import es.ucm.fdi.sim.objects.Vehicle;
-import es.ucm.fdi.exceptions.ObjectNotFoundException;
 import es.ucm.fdi.sim.objects.RoadMap;
 import es.ucm.fdi.ini.Ini;
-import es.ucm.fdi.ini.IniSection;
 
-import java.util.Map;
-import java.util.List;
 import java.util.ArrayList;
 import java.io.OutputStream;
 import java.io.IOException;

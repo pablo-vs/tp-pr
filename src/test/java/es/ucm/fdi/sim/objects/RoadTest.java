@@ -2,7 +2,6 @@ package es.ucm.fdi.sim.objects;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -11,7 +10,6 @@ import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.sim.objects.Road;
 import es.ucm.fdi.sim.objects.Vehicle;
 import es.ucm.fdi.sim.objects.Junction;
-import es.ucm.fdi.control.Controller;
 
 public class RoadTest {
 	
@@ -19,7 +17,7 @@ public class RoadTest {
 	public void dynamicsTest() throws Exception {
 		Road r;
 		Junction ini, end;
-		Vehicle v1,v2,v3,v4;
+		Vehicle v1;
 		IniSection sec, report;
 		List<Junction> l = new ArrayList<Junction>();
 		
@@ -33,16 +31,16 @@ public class RoadTest {
 		v1 = new Vehicle("v1", 5, l);
 		r.move();
 		//v1 at 5
-		v2 = new Vehicle("v2", 20, l);
+		new Vehicle("v2", 20, l);
 		r.move();
 		//v1 at 10, v2 at 11
 		v1.setBrokenTime(2);
 		r.move();
 		//v1 at 10, v2 at 22
-		v3 = new Vehicle("v3", 20, l);
+		new Vehicle("v3", 20, l);
 		r.move();
 		//v3 at 3, v1 at 10, v2 at 29
-		v4 = new Vehicle("v4", 20, l);
+		new Vehicle("v4", 20, l);
 		r.move();
 		//v4 at 6, v3 at 9, v1 at 15, v2 out
 
@@ -59,7 +57,6 @@ public class RoadTest {
 	public void buildReportTest() throws Exception {
 		Road r;
 		Junction ini, end;
-		Vehicle v1,v2;
 		IniSection sec, report;
 		List<Junction> l = new ArrayList<Junction>();
 		
@@ -69,9 +66,9 @@ public class RoadTest {
 		l.add(end);
 		
 		r = new Road("r1",200, 20, ini, end);
-		v1 = new Vehicle("v1", 20, l);
+		new Vehicle("v1", 20, l);
 		r.move();
-		v2 = new Vehicle("v2", 10, l);
+		new Vehicle("v2", 10, l);
 		r.move(); //BASE SPEED 11 
 		
 		//We will check the sec after 4 steps of the simulation

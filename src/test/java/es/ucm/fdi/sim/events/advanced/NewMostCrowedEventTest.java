@@ -3,12 +3,7 @@ package es.ucm.fdi.sim.events.advanced;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.junit.Test;
-import org.junit.Assert;
 
 import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.sim.events.EventTest;
