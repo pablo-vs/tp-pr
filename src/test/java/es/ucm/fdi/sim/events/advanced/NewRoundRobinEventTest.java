@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
-import org.junit.Assert;
 
 import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.sim.events.EventTest;

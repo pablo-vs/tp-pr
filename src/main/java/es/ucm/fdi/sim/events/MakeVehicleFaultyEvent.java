@@ -1,7 +1,6 @@
 package es.ucm.fdi.sim.events;
 
 import java.util.List;
-import java.util.Arrays;
 import java.util.ArrayList;
 
 import es.ucm.fdi.ini.IniSection;

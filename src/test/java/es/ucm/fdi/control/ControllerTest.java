@@ -1,21 +1,15 @@
 package es.ucm.fdi.control;
 
+import java.io.IOException;
 import java.lang.Exception;
-import java.util.List;
-import java.io.FileWriter;
 import java.io.FileInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.ini.Ini;
 
 public class ControllerTest {
@@ -27,13 +21,12 @@ public class ControllerTest {
 			inputPathIncorrect = "thisshouldnotexist.ini",
 			outputPath = "input.ini.out";
 
-		Controller c;
-		c = new Controller(inputPathCorrect);
-		c = new Controller(inputPathCorrect, outputPath);
+		new Controller(inputPathCorrect);
+		new Controller(inputPathCorrect, outputPath);
 
 		try {
 			//This should throw an exception
-			c = new Controller(inputPathIncorrect);
+			new Controller(inputPathIncorrect);
 			throw new Exception("Either the incorrect path " + inputPathIncorrect +
 					    " does exist, or there are errors in the code");
 		} catch (IOException e) {

@@ -2,8 +2,6 @@ package es.ucm.fdi.sim.objects;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.io.InputStream;
 import org.apache.commons.io.IOUtils;
 
 import org.junit.Test;
@@ -11,7 +9,6 @@ import static org.junit.Assert.*;
 
 import es.ucm.fdi.ini.Ini;
 import es.ucm.fdi.ini.IniSection;
-import es.ucm.fdi.control.Controller;
 
 /**
  * Contains unit tests for es.ucm.fdi.sim.objects.Vehicle
@@ -47,8 +44,8 @@ public class VehicleTest {
 		IniSection v1Report = expReport.get(0), v2Report = expReport.get(1), report;
 		
 		Junction j1 = new Junction("j1"), j2 = new Junction("j2"), j3 = new Junction("j3");
-		Road r1 = new Road("r1", 2, 2, j1, j2);
-		Road r2 = new Road("r2", 5, 3, j2, j3);
+		new Road("r1", 2, 2, j1, j2);
+		new Road("r2", 5, 3, j2, j3);
 		ArrayList<Junction> it1 = new ArrayList<>(), it2 = new ArrayList<>();
 		
 		it1.add(j1);

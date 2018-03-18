@@ -4,7 +4,6 @@ import java.lang.Exception;
 import java.lang.IllegalArgumentException;
 
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 import es.ucm.fdi.launcher.Main;
 

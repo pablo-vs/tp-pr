@@ -56,7 +56,7 @@ public class MultiTreeMapTest {
         }
     }
 
-    //@Test
+    @Test
     public void putAndRemove() throws Exception {
         MultiTreeMap<Integer, T> ts = new MultiTreeMap<>();
         T[] array = new T[]{
@@ -86,7 +86,7 @@ public class MultiTreeMapTest {
         assertEquals(1, ts.get(t.i).size());
     }
 
-    //@Test
+    @Test
     public void sizeComputation() throws Exception {
         MultiTreeMap<Integer, T> ts = new MultiTreeMap<>();
         T[] array = new T[]{
@@ -105,7 +105,7 @@ public class MultiTreeMapTest {
                 ts.sizeOfValues());
     }
 
-    //@Test
+    @Test
     public void innerValuesAscending() throws Exception {
         MultiTreeMap<Integer, T> ts = new MultiTreeMap<>();
         T[] array = new T[]{
@@ -131,7 +131,7 @@ public class MultiTreeMapTest {
         assertEquals("all elements iterated", array.length, i);
     }
 
-    //@Test
+    @Test
     public void innerValuesDescending() throws Exception {
         MultiTreeMap<Integer, T> ts = new MultiTreeMap<>((Integer a, Integer b)->b.compareTo(a));
         T[] array = new T[]{
