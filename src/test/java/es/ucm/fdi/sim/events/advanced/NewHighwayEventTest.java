@@ -47,7 +47,7 @@ public class NewHighwayEventTest implements EventTest{
 		
 		EventTest.buildAdvancedEventRoadMap(r);
 		sec.setValue("time", "5");
-		sec.setValue("id", "dr");
+		sec.setValue("id", "hw");
 		sec.setValue("src", "j1");
 		sec.setValue("dest", "j2");
 		sec.setValue("max_speed","20");
@@ -57,11 +57,11 @@ public class NewHighwayEventTest implements EventTest{
 		new NewHighwayEvent.Builder().build(sec).execute(r);
 		
 		report.setValue("time", "0");
-		report.setValue("id", "dr");
+		report.setValue("id", "hw");
 		report.setValue("state", "");
 		report.setValue("type", "lanes");
 		
-		assertEquals("Reports do not match", report, r.getRoad("dr").report(0));
+		assertEquals("Reports do not match", report, r.getRoad("hw").report(0));
 	}
 	
 }

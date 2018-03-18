@@ -20,7 +20,7 @@ public class Junction extends SimObject{
 	protected List<IncomingRoad> incomingRoads;
 	
 	private static String junction_header = "junction_report";	
-	private int time, currentOpenQueue;
+	private int currentOpenQueue;
 	private List<Road> outgoingRoads;
 	private HashMap<Road, IncomingRoad> roadToQueueMap;
 	private HashMap<Junction, Road> junctionToRoadMap;
