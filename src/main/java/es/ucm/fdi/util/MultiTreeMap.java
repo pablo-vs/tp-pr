@@ -1,6 +1,7 @@
 package es.ucm.fdi.util;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * A TreeMap that supports multiple values for the same key, via ArrayLists.
@@ -11,12 +12,7 @@ import java.util.*;
  */
 public class MultiTreeMap<K, V> extends TreeMap<K, ArrayList<V>> {
 
-    /**
-	 * Generated UID
-	 */
-	private static final long serialVersionUID = -4499248827104580712L;
-
-	public MultiTreeMap() {}
+    public MultiTreeMap() {}
 
     public MultiTreeMap(Comparator<K> comparator) {
         super(comparator);
@@ -57,12 +53,56 @@ public class MultiTreeMap<K, V> extends TreeMap<K, ArrayList<V>> {
     /**
      * Returns the total number of values stored in this multimap
      */
-    public long sizeOfValues() {
-        long total = 0;
+    public int sizeOfValues() {
+        int total = 0;
         for (List<V> l : values()) {
             total += l.size();
         }
         return total;
+    }
+
+    /**
+     * Returns the values as a read-only list. Changes to this structure
+     * will be immediately reflected in the list.
+     */
+    public List<V> valuesList() {
+        return new InnerList();
+    }
+
+    /**
+     * A logical, read-only list containing all elements in
+     * correct order.
+     */
+    private class InnerList extends AbstractList<V> {
+
+        @Override
+        public V get(int index) {
+
+            if (index < 0 || isEmpty()) {
+                throw new IndexOutOfBoundsException(
+                        "Index " + index + " is out of bounds");
+            }
+
+            Iterator<ArrayList<V>> it = values().iterator();
+            ArrayList<V> current = it.next(); // not empty, therefore hasNext()
+            int start = 0;
+
+            while (index >= (start+current.size())) {
+                if (!it.hasNext()) {
+                    throw new IndexOutOfBoundsException(
+                            "Index " + index + " is out of bounds");
+                }
+                start += current.size();
+                current = it.next();
+            }
+
+            return current.get(index - start);
+        }
+
+        @Override
+        public int size() {
+            return sizeOfValues();
+        }
     }
 
     /**

@@ -18,6 +18,7 @@ import org.apache.commons.cli.ParseException;
 
 import es.ucm.fdi.ini.Ini;
 import es.ucm.fdi.control.Controller;
+import es.ucm.fdi.view.SimWindow;
 
 public class Main {
 
@@ -180,7 +181,8 @@ public class Main {
 		// test("resources/examples/basic/");
 
 		// Call start to start the simulator from command line, etc.
-		start(args);
+		SimWindow view = new SimWindow();
+		//start(args);
 
 	}
 
