@@ -6,18 +6,21 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 
 import javax.swing.JSpinner;
-import javax.swing.text.StyleConstants;
 
 import es.ucm.fdi.control.SimulatorAction;
 
 public class SimWindow extends JFrame{
+	/**
+	 * Generated serialVersionUID
+	 */
+	private static final long serialVersionUID = -2574375309247665340L;
+
 	public SimWindow() {
 		super("Traffic Simulator");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(1000, 1000);
 		addToolbar();
 		addCenterPanel();
-		System.err.println("Hello world\n" + this);
 		
 	}
 
