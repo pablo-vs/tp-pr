@@ -1,13 +1,14 @@
 package es.ucm.fdi.view;
 
-import java.util.List;
-
 import javax.swing.table.AbstractTableModel;
 
 public class InitializedTableModel extends AbstractTableModel {
-
+	/**
+	 * Generated version UID
+	 */
+	private static final long serialVersionUID = -4823431851535170164L;
 	private String[] columnTags;
-	private String[][] data;
+	private String[][] data; //BETTER TO USE LIST
 	
 	public InitializedTableModel(String[] columnTags, String[][] data){
 		this.columnTags = columnTags;

@@ -105,8 +105,8 @@ public class SimWindow extends JFrame{
 		JPanel centerPanel = new JPanel(new GridLayout());
 		JPanel rightPanel = new JPanel();
 		
-		String[] tags = {"data"};
-		String[][] data = {{"1"}};
+		String[] tags = {"data", "test"};
+		String[][] data = {{"1", "hello"}, {"2", "hello"}};
 		JTable table = new JTable(
 				new InitializedTableModel(tags,data) );
 		
@@ -128,8 +128,8 @@ public class SimWindow extends JFrame{
 		JPanel centerPanel = new JPanel(new GridLayout());
 		JPanel southPanel = new JPanel(new GridLayout());
 		
-		String[] tags = {"data"};
-		String[][] data = {{"1"}};
+		String[] tags = {"data", "test"};
+		String[][] data = {{"1", "hello"}, {"2", "hello"}};
 		JTable table1 = new JTable(new InitializedTableModel(tags,data) ),
 				table2 = new JTable(new InitializedTableModel(tags,data) ),
 				table3 = new JTable((new InitializedTableModel(tags,data) ));
