@@ -1,13 +1,20 @@
 package es.ucm.fdi.view;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.KeyEvent;
+
 import javax.swing.JSpinner;
 
 import es.ucm.fdi.control.SimulatorAction;
 
 public class SimWindow extends JFrame{
+	/**
+	 * Generated serialVersionUID
+	 */
+	private static final long serialVersionUID = -2574375309247665340L;
+
 	public SimWindow() {
 		super("Traffic Simulator");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -48,11 +55,14 @@ public class SimWindow extends JFrame{
 		
 		JSpinner steps = new JSpinner();
 		((SpinnerNumberModel) steps.getModel()).setMinimum(0);
+		steps.setPreferredSize(new Dimension(100,10));
 		
-		JTextPane time = new JTextPane();
+		JTextField time = new JTextField();
+		time.setPreferredSize(new Dimension(100,10));
 		time.setText("0"); //initial
 		time.setEditable(false);
-		//time.setAlignmentX();
+		
+		//Non-elegant solution for 
 		
 		JToolBar bar = new JToolBar();
 		bar.add(load);
