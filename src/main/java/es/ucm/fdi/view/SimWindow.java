@@ -4,10 +4,12 @@ import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.util.Arrays;
 
 import javax.swing.JSpinner;
 
 import es.ucm.fdi.control.SimulatorAction;
+import es.ucm.fdi.view.InitializedTableModel;
 
 public class SimWindow extends JFrame{
 	/**
@@ -15,6 +17,8 @@ public class SimWindow extends JFrame{
 	 */
 	private static final long serialVersionUID = -2574375309247665340L;
 
+	//SHOULD REFERENCE COMPONENTS?
+	
 	public SimWindow() {
 		super("Traffic Simulator");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -63,8 +67,6 @@ public class SimWindow extends JFrame{
 		time.setText("0"); //initial
 		time.setEditable(false);
 		
-		//Non-elegant solution for 
-		
 		JToolBar bar = new JToolBar();
 		bar.add(load);
 		bar.add(save);
@@ -101,11 +103,19 @@ public class SimWindow extends JFrame{
 	public JPanel createNorthPanel() {
 		JPanel northPanel = new JPanel();
 		JPanel leftPanel = new JPanel();
-		JPanel centerPanel = new JPanel();
+		JPanel centerPanel = new JPanel(new GridLayout());
 		JPanel rightPanel = new JPanel();
+		
+		String[] tags = {"data"};
+		String[][] data = {{"1"}};
+		JTable table = new JTable(
+				new InitializedTableModel(tags,data) );
+		
 		northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.X_AXIS));
 		leftPanel.setBackground(Color.blue);
-		centerPanel.setBackground(Color.green);
+		centerPanel.add(new JScrollPane(table));
+		centerPanel.setBorder(BorderFactory.createTitledBorder("Event List"));
+		
 		rightPanel.setBackground(Color.red);
 		northPanel.add(leftPanel);
 		northPanel.add(centerPanel);
@@ -115,16 +125,27 @@ public class SimWindow extends JFrame{
 
 	public JPanel createSouthWestPanel() {
 		JPanel southWestPanel = new JPanel();
-		JPanel northPanel = new JPanel();
-		JPanel centerPanel = new JPanel();
-		JPanel southPanel = new JPanel();
+		JPanel northPanel = new JPanel(new GridLayout());
+		JPanel centerPanel = new JPanel(new GridLayout());
+		JPanel southPanel = new JPanel(new GridLayout());
+		
+		String[] tags = {"data"};
+		String[][] data = {{"1"}};
+		JTable table1 = new JTable(new InitializedTableModel(tags,data) ),
+				table2 = new JTable(new InitializedTableModel(tags,data) ),
+				table3 = new JTable((new InitializedTableModel(tags,data) ));
+		
 		southWestPanel.setLayout(new BoxLayout(southWestPanel, BoxLayout.Y_AXIS));
-		northPanel.setBackground(Color.pink);
-		centerPanel.setBackground(Color.yellow);
-		southPanel.setBackground(Color.cyan);
+		northPanel.add(new JScrollPane(table1));
+		northPanel.setBorder(BorderFactory.createTitledBorder("Vehicles"));
+		centerPanel.add(new JScrollPane(table2));
+		centerPanel.setBorder(BorderFactory.createTitledBorder("Roads"));
+		southPanel.add(new JScrollPane(table3));
+		southPanel.setBorder(BorderFactory.createTitledBorder("Junctions"));
 		southWestPanel.add(northPanel);
 		southWestPanel.add(centerPanel);
 		southWestPanel.add(southPanel);
+		
 		return southWestPanel;
 	}
 
