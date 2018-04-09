@@ -25,7 +25,6 @@ public class SimWindow extends JFrame{
 		setSize(1000, 1000);
 		addToolbar();
 		addCenterPanel();
-		
 	}
 
 	public void addToolbar() {

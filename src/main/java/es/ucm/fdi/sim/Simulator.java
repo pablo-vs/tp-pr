@@ -1,5 +1,9 @@
 package es.ucm.fdi.sim;
 
+import java.util.List;
+import java.util.ArrayList;
+import javax.swing.SwingUtilities;
+
 import es.ucm.fdi.sim.events.Event;
 import es.ucm.fdi.sim.objects.Road;
 import es.ucm.fdi.util.MultiTreeMap;
@@ -19,9 +23,10 @@ import java.io.IOException;
  */
 public class Simulator {
 
-	MultiTreeMap<Integer, Event> eventList; //Ordered by time and arrival time.
-	RoadMap roadMap;
-	int timeLimit, timer;
+	private MultiTreeMap<Integer, Event> eventList; //Ordered by time and arrival time.
+	private RoadMap roadMap;
+	private int timeLimit, timer;
+	private List<Listener> listeners;
 	
 	/**
 	 * Default constructor for the <code>Simulator</code>.
@@ -30,6 +35,7 @@ public class Simulator {
 		eventList = new MultiTreeMap<Integer, Event>();
 		roadMap = new RoadMap();
 		timer = 0;
+		listeners = new ArrayList<>();
 	}
 	
 	/**
@@ -99,5 +105,85 @@ public class Simulator {
 			report.addsection(v.report(timer));
 		}
 		return report;
+	}
+
+	public void addSimulatorListener(Listener l) {
+		listeners.add(l);
+		UpdateEvent event = new UpdateEvent(EventType.REGISTERED);
+		SwingUtilities.invokeLater(()->l.update(event, ""));
+	}
+
+	public void removeListener(Listener l) {
+		listeners.remove(l);
+	}
+
+	private void fireUpdateEvent(EventType type, String error) {
+		UpdateEvent event = new UpdateEvent(type, roadMap, eventList, timer);
+		for(Listener l : listeners) {
+			l.update(event, error);
+		}
+	}
+
+	public interface Listener {
+		void update(UpdateEvent ue, String error);
+	}
+
+	public enum EventType {
+		REGISTERED,
+		RESET,
+		NEW_EVENT,
+		ADVANCED,
+		ERROR;
+	}
+
+	public class UpdateEvent {
+		private EventType type;
+		private List<Vehicle> vehicles;
+		private List<Road> roads;
+		private List<Junction> junctions;
+		private List<Event> eventQueue;
+		private int time;
+
+		public UpdateEvent(EventType type) {
+			this.type = type;
+			vehicles = new ArrayList<>();
+			junctions = new ArrayList<>();
+			roads = new ArrayList<>();
+			eventQueue = new ArrayList<>();
+			time = 0;
+		}
+
+		public UpdateEvent(EventType type, RoadMap map, MultiTreeMap<Integer, Event> eventQueue, int time) {
+			this.type = type;
+			vehicles = map.getVehicles();
+			junctions = map.getJunctions();
+			roads = map.getRoads();
+			this.eventQueue = eventQueue.valuesList();
+			this.time = time;
+		}
+
+		public EventType getEvent() {
+			return type;
+		}
+
+		public List<Vehicle> getVehicles() {
+			return vehicles;
+		}
+
+		public List<Junction> getJunctions() {
+			return junctions;
+		}
+
+		public List<Road> getRoads() {
+			return roads;
+		}
+
+		public List<Event> getEventQeue() {
+			return eventQueue;
+		}
+
+		public int getCurrentTime() {
+			return time;
+		}
 	}
 }
