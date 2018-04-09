@@ -1,9 +1,12 @@
 package es.ucm.fdi.view;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.KeyEvent;
+
 import javax.swing.JSpinner;
+import javax.swing.text.StyleConstants;
 
 import es.ucm.fdi.control.SimulatorAction;
 
@@ -51,11 +54,14 @@ public class SimWindow extends JFrame{
 		
 		JSpinner steps = new JSpinner();
 		((SpinnerNumberModel) steps.getModel()).setMinimum(0);
+		steps.setPreferredSize(new Dimension(100,10));
 		
-		JTextPane time = new JTextPane();
+		JTextField time = new JTextField();
+		time.setPreferredSize(new Dimension(100,10));
 		time.setText("0"); //initial
 		time.setEditable(false);
-		//time.setAlignmentX();
+		
+		//Non-elegant solution for 
 		
 		JToolBar bar = new JToolBar();
 		bar.add(load);
