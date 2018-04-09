@@ -14,12 +14,11 @@ public class SimWindow extends JFrame{
 	public SimWindow() {
 		super("Traffic Simulator");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+		setSize(1000, 1000);
 		addToolbar();
 		addCenterPanel();
-
-		setSize(1000, 1000);
-		setVisible(true);
+		System.err.println("Hello world\n" + this);
+		
 	}
 
 	public void addToolbar() {
@@ -84,14 +83,23 @@ public class SimWindow extends JFrame{
 	}
 
 	public void addCenterPanel() {
-		JPanel northPanel = createNorthPanel(), southPanel = new JPanel();
-		southPanel.add(new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, createSouthWestPanel(), createSouthEastPanel()), BorderLayout.CENTER);
-		JSplitPane centerPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, northPanel, southPanel);
-		add(centerPanel, BorderLayout.CENTER);
+		JSplitPane eastWestSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, 
+				createSouthWestPanel(), 
+				createSouthEastPanel());		
+		JSplitPane northSouthSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, 
+			createNorthPanel(), 
+			eastWestSplit);
+		add(northSouthSplit, BorderLayout.CENTER);
+		setVisible(true);
+		northSouthSplit.setDividerLocation(.5);
+		eastWestSplit.setDividerLocation(.5);
 	}
 
 	public JPanel createNorthPanel() {
-		JPanel northPanel = new JPanel(), leftPanel = new JPanel(), centerPanel = new JPanel(), rightPanel = new JPanel();
+		JPanel northPanel = new JPanel();
+		JPanel leftPanel = new JPanel();
+		JPanel centerPanel = new JPanel();
+		JPanel rightPanel = new JPanel();
 		northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.X_AXIS));
 		leftPanel.setBackground(Color.blue);
 		centerPanel.setBackground(Color.green);
@@ -103,7 +111,10 @@ public class SimWindow extends JFrame{
 	}
 
 	public JPanel createSouthWestPanel() {
-		JPanel southWestPanel = new JPanel(), northPanel = new JPanel(), centerPanel = new JPanel(), southPanel = new JPanel();
+		JPanel southWestPanel = new JPanel();
+		JPanel northPanel = new JPanel();
+		JPanel centerPanel = new JPanel();
+		JPanel southPanel = new JPanel();
 		southWestPanel.setLayout(new BoxLayout(southWestPanel, BoxLayout.Y_AXIS));
 		northPanel.setBackground(Color.pink);
 		centerPanel.setBackground(Color.yellow);
