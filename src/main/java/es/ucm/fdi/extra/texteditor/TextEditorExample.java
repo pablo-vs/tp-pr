@@ -15,9 +15,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
-@SuppressWarnings("serial")
 public class TextEditorExample extends JFrame implements ActionListener {
 
+	/**
+	 * Generated UID
+	 */
+	private static final long serialVersionUID = 8508232558383685884L;
 	private final String LOAD = "load";
 	private final String SAVE = "save";
 	private final String CLEAR = "clear";
