@@ -34,4 +34,5 @@ public class InitializedTableModel extends AbstractTableModel {
 	public String getColumnName(int i){
 		return columnTags[i];
 	}
+
 }

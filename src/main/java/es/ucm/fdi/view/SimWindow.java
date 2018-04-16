@@ -9,8 +9,10 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.JSpinner;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.lang.IllegalArgumentException;
 
 import es.ucm.fdi.control.Controller;
 import es.ucm.fdi.control.SimulatorAction;
@@ -23,8 +25,9 @@ public class SimWindow extends JPanel{
 	 */
 	private static final long serialVersionUID = -2574375309247665340L;
 
-	Controller controller;
-	CustomTextComponent eventsEditor, reportsArea;
+	private Controller controller;
+	private CustomTextComponent eventsEditor, reportsArea;
+	private JSpinner steps;
 	
 	private enum Actions{
 		LOAD_EVENT("Load"), SAVE_EVENT("Save"), CLEAR_EDITOR("Clear"), 
@@ -54,6 +57,7 @@ public class SimWindow extends JPanel{
 		
 		jf.setLayout(new BorderLayout());
 		jf.add(this, BorderLayout.CENTER);
+		//jf.pack();
 	}
 	
 	public void addActions(){
@@ -79,15 +83,25 @@ public class SimWindow extends JPanel{
 				}).register(this);
 		new SimulatorAction(Actions.INSERT_EVENT_DATA, "events.png", "Adds the event data to the event queue",
 				KeyEvent.VK_I, "control shift I", ()->{
-					//doStuff
+					try {
+						controller.readEvents(new ByteArrayInputStream(eventsEditor.getText().getBytes(StandardCharsets.UTF_8)));
+					} catch(IOException e) {
+						System.err.println("IO error while reading event!");
+					} catch(IllegalArgumentException e) {
+						System.err.println("Invalid event file!");
+					}
 				}).register(this);
 		new SimulatorAction(Actions.PLAY, "play.png", "Executes the indicated steps",
 				KeyEvent.VK_X, "control shift X", ()->{
-					//doStuff
+					try{
+						controller.run((Integer)steps.getValue());
+					} catch (IOException e) {
+						//doStuff
+					}
 				}).register(this);
 		new SimulatorAction(Actions.RESET, "reset.png", "Resets the simulation to its initial point",
 				KeyEvent.VK_R, "control shift R", ()->{
-					//doStuff
+					controller.reset();
 				}).register(this);
 		new SimulatorAction(Actions.EXIT, "exit.png", "Exit the program",
 				KeyEvent.VK_E, "control shift E", ()->System.exit(0))
@@ -98,7 +112,7 @@ public class SimWindow extends JPanel{
 		JLabel stepsLabel = new JLabel(" Steps: "), timeLabel = new JLabel(" Time: ");
 		ActionMap m = getActionMap();
 
-		JSpinner steps = new JSpinner();
+		steps = new JSpinner();
 		((SpinnerNumberModel) steps.getModel()).setMinimum(0);
 		steps.setPreferredSize(new Dimension(100,10));
 		
@@ -140,40 +154,41 @@ public class SimWindow extends JPanel{
 		jf.pack();
 		jf.setSize(1000, 1000);
 		jf.setVisible(true);
-		northSouthSplit.setDividerLocation(.5);
-		eastWestSplit.setDividerLocation(.5);
+		northSouthSplit.setDividerLocation(0.5);
+		northSouthSplit.setResizeWeight(0.5);
+		eastWestSplit.setDividerLocation(0.5);
+		eastWestSplit.setResizeWeight(0.5);
 	}
 
 	public JPanel createNorthPanel() {
 		JPanel northPanel = new JPanel();
-		JPanel leftPanel = new JPanel();
-		JPanel centerPanel = new JPanel(new GridLayout());
-		JPanel rightPanel = new JPanel();
-		
-		String[] tags = {"data", "test"};
-		String[][] data = {{"1", "hello"}, {"2", "hello"}};
+
+		String[] tags = {"#", "Time", "Type"};
+		String[][] data = {{"0", "0", "New Junction j"}};
 		JTable table = new JTable(
-				new InitializedTableModel(tags,data) );
+				new InitializedTableModel(tags,data) ) {
+
+		};
+		JScrollPane scrollPane = new JScrollPane(table);
 		
 		northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.X_AXIS));
-		leftPanel.add(eventsEditor);
-		leftPanel.setBorder(BorderFactory.createTitledBorder("Events editor"));
-		centerPanel.add(new JScrollPane(table));
-		centerPanel.setBorder(BorderFactory.createTitledBorder("Event List"));
-		rightPanel.add(reportsArea);
-		rightPanel.setBorder(BorderFactory.createTitledBorder("Reports Area"));
+
+		northPanel.add(eventsEditor);
+		eventsEditor.setBorder(BorderFactory.createTitledBorder("Events editor"));
+
+		northPanel.add(scrollPane);
+		scrollPane.setBorder(BorderFactory.createTitledBorder("Event List"));
+
+		northPanel.add(reportsArea);
+		reportsArea.setBorder(BorderFactory.createTitledBorder("Reports Area"));
+
+		//northPanel.setPreferredSize(new Dimension(900, 150));
 		
-		northPanel.add(leftPanel);
-		northPanel.add(centerPanel);
-		northPanel.add(rightPanel);
 		return northPanel;
 	}
 
 	public JPanel createSouthWestPanel() {
 		JPanel southWestPanel = new JPanel();
-		JPanel northPanel = new JPanel(new GridLayout());
-		JPanel centerPanel = new JPanel(new GridLayout());
-		JPanel southPanel = new JPanel(new GridLayout());
 		
 		String[] tags = {"data", "test"};
 		String[][] data = {{"1", "hello"}, {"2", "hello"}};
@@ -182,20 +197,25 @@ public class SimWindow extends JPanel{
 				table3 = new JTable((new InitializedTableModel(tags,data) ));
 		
 		southWestPanel.setLayout(new BoxLayout(southWestPanel, BoxLayout.Y_AXIS));
-		northPanel.add(new JScrollPane(table1));
-		northPanel.setBorder(BorderFactory.createTitledBorder("Vehicles"));
-		centerPanel.add(new JScrollPane(table2));
-		centerPanel.setBorder(BorderFactory.createTitledBorder("Roads"));
-		southPanel.add(new JScrollPane(table3));
-		southPanel.setBorder(BorderFactory.createTitledBorder("Junctions"));
-		southWestPanel.add(northPanel);
-		southWestPanel.add(centerPanel);
-		southWestPanel.add(southPanel);
-		
+
+		southWestPanel.add(new JScrollPane(table1));
+		table1.setBorder(BorderFactory.createTitledBorder("Vehicles"));
+
+		southWestPanel.add(new JScrollPane(table2));
+		table2.setBorder(BorderFactory.createTitledBorder("Roads"));
+
+		southWestPanel.add(new JScrollPane(table3));
+		table3.setBorder(BorderFactory.createTitledBorder("Junctions"));
+
+		southWestPanel.setPreferredSize(new Dimension(400, 400));
+
 		return southWestPanel;
 	}
 
 	public JPanel createSouthEastPanel() {
-		return new JPanel();
+		JPanel panel = new JPanel();
+		panel.setPreferredSize(new Dimension(400, 400));
+		return panel;
 	}
+
 }

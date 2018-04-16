@@ -9,6 +9,7 @@ import java.util.Scanner;
 import java.nio.file.Files;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class CustomTextComponent extends JPanel {
 
@@ -25,8 +26,9 @@ public class CustomTextComponent extends JPanel {
 		textArea.setLineWrap(true);
 		textArea.setWrapStyleWord(true);
 		JScrollPane area = new JScrollPane(textArea);
-		area.setPreferredSize(new Dimension(500, 500));
-		add(area);
+		setPreferredSize(new Dimension(400,300));
+		setLayout(new BorderLayout());
+		add(area, BorderLayout.CENTER);
 		fileChooser = new JFileChooser();
 	}
 	
@@ -47,6 +49,10 @@ public class CustomTextComponent extends JPanel {
 		}
 	}
 	
+	public String getText() {
+		return textArea.getText();
+	}
+
 	public void clear(){
 		textArea.setText("");
 	}

@@ -107,8 +107,10 @@ public class Controller {
 
 	/**
 	 * Reads the events from the input stream and inserts them into the simulator queue.
+	 *
+	 * @param in InputStream from which to read events.
 	*/
-	private void readEvents(InputStream in) throws IOException {
+	public void readEvents(InputStream in) throws IOException {
 		Ini events = new Ini(in);
 		for(IniSection sec : events.getSections()) {
 			Event e = parseEvent(sec);
@@ -122,10 +124,17 @@ public class Controller {
 	}
 
 	/**
-	* Resets the simulator
+	* Resets the simulator.
 	*/
 	public void reset() {
 		sim.reset();
+	}
+
+	/**
+	* Adds a Listener to the sim.
+	*/
+	public void addListener(Simulator.Listener l) {
+		sim.addSimulatorListener(l);
 	}
 
 	/**

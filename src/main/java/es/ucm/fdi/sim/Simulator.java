@@ -163,7 +163,7 @@ public class Simulator {
 	}
 
 	public interface Listener {
-		void update(UpdateEvent ue, String error);
+		public void update(UpdateEvent ue, String error);
 	}
 
 	public enum EventType {
