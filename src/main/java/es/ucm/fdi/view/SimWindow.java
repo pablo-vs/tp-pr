@@ -9,6 +9,10 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.JSpinner;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
+import es.ucm.fdi.control.Controller;
 import es.ucm.fdi.control.SimulatorAction;
 import es.ucm.fdi.view.CustomTextComponent;
 import es.ucm.fdi.view.InitializedTableModel;
@@ -19,14 +23,13 @@ public class SimWindow extends JPanel{
 	 */
 	private static final long serialVersionUID = -2574375309247665340L;
 
+	Controller controller;
 	CustomTextComponent eventsEditor, reportsArea;
 	
 	private enum Actions{
 		LOAD_EVENT("Load"), SAVE_EVENT("Save"), CLEAR_EDITOR("Clear"), 
 		INSERT_EVENT_DATA("Insert"), PLAY("Play"), RESET("Reset"), EXIT("Exit");
-		
-		String s;
-		
+		String s;	
 		private Actions(String s){
 			this.s = s;
 		}
@@ -36,8 +39,10 @@ public class SimWindow extends JPanel{
 		}
 	}
 	
-	public SimWindow() {
+	public SimWindow(Controller cont) {
 		JFrame jf = new JFrame("Traffic Simulator");
+		controller = cont;
+		
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		setLayout(new BorderLayout());
@@ -92,7 +97,7 @@ public class SimWindow extends JPanel{
 	public void addToolbar() {
 		JLabel stepsLabel = new JLabel(" Steps: "), timeLabel = new JLabel(" Time: ");
 		ActionMap m = getActionMap();
-		
+
 		JSpinner steps = new JSpinner();
 		((SpinnerNumberModel) steps.getModel()).setMinimum(0);
 		steps.setPreferredSize(new Dimension(100,10));

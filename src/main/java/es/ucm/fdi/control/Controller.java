@@ -53,7 +53,7 @@ public class Controller {
 		sim = new Simulator();
 		input = System.in;
 		output = System.out;
-		readEvents();
+		readEvents(input);
 	}
 
 	/**
@@ -66,7 +66,7 @@ public class Controller {
 		sim = new Simulator();
 		this.input = input;
 		this.output = output;
-		readEvents();
+		readEvents(input);
 	}
 
 	/**
@@ -79,7 +79,7 @@ public class Controller {
 		output = System.out;
 		try(FileInputStream inputStream = new FileInputStream(inputPath)){
 			input = inputStream;
-			readEvents();  
+			readEvents(input);  
 		} catch(IOException e) {
 			throw new IOException("Could not open or read file " + inputPath, e);
 		}
@@ -98,7 +98,7 @@ public class Controller {
 		    FileOutputStream outputStream = new FileOutputStream(outputPath)) {
 			input = inputStream;
 			output = outputStream;
-			readEvents();
+			readEvents(input);
 		} catch(IOException e) {
 			throw new IOException("Could not open or read files", e);
 		}
@@ -106,10 +106,10 @@ public class Controller {
 	}
 
 	/**
-	   Reads the events from the input stream and inserts them into the simulator queue.
+	 * Reads the events from the input stream and inserts them into the simulator queue.
 	*/
-	private void readEvents() throws IOException {
-		Ini events = new Ini(input);
+	private void readEvents(InputStream in) throws IOException {
+		Ini events = new Ini(in);
 		for(IniSection sec : events.getSections()) {
 			Event e = parseEvent(sec);
 			if(e == null) {
@@ -122,6 +122,13 @@ public class Controller {
 	}
 
 	/**
+	* Resets the simulator
+	*/
+	public void reset() {
+		sim.reset();
+	}
+
+	/**
 	 * Runs the simulation for the given number of steps.
 	 *
 	 * @param steps The number of ticks to simulate.
@@ -131,8 +138,8 @@ public class Controller {
 	}
 
 	/**
-	   Attempts to create an <code>Event</code> from the given IniSection.
-	   Returns null if the section tag is unknown.
+	 * Attempts to create an <code>Event</code> from the given IniSection.
+	 * Returns null if the section tag is unknown.
 	*/
 	private Event parseEvent(IniSection section) {
 		Event result = null;
