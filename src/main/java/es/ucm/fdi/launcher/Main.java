@@ -3,6 +3,8 @@ package es.ucm.fdi.launcher;
 import java.io.File;
 import java.io.IOException;
 import java.io.FilenameFilter;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileNotFoundException;
@@ -181,7 +183,8 @@ public class Main {
 		// test("resources/examples/basic/");
 
 		// Call start to start the simulator from command line, etc.
-		SimWindow view = new SimWindow();
+		Controller control = new Controller(new ByteArrayInputStream("".getBytes()), new ByteArrayOutputStream());
+		SimWindow view = new SimWindow(control);
 		//start(args);
 
 	}

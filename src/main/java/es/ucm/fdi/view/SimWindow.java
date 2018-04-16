@@ -8,6 +8,10 @@ import java.util.Arrays;
 
 import javax.swing.JSpinner;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
+import es.ucm.fdi.control.Controller;
 import es.ucm.fdi.control.SimulatorAction;
 import es.ucm.fdi.view.InitializedTableModel;
 
@@ -17,10 +21,11 @@ public class SimWindow extends JFrame{
 	 */
 	private static final long serialVersionUID = -2574375309247665340L;
 
-	//SHOULD REFERENCE COMPONENTS?
+	Controller controller;
 	
-	public SimWindow() {
+	public SimWindow(Controller cont) {
 		super("Traffic Simulator");
+		controller = cont;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(1000, 1000);
 		addToolbar();
@@ -28,6 +33,18 @@ public class SimWindow extends JFrame{
 	}
 
 	public void addToolbar() {
+
+		JSpinner steps = new JSpinner();
+		((SpinnerNumberModel) steps.getModel()).setMinimum(0);
+		steps.setPreferredSize(new Dimension(100,10));
+		
+		JTextField time = new JTextField();
+		time.setPreferredSize(new Dimension(100,10));
+		time.setText("0"); //initial
+		time.setEditable(false);
+
+		JLabel stepsLabel = new JLabel(" Steps: "), timeLabel = new JLabel(" Time: ");
+
 		SimulatorAction load = new SimulatorAction("Load", "open.png", "Loads an input file",
 						KeyEvent.VK_L, "control shift L", ()->{
 							//doStuff
@@ -42,29 +59,24 @@ public class SimWindow extends JFrame{
 				}),
 				insert = new SimulatorAction("Insert", "events.png", "Adds the event data to the event queue",
 						KeyEvent.VK_I, "control shift I", ()->{
-							//doStuff
+							//controller.readEvents(eventsEditor.getText().getBytes(StandardCharsets.UTF_8));
 						}),
-				execute = new SimulatorAction("Insert", "play.png", "Executes the indicated steps",
+				execute = new SimulatorAction("Play", "play.png", "Executes the indicated steps",
 						KeyEvent.VK_X, "control shift X", ()->{
-							//doStuff
+							try{
+								controller.run((Integer)steps.getValue());
+							} catch (IOException e) {
+								//doStuff
+							}
 						}),
 				reset = new SimulatorAction("Reset", "reset.png", "Resets the simulation to its initial point",
 						KeyEvent.VK_R, "control shift R", ()->{
-							//doStuff
+							controller.reset();
 						}),
 				exit = new SimulatorAction("Exit", "exit.png", "Exit the program",
 						KeyEvent.VK_E, "control shift E", ()->System.exit(0));
 				
-		JLabel stepsLabel = new JLabel(" Steps: "), timeLabel = new JLabel(" Time: ");
 		
-		JSpinner steps = new JSpinner();
-		((SpinnerNumberModel) steps.getModel()).setMinimum(0);
-		steps.setPreferredSize(new Dimension(100,10));
-		
-		JTextField time = new JTextField();
-		time.setPreferredSize(new Dimension(100,10));
-		time.setText("0"); //initial
-		time.setEditable(false);
 		
 		JToolBar bar = new JToolBar();
 		bar.add(load);

@@ -116,8 +116,6 @@ public class Road extends SimObject{
 	
 	/**
 	 * Getter method for {@link Road#vehicleList}
-	 * 
-//	 * @return Current <code>Road</code>'s <code>vehicleList</code>.
 	 */
 	public MultiTreeMap<Integer, Vehicle> getVehicles(){
 		return vehicleList;

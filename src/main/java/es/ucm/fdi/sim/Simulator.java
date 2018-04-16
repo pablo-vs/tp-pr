@@ -31,7 +31,7 @@ public class Simulator {
 	/**
 	 * Default constructor for the <code>Simulator</code>.
 	 */
-	public Simulator(){
+	public Simulator() {
 		eventList = new MultiTreeMap<Integer, Event>();
 		roadMap = new RoadMap();
 		timer = 0;
@@ -45,6 +45,7 @@ public class Simulator {
 	 */
 	public void insertEvent(Event e){
 		eventList.putValue(e.getTime(), e);
+		fireUpdateEvent(EventType.NEW_EVENT);
 	}
 	
 	/**
@@ -84,6 +85,7 @@ public class Simulator {
 				}
 			}
 		}
+		fireUpdateEvent(EventType.ADVANCED);
 	}
 	
 	/**
@@ -107,21 +109,57 @@ public class Simulator {
 		return report;
 	}
 
+
+	/**
+	* Resets the simulator
+	*/
+	public void reset() {
+		eventList = new MultiTreeMap<Integer, Event>();
+		roadMap = new RoadMap();
+		timer = 0;
+		fireUpdateEvent(EventType.RESET);
+	}
+
+	/**
+	* Registers a new Listener and sends a REGISTERED event.
+	*
+	* @param l The Listener to add.
+	*/
 	public void addSimulatorListener(Listener l) {
 		listeners.add(l);
 		UpdateEvent event = new UpdateEvent(EventType.REGISTERED);
 		SwingUtilities.invokeLater(()->l.update(event, ""));
 	}
 
+	/**
+	* Removes a Listener.
+	*
+	* @param l The Listener to remove.
+	*/
 	public void removeListener(Listener l) {
 		listeners.remove(l);
 	}
 
+	/**
+	* Updates all the registered Listeners with the given event.
+	*
+	* @param type The event type
+	* @param error An error message
+	*/
 	private void fireUpdateEvent(EventType type, String error) {
 		UpdateEvent event = new UpdateEvent(type, roadMap, eventList, timer);
 		for(Listener l : listeners) {
-			l.update(event, error);
+			SwingUtilities.invokeLater(()->l.update(event, error));
 		}
+	}
+
+	/**
+	* Updates all the registered Listeners with the given event.
+	*
+	* @param type The event type
+	*/
+	private void fireUpdateEvent(EventType type) {
+		fireUpdateEvent(type, "");
 	}
 
 	public interface Listener {
