@@ -17,7 +17,7 @@ public class SimulatorAction extends AbstractAction {
     private static final String ICON_BASE = "icons/";
 
     private Runnable callback;
-
+    
     /**
      * Creates an action for use in buttons, toolbar-buttons, and menus of all stripes
      * @param name to use in menus (via toString), and as identifier when registering.
