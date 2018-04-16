@@ -1,14 +1,16 @@
 package es.ucm.fdi.view;
 
+import java.io.IOException;
+
 import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.util.Arrays;
 
 import javax.swing.JSpinner;
 
 import es.ucm.fdi.control.SimulatorAction;
+import es.ucm.fdi.view.CustomTextComponent;
 import es.ucm.fdi.view.InitializedTableModel;
 
 public class SimWindow extends JFrame{
@@ -18,11 +20,15 @@ public class SimWindow extends JFrame{
 	private static final long serialVersionUID = -2574375309247665340L;
 
 	//SHOULD REFERENCE COMPONENTS?
+	CustomTextComponent eventsEditor, reportsArea;
 	
 	public SimWindow() {
 		super("Traffic Simulator");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(1000, 1000);
+		
+		eventsEditor = new CustomTextComponent(true);
+		reportsArea = new CustomTextComponent(false);
 		addToolbar();
 		addCenterPanel();
 	}
@@ -30,15 +36,23 @@ public class SimWindow extends JFrame{
 	public void addToolbar() {
 		SimulatorAction load = new SimulatorAction("Load", "open.png", "Loads an input file",
 						KeyEvent.VK_L, "control shift L", ()->{
-							//doStuff
-				}),
+							try{
+								eventsEditor.load();
+							}catch(IOException e){
+								
+							}
+						}),
 				save = new SimulatorAction("Save", "save.png", "Saves the event data in a file",
 						KeyEvent.VK_S, "control shift S", ()->{
-							//doStuff
+							try{
+								eventsEditor.save();
+							}catch(IOException e){
+								
+							}
 				}),
 				clear = new SimulatorAction("Clear", "clear.png", "Clears the current event data",
 						KeyEvent.VK_C, "control shift C", ()->{
-							//doStuff
+							eventsEditor.clear();
 				}),
 				insert = new SimulatorAction("Insert", "events.png", "Adds the event data to the event queue",
 						KeyEvent.VK_I, "control shift I", ()->{
@@ -111,11 +125,13 @@ public class SimWindow extends JFrame{
 				new InitializedTableModel(tags,data) );
 		
 		northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.X_AXIS));
-		leftPanel.setBackground(Color.blue);
+		leftPanel.add(eventsEditor);
+		leftPanel.setBorder(BorderFactory.createTitledBorder("Events editor"));
 		centerPanel.add(new JScrollPane(table));
 		centerPanel.setBorder(BorderFactory.createTitledBorder("Event List"));
+		rightPanel.add(reportsArea);
+		rightPanel.setBorder(BorderFactory.createTitledBorder("Reports Area"));
 		
-		rightPanel.setBackground(Color.red);
 		northPanel.add(leftPanel);
 		northPanel.add(centerPanel);
 		northPanel.add(rightPanel);
