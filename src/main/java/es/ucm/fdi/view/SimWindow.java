@@ -23,7 +23,6 @@ public class SimWindow extends JFrame{
 	 */
 	private static final long serialVersionUID = -2574375309247665340L;
 
-<<<<<<< HEAD
 	Controller controller;
 	CustomTextComponent eventsEditor, reportsArea;
 	
