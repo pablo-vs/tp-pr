@@ -13,11 +13,12 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.lang.IllegalArgumentException;
+import java.util.ArrayList;
 
 import es.ucm.fdi.control.Controller;
 import es.ucm.fdi.control.SimulatorAction;
 import es.ucm.fdi.view.CustomTextComponent;
-import es.ucm.fdi.view.InitializedTableModel;
+import es.ucm.fdi.view.CustomTableModel;
 
 public class SimWindow extends JPanel{
 	/**
@@ -25,6 +26,9 @@ public class SimWindow extends JPanel{
 	 */
 	private static final long serialVersionUID = -2574375309247665340L;
 
+	private final double NS_SPLIT_DIVISION = 0.3;
+	private final double EW_SPLIT_DIVISION = 0.5;
+	
 	private Controller controller;
 	private CustomTextComponent eventsEditor, reportsArea;
 	private JSpinner steps;
@@ -154,30 +158,29 @@ public class SimWindow extends JPanel{
 		jf.pack();
 		jf.setSize(1000, 1000);
 		jf.setVisible(true);
-		northSouthSplit.setDividerLocation(0.5);
-		northSouthSplit.setResizeWeight(0.5);
-		eastWestSplit.setDividerLocation(0.5);
-		eastWestSplit.setResizeWeight(0.5);
+		northSouthSplit.setDividerLocation(NS_SPLIT_DIVISION);
+		northSouthSplit.setResizeWeight(NS_SPLIT_DIVISION);
+		eastWestSplit.setDividerLocation(EW_SPLIT_DIVISION);
+		eastWestSplit.setResizeWeight(EW_SPLIT_DIVISION);
 	}
 
 	public JPanel createNorthPanel() {
 		JPanel northPanel = new JPanel();
 
-		String[] tags = {"#", "Time", "Type"};
-		String[][] data = {{"0", "0", "New Junction j"}};
-		JTable table = new JTable(
-				new InitializedTableModel(tags,data) ) {
-
-		};
-		JScrollPane scrollPane = new JScrollPane(table);
+	        CustomTableModel.EventsListModel eventsTableModel =
+			new CustomTableModel.EventsListModel();
+		
+	        JScrollPane eventsTable = new JScrollPane(new JTable(eventsTableModel));
+		
+		controller.addListener(eventsTableModel);
 		
 		northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.X_AXIS));
 
 		northPanel.add(eventsEditor);
 		eventsEditor.setBorder(BorderFactory.createTitledBorder("Events editor"));
 
-		northPanel.add(scrollPane);
-		scrollPane.setBorder(BorderFactory.createTitledBorder("Event List"));
+		northPanel.add(eventsTable);
+		eventsTable.setBorder(BorderFactory.createTitledBorder("Event List"));
 
 		northPanel.add(reportsArea);
 		reportsArea.setBorder(BorderFactory.createTitledBorder("Reports Area"));
@@ -190,31 +193,43 @@ public class SimWindow extends JPanel{
 	public JPanel createSouthWestPanel() {
 		JPanel southWestPanel = new JPanel();
 		
-		String[] tags = {"data", "test"};
-		String[][] data = {{"1", "hello"}, {"2", "hello"}};
-		JTable table1 = new JTable(new InitializedTableModel(tags,data) ),
-				table2 = new JTable(new InitializedTableModel(tags,data) ),
-				table3 = new JTable((new InitializedTableModel(tags,data) ));
+		String[] tags = {"data", "test"},
+			dataRow1 = {"1", "hello"},
+			dataRow2 = {"2", "hello"};
+		ArrayList<String[]> data = new ArrayList<>();
+		data.add(dataRow1);
+		data.add(dataRow2);
+
+		CustomTableModel.VehicleListModel vehiclesModel = new CustomTableModel.VehicleListModel();
+		CustomTableModel.RoadListModel roadsModel = new CustomTableModel.RoadListModel();
+		CustomTableModel.JunctionListModel junctionsModel = new CustomTableModel.JunctionListModel();
+		JScrollPane table1 = new JScrollPane(new JTable(vehiclesModel)),
+			table2 = new JScrollPane(new JTable(roadsModel)),
+			table3 = new JScrollPane(new JTable(junctionsModel));
+
+		controller.addListener(vehiclesModel);
+		controller.addListener(roadsModel);
+		controller.addListener(junctionsModel);
 		
 		southWestPanel.setLayout(new BoxLayout(southWestPanel, BoxLayout.Y_AXIS));
 
-		southWestPanel.add(new JScrollPane(table1));
+		southWestPanel.add(table1);
 		table1.setBorder(BorderFactory.createTitledBorder("Vehicles"));
 
-		southWestPanel.add(new JScrollPane(table2));
+		southWestPanel.add(table2);
 		table2.setBorder(BorderFactory.createTitledBorder("Roads"));
 
-		southWestPanel.add(new JScrollPane(table3));
+		southWestPanel.add(table3);
 		table3.setBorder(BorderFactory.createTitledBorder("Junctions"));
 
-		southWestPanel.setPreferredSize(new Dimension(400, 400));
+		southWestPanel.setPreferredSize(new Dimension(400, 600));
 
 		return southWestPanel;
 	}
 
 	public JPanel createSouthEastPanel() {
 		JPanel panel = new JPanel();
-		panel.setPreferredSize(new Dimension(400, 400));
+		panel.setPreferredSize(new Dimension(400, 600));
 		return panel;
 	}
 

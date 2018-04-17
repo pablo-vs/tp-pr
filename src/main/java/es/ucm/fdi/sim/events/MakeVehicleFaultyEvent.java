@@ -64,6 +64,16 @@ public class MakeVehicleFaultyEvent extends Event {
 	}
 
 	/**
+	 * Return a  description of the event.
+	 *
+	 * @return A <code>String</code> representing the event.
+	 */
+	@Override
+	public String getDescription() {
+		return "Break vehicles " + String.join(" ", vehicles);
+	}
+
+	/**
 	 * Builder for this event.
 	 *
 	 * @version 28.02.2016

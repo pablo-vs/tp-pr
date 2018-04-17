@@ -59,6 +59,16 @@ public class NewVehicleEvent extends Event {
 	}
 
 	/**
+	 * Return a  description of the event.
+	 *
+	 * @return A <code>String</code> representing the event.
+	 */
+	@Override
+	public String getDescription() {
+		return "New vehicle " + vehicleID;
+	}
+
+	/**
 	 * Creates a new Vehicle with the event parameters, if possible.
 	 *
 	 * @return The corresponding Vehicle.

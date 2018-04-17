@@ -26,10 +26,10 @@ public class Junction extends SimObject{
 	private HashMap<Junction, Road> junctionToRoadMap;
 
 	/**
-	 * Private class representing a <code>Road</code> with its respective queue of 
+	 * Class representing a <code>Road</code> with its respective queue of 
 	 * <code>Vehicles</code> and traffic light.
 	 */
-	protected class IncomingRoad extends ArrayDeque<Vehicle> {
+	public class IncomingRoad extends ArrayDeque<Vehicle> {
 		/**
 		 * Generated UID.
 		 */
@@ -261,7 +261,33 @@ public class Junction extends SimObject{
 	public void addOutgoingRoad(Road r) {
 		outgoingRoads.add(r);
 		junctionToRoadMap.put(r.getEnd(), r);
-	}	
+	}
+
+	/**
+	 * Returns the current open incoming road.
+	 *
+	 * @return The open <code>IncomingRoad</code>;
+	 */
+	public IncomingRoad getOpenRoad() {
+		if(currentOpenQueue != -1) {
+			return incomingRoads.get(currentOpenQueue);
+		} else return null;
+	}
+
+	/**
+	 * Returns the current closed roads.
+	 *
+	 * @return A <code>List</code> of closed <code>IncomingRoads</code>.
+	 */
+	public List<IncomingRoad> getClosedRoads() {
+		ArrayList<IncomingRoad> list = new ArrayList<>();
+		for(IncomingRoad r : roadToQueueMap.values()) {
+			if(!r.equals(getOpenRoad())) {
+				list.add(r);
+			}
+		}
+		return list;
+	}
 
 	/**
 	 * Fills the given map with the details of the state of the object.

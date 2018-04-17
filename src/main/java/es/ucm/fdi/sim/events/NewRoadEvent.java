@@ -99,7 +99,16 @@ public class NewRoadEvent extends Event {
     	
 		return isEqual;
 	}
-    
+
+	/**
+	 * Return a  description of the event.
+	 *
+	 * @return A <code>String</code> representing the event.
+	 */
+	@Override
+	public String getDescription() {
+		return "New road " + roadID;
+	}
     
 	/**
 	 * Builder for this event.

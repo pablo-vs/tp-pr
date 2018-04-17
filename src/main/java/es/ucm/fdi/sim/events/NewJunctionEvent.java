@@ -57,6 +57,16 @@ public class NewJunctionEvent extends Event {
 		return (o instanceof NewJunctionEvent 
     			&& junctionID.equals(((NewJunctionEvent)o).junctionID));
 	}
+
+	/**
+	 * Return a  description of the event.
+	 *
+	 * @return A <code>String</code> representing the event.
+	 */
+	@Override
+	public String getDescription() {
+		return "New junction " + junctionID;
+	}
     
 	/**
 	 * Builder for this event.

@@ -200,7 +200,7 @@ public class Simulator {
 			this.time = time;
 		}
 
-		public EventType getEvent() {
+		public EventType getType() {
 			return type;
 		}
 
@@ -216,7 +216,7 @@ public class Simulator {
 			return roads;
 		}
 
-		public List<Event> getEventQeue() {
+		public List<Event> getEventQueue() {
 			return eventQueue;
 		}
 

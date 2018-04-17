@@ -188,6 +188,33 @@ public class Vehicle extends SimObject{
 	public Road getRoad() {
 		return currentRoad;
 	}
+
+	/**
+	 * Getter method for {@link Vehicle#kilometrage}.
+	 * 
+	 * @return Current kilometrage.
+	 */
+	public int getKm() {
+		return kilometrage;
+	}
+
+	/**
+	 * Getter method for {@link Vehicle#brokenTime}.
+	 * 
+	 * @return	Time for this <code>Vehicle</code> to be broken.
+	 */
+	public int getBrokenTime(){
+		return brokenTime;
+	}
+
+	/**
+	 * Getter method for {@link Vehicle#itinerary}.
+	 * 
+	 * @return	The itinerary of this <code>Vehicle</code>.
+	 */
+	public List<Junction> getItinerary() {
+		return itinerary;
+	}
 	
 	/**
 	 * Indicates whether this <code>Vehicle</code> is faulty.
@@ -201,6 +228,8 @@ public class Vehicle extends SimObject{
 		}
 		return faulty;
 	}
+
+
 	
 	/**
 	 * Fills the given map with the details of the state of the object.

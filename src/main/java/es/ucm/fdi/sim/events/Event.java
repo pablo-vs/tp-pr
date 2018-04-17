@@ -51,6 +51,13 @@ public abstract class Event {
 	public abstract void execute(RoadMap r);
 
 	/**
+	 * Return a  description of the event.
+	 *
+	 * @return A <code>String</code> representing the event.
+	 */
+	public abstract String getDescription();
+	
+	/**
 	 *	Abstract parent of all the <code>EventBuilders</code>
 	 */
 	public static abstract class EventBuilder {		
