@@ -9,6 +9,7 @@ import java.util.Scanner;
 import java.nio.file.Files;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class CustomTextComponent extends JPanel {
 
@@ -20,6 +21,7 @@ public class CustomTextComponent extends JPanel {
 	private JTextArea textArea;
 	
 	public CustomTextComponent(boolean isEditable){
+		setLayout(new GridLayout());
 		textArea = new JTextArea();
 		textArea.setEditable(isEditable);
 		textArea.setLineWrap(true);

@@ -115,15 +115,20 @@ public class SimWindow extends JPanel{
 		bar.add(m.get(""+Actions.INSERT_EVENT_DATA));
 		bar.add(m.get(""+Actions.PLAY));
 		bar.add(m.get(""+Actions.RESET));
+		bar.addSeparator();
 		
 		//Here goes the spinner
+		steps.setMaximumSize(new Dimension(100, 50));
 		bar.add(stepsLabel);
 		bar.add(steps);
+		bar.addSeparator();
 		
 		//Here goes the JTextPanes
+		time.setMaximumSize(new Dimension(100, 50));
 		bar.add(timeLabel);
 		bar.add(time);
 		
+		bar.addSeparator();
 		bar.add(m.get(""+Actions.EXIT));
 		add(bar, BorderLayout.NORTH);
 	}
@@ -140,8 +145,14 @@ public class SimWindow extends JPanel{
 		jf.pack();
 		jf.setSize(1000, 1000);
 		jf.setVisible(true);
-		northSouthSplit.setDividerLocation(.5);
-		eastWestSplit.setDividerLocation(.5);
+		SwingUtilities.invokeLater(new Runnable(){
+			
+			@Override
+			public void run(){
+				northSouthSplit.setDividerLocation(0.3);
+				eastWestSplit.setDividerLocation(0.5);	
+			}
+		});
 	}
 
 	public JPanel createNorthPanel() {
@@ -156,13 +167,17 @@ public class SimWindow extends JPanel{
 				new InitializedTableModel(tags,data) );
 		
 		northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.X_AXIS));
+		leftPanel.setLayout(new GridLayout());
 		leftPanel.add(eventsEditor);
 		leftPanel.setBorder(BorderFactory.createTitledBorder("Events editor"));
+		centerPanel.setLayout(new GridLayout());
 		centerPanel.add(new JScrollPane(table));
 		centerPanel.setBorder(BorderFactory.createTitledBorder("Event List"));
+		rightPanel.setLayout(new GridLayout());
 		rightPanel.add(reportsArea);
 		rightPanel.setBorder(BorderFactory.createTitledBorder("Reports Area"));
 		
+		northPanel.setLayout(new GridLayout());
 		northPanel.add(leftPanel);
 		northPanel.add(centerPanel);
 		northPanel.add(rightPanel);
