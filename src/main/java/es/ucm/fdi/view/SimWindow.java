@@ -133,15 +133,20 @@ public class SimWindow extends JPanel{
 		bar.add(m.get(""+Actions.INSERT_EVENT_DATA));
 		bar.add(m.get(""+Actions.PLAY));
 		bar.add(m.get(""+Actions.RESET));
+		bar.addSeparator();
 		
 		//Here goes the spinner
+		steps.setMaximumSize(new Dimension(100, 50));
 		bar.add(stepsLabel);
 		bar.add(steps);
+		bar.addSeparator();
 		
 		//Here goes the JTextPanes
+		time.setMaximumSize(new Dimension(100, 50));
 		bar.add(timeLabel);
 		bar.add(time);
 		
+		bar.addSeparator();
 		bar.add(m.get(""+Actions.EXIT));
 		add(bar, BorderLayout.NORTH);
 	}
@@ -158,10 +163,13 @@ public class SimWindow extends JPanel{
 		jf.pack();
 		jf.setSize(1000, 1000);
 		jf.setVisible(true);
-		northSouthSplit.setDividerLocation(NS_SPLIT_DIVISION);
-		northSouthSplit.setResizeWeight(NS_SPLIT_DIVISION);
-		eastWestSplit.setDividerLocation(EW_SPLIT_DIVISION);
-		eastWestSplit.setResizeWeight(EW_SPLIT_DIVISION);
+
+		SwingUtilities.invokeLater(()->{
+				northSouthSplit.setDividerLocation(NS_SPLIT_DIVISION);
+				northSouthSplit.setResizeWeight(NS_SPLIT_DIVISION);
+				eastWestSplit.setDividerLocation(EW_SPLIT_DIVISION);
+				eastWestSplit.setResizeWeight(EW_SPLIT_DIVISION);
+			});
 	}
 
 	public JPanel createNorthPanel() {
@@ -184,9 +192,6 @@ public class SimWindow extends JPanel{
 
 		northPanel.add(reportsArea);
 		reportsArea.setBorder(BorderFactory.createTitledBorder("Reports Area"));
-
-		//northPanel.setPreferredSize(new Dimension(900, 150));
-		
 		return northPanel;
 	}
 

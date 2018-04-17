@@ -21,6 +21,7 @@ public class CustomTextComponent extends JPanel {
 	private JTextArea textArea;
 	
 	public CustomTextComponent(boolean isEditable){
+		setLayout(new GridLayout());
 		textArea = new JTextArea();
 		textArea.setEditable(isEditable);
 		textArea.setLineWrap(true);
