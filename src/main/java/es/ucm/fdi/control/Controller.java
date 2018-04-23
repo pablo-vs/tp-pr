@@ -147,6 +147,13 @@ public class Controller {
 	}
 
 	/**
+	 * @return Current simulator.
+	 */
+	public Simulator getSimulator(){
+		return sim;
+	}
+	
+	/**
 	 * Attempts to create an <code>Event</code> from the given IniSection.
 	 * Returns null if the section tag is unknown.
 	*/

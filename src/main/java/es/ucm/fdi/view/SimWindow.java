@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 import es.ucm.fdi.control.Controller;
 import es.ucm.fdi.control.SimulatorAction;
+import es.ucm.fdi.sim.Simulator;
 import es.ucm.fdi.view.CustomTextComponent;
 import es.ucm.fdi.view.CustomTableModel;
 import es.ucm.fdi.view.CustomGraphLayout;
@@ -32,7 +33,9 @@ public class SimWindow extends JPanel{
 	
 	private Controller controller;
 	private CustomTextComponent eventsEditor, reportsArea;
+	private CustomGraphLayout graph;
 	private JSpinner steps;
+	private JTextField time;
 	
 	private enum Actions{
 		LOAD_EVENT("Load"), SAVE_EVENT("Save"), CLEAR_EDITOR("Clear"), 
@@ -56,6 +59,7 @@ public class SimWindow extends JPanel{
 		setLayout(new BorderLayout());
 		eventsEditor = new CustomTextComponent(true);
 		reportsArea = new CustomTextComponent(false);
+		graph = new CustomGraphLayout();
 		addActions();
 		addToolbar();
 		addCenterPanel(jf);
@@ -100,12 +104,18 @@ public class SimWindow extends JPanel{
 				KeyEvent.VK_X, "control shift X", ()->{
 					try{
 						controller.run((Integer)steps.getValue());
+						time.setText(Integer.toString(controller
+								.getSimulator().getTimer()));
+						graph.updateGraph(controller.getSimulator().getRoadMap());
 					} catch (IOException e) {
 						//doStuff
 					}
 				}).register(this);
 		new SimulatorAction(Actions.RESET, "reset.png", "Resets the simulation to its initial point",
 				KeyEvent.VK_R, "control shift R", ()->{
+					graph.clearGraph();
+					graph = new CustomGraphLayout();
+					time.setText("0");
 					controller.reset();
 				}).register(this);
 		new SimulatorAction(Actions.EXIT, "exit.png", "Exit the program",
@@ -121,7 +131,7 @@ public class SimWindow extends JPanel{
 		((SpinnerNumberModel) steps.getModel()).setMinimum(0);
 		steps.setPreferredSize(new Dimension(100,10));
 		
-		JTextField time = new JTextField();
+		time = new JTextField();
 		time.setPreferredSize(new Dimension(100,10));
 		time.setText("0"); //initial
 		time.setEditable(false);
@@ -237,7 +247,7 @@ public class SimWindow extends JPanel{
 		JPanel panel = new JPanel(new BorderLayout());
 		panel.setPreferredSize(new Dimension(400, 600));
 		panel.setBorder(BorderFactory.createTitledBorder("Road Map"));
-		panel.add(new CustomGraphLayout(), BorderLayout.CENTER);
+		panel.add(graph, BorderLayout.CENTER);
 		return panel;
 	}
 

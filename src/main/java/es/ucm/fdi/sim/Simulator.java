@@ -62,6 +62,7 @@ public class Simulator {
 				e.execute(roadMap);
 			}
 			
+			eventList.remove(timer);
 			// 2. Invoke advance method for every Road
 			for(Road r : roadMap.getRoads()) {
 				r.move();
@@ -119,7 +120,21 @@ public class Simulator {
 		timer = 0;
 		fireUpdateEvent(EventType.RESET);
 	}
+	
+	/**
+	 * @return Current road map.
+	 */
+	public RoadMap getRoadMap(){
+		return roadMap;
+	}
 
+	/**
+	 * @return	Current timer.
+	 */
+	public int getTimer(){
+		return timer;
+	}
+	
 	/**
 	* Registers a new Listener and sends a REGISTERED event.
 	*

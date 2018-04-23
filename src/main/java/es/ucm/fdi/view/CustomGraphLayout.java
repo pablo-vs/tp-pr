@@ -2,6 +2,8 @@ package es.ucm.fdi.view;
 
 import java.awt.BorderLayout;
 import java.util.Random;
+import java.util.Map;
+import java.util.HashMap;
 
 import javax.swing.JPanel;
 
@@ -26,37 +28,35 @@ public class CustomGraphLayout extends JPanel {
 	 */
 	private static final long serialVersionUID = -735338964701982371L;
 	private GraphComponent _graphComp;
+	private RoadMap rm;
     
     /**
      * Empty constructor.
      */
 	public CustomGraphLayout() {
 		super(new BorderLayout());
-		_graphComp = new GraphComponent();
-		generateGraph();
+		_graphComp = new GraphComponent();	
 		add(_graphComp, BorderLayout.CENTER);
 		setVisible(true);
 	}
 
 	public void updateGraph(RoadMap rm){
 		Graph g = new Graph();
-		
+		Map<Junction, Node> junctionToNode 
+			= new HashMap<Junction,Node>();
+	
 		for(Junction j : rm.getJunctions()){
-			g.addNode(new Node(j.getID()));
+			Node n = new Node(j.getID());
+			g.addNode(n);
+			junctionToNode.put(j, n);
 		}
-		
-		
-		for(Road r : rm.getRoads()){
-			int i1, i2;
-			
-			i1 = g.getNodes().indexOf(r.getIni().getID());
-			i2 = g.getNodes().indexOf(r.getEnd().getID());
-		 	Edge e = new Edge(r.getID(), g.getNodes().get(i1)
-		 			, g.getNodes().get(i2), r.getLength());		 	
-		 	
-		 	/*for(Vehicle v : r.getVehicles().values()){
-			 	e.addDot(id, point);
-			}*/
+
+		for(Road r : rm.getRoads()){	
+		 	Edge e = new Edge(r.getID(), junctionToNode.get(r.getIni())
+		 			, junctionToNode.get(r.getEnd()), r.getLength());		 			 	
+		 	for(Vehicle v : r.getVehicles().innerValues()){
+			 	e.addDot(new Dot(v.getID(), v.getPosition()));
+			}
 		 	
 		 	g.addEdge(e);
 		 }
@@ -64,39 +64,7 @@ public class CustomGraphLayout extends JPanel {
 		_graphComp.setGraph(g);
 	}
 	
-	
-	/**
-	 * 
-	 */
-	protected void generateGraph() {
-	    Random _rand = new Random(System.currentTimeMillis());
-		Graph g = new Graph();
-		int numNodes = _rand.nextInt(20)+5;
-		int numEdges = _rand.nextInt(2*numNodes);		
-		
-		for (int i=0; i<numNodes; i++) {
-			g.addNode(new Node("n"+i));
-		}
-		
-		for (int i=0; i<numEdges; i++) {
-			int s = _rand.nextInt(numNodes);
-			int t = _rand.nextInt(numNodes);
-			if ( s == t ) {
-				t = (t + 1) % numNodes;
-			}
-			int l = _rand.nextInt(30)+20;
-			Edge e = new Edge("e"+i, g.getNodes().get(s), g.getNodes().get(t), l);
-			
-			int numDots = _rand.nextInt(5);
-			for(int j=0; j<numDots; j++) {
-				l = Math.max(0, _rand.nextBoolean() ? l/2 : l);
-				e.addDot( new Dot("d"+j, l));
-			}
-			
-			g.addEdge(e);
-		}
-		
-		_graphComp.setGraph(g);
-
+	public void clearGraph(){
+		_graphComp.setGraph(new Graph());
 	}
 }
