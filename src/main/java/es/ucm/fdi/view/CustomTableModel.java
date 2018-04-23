@@ -29,8 +29,8 @@ public abstract class CustomTableModel extends AbstractTableModel implements Sim
 
 	public CustomTableModel(String[] columnTags){
 		this.columnTags = columnTags;
-		this.data = new ArrayList<>();
-		this.updateEvents = new ArrayList<>();
+		this.data = new ArrayList<String[]>();
+		this.updateEvents = new ArrayList<Simulator.EventType>();
 	}
 	
 	public CustomTableModel(String[] columnTags, List<Simulator.EventType> updateEvents){
@@ -75,19 +75,19 @@ public abstract class CustomTableModel extends AbstractTableModel implements Sim
 	}
 
 	public void update(Simulator.UpdateEvent ue, String error) {
-	        switch(ue.getType()) {
-		case REGISTERED:
-		case ERROR: break;
-		case RESET: {
-			setData(new ArrayList<String[]>());
-		} break;
-		default: {
-			
-			if(updateEvents.contains(ue.getType())) {
-				setData(getStrings(ue));
+	    switch(ue.getType()) {
+			case REGISTERED:
+			case ERROR: break;
+			case RESET: {
+				setData(new ArrayList<String[]>());
+			} break;
+			default: {
+				
+				if(updateEvents.contains(ue.getType())) {
+					setData(getStrings(ue));
+				}
+				
 			}
-			
-		}
 		}
 		
 		for(TableModelListener l : listenerList.getListeners(TableModelListener.class)) {
@@ -99,6 +99,10 @@ public abstract class CustomTableModel extends AbstractTableModel implements Sim
 	
 	public static class EventsListModel extends CustomTableModel {
 
+		/**
+		 * Generate UID.
+		 */
+		private static final long serialVersionUID = 4711550276080442763L;
 		private static final String[] tags = {"#", "Time", "Type"};
 		private static final Simulator.EventType[] events = {Simulator.EventType.NEW_EVENT,
 									 Simulator.EventType.ADVANCED};
@@ -116,6 +120,7 @@ public abstract class CustomTableModel extends AbstractTableModel implements Sim
 						Integer.toString(e.getTime()),
 						e.getDescription()};
 				list.add(row);
+				++i;
 			}
 			return list;
 		}
@@ -123,6 +128,10 @@ public abstract class CustomTableModel extends AbstractTableModel implements Sim
 
 	public static class VehicleListModel extends CustomTableModel {
 
+		/**
+		 * Generated UID.
+		 */
+		private static final long serialVersionUID = 1L;
 		private static final String[] tags = {"ID", "Road", "Location", "Speed", "Km",
 					 "Faulty Units", "Initerary"};
 		private static final Simulator.EventType[] events = {Simulator.EventType.ADVANCED};
@@ -153,6 +162,10 @@ public abstract class CustomTableModel extends AbstractTableModel implements Sim
 
 	public static class RoadListModel extends CustomTableModel {
 
+		/**
+		 * Generated UID.
+		 */
+		private static final long serialVersionUID = 1L;
 		private static final String[] tags = {"ID", "Source", "Target", "Length", "Max Speed",
 						      "Vehicles"};
 		private static final Simulator.EventType[] events = {Simulator.EventType.ADVANCED};
@@ -182,6 +195,10 @@ public abstract class CustomTableModel extends AbstractTableModel implements Sim
 
 	public static class JunctionListModel extends CustomTableModel {
 
+		/**
+		 * Generated UID.
+		 */
+		private static final long serialVersionUID = 1L;
 		private static final String[] tags = {"ID", "Green", "Red"};
 		private static final Simulator.EventType[] events = {Simulator.EventType.ADVANCED};
 		

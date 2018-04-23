@@ -19,6 +19,7 @@ import es.ucm.fdi.control.Controller;
 import es.ucm.fdi.control.SimulatorAction;
 import es.ucm.fdi.view.CustomTextComponent;
 import es.ucm.fdi.view.CustomTableModel;
+import es.ucm.fdi.view.CustomGraphLayout;
 
 public class SimWindow extends JPanel{
 	/**
@@ -233,8 +234,10 @@ public class SimWindow extends JPanel{
 	}
 
 	public JPanel createSouthEastPanel() {
-		JPanel panel = new JPanel();
+		JPanel panel = new JPanel(new BorderLayout());
 		panel.setPreferredSize(new Dimension(400, 600));
+		panel.setBorder(BorderFactory.createTitledBorder("Road Map"));
+		panel.add(new CustomGraphLayout(), BorderLayout.CENTER);
 		return panel;
 	}
 
