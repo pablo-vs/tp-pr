@@ -28,7 +28,6 @@ public class CustomGraphLayout extends JPanel {
 	 */
 	private static final long serialVersionUID = -735338964701982371L;
 	private GraphComponent _graphComp;
-	private RoadMap rm;
     
     /**
      * Empty constructor.
@@ -62,9 +61,5 @@ public class CustomGraphLayout extends JPanel {
 		 }
 		
 		_graphComp.setGraph(g);
-	}
-	
-	public void clearGraph(){
-		_graphComp.setGraph(new Graph());
 	}
 }

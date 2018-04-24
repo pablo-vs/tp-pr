@@ -10,17 +10,14 @@ import java.awt.event.KeyEvent;
 import javax.swing.JSpinner;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.lang.IllegalArgumentException;
-import java.util.ArrayList;
 
 import es.ucm.fdi.control.Controller;
 import es.ucm.fdi.control.SimulatorAction;
-import es.ucm.fdi.sim.Simulator;
-import es.ucm.fdi.view.CustomTextComponent;
 import es.ucm.fdi.view.CustomTableModel;
 import es.ucm.fdi.view.CustomGraphLayout;
+import es.ucm.fdi.view.CustomTextComponent;
 
 public class SimWindow extends JPanel{
 	/**
@@ -60,13 +57,14 @@ public class SimWindow extends JPanel{
 		eventsEditor = new CustomTextComponent(true);
 		reportsArea = new CustomTextComponent(false);
 		graph = new CustomGraphLayout();
+		
 		addActions();
-		addToolbar();
+		addToolBar();
+		addButtonBar();
 		addCenterPanel(jf);
 		
 		jf.setLayout(new BorderLayout());
 		jf.add(this, BorderLayout.CENTER);
-		//jf.pack();
 	}
 	
 	public void addActions(){
@@ -113,18 +111,27 @@ public class SimWindow extends JPanel{
 				}).register(this);
 		new SimulatorAction(Actions.RESET, "reset.png", "Resets the simulation to its initial point",
 				KeyEvent.VK_R, "control shift R", ()->{
-					graph.clearGraph();
-					graph = new CustomGraphLayout();
 					time.setText("0");
 					controller.reset();
+					graph.updateGraph(controller.getSimulator().getRoadMap());
 				}).register(this);
 		new SimulatorAction(Actions.EXIT, "exit.png", "Exit the program",
 				KeyEvent.VK_E, "control shift E", ()->System.exit(0))
 					.register(this);
 	}
 	
-	public void addToolbar() {
-		JLabel stepsLabel = new JLabel(" Steps: "), timeLabel = new JLabel(" Time: ");
+	public void addToolBar(){
+		JToolBar tb = new JToolBar();
+		
+		//PENDING
+		
+		add(tb, BorderLayout.NORTH);
+		
+	}
+	
+	public void addButtonBar() {
+		JLabel stepsLabel = new JLabel(" Steps: ");
+		JLabel timeLabel = new JLabel(" Time: ");
 		ActionMap m = getActionMap();
 
 		steps = new JSpinner();
@@ -133,8 +140,8 @@ public class SimWindow extends JPanel{
 		
 		time = new JTextField();
 		time.setPreferredSize(new Dimension(100,10));
-		time.setText("0"); //initial
 		time.setEditable(false);
+		time.setText("0");
 		
 		JToolBar bar = new JToolBar();
 		bar.setFloatable(false);
@@ -152,7 +159,7 @@ public class SimWindow extends JPanel{
 		bar.add(steps);
 		bar.addSeparator();
 		
-		//Here goes the JTextPanes
+		//Here go the JTextPanes
 		time.setMaximumSize(new Dimension(100, 50));
 		bar.add(timeLabel);
 		bar.add(time);
@@ -167,8 +174,8 @@ public class SimWindow extends JPanel{
 				createSouthWestPanel(), 
 				createSouthEastPanel());		
 		JSplitPane northSouthSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, 
-			createNorthPanel(), 
-			eastWestSplit);
+				createNorthPanel(), 
+				eastWestSplit);
 		add(northSouthSplit, BorderLayout.CENTER);
 		
 		jf.pack();
@@ -180,48 +187,38 @@ public class SimWindow extends JPanel{
 				northSouthSplit.setResizeWeight(NS_SPLIT_DIVISION);
 				eastWestSplit.setDividerLocation(EW_SPLIT_DIVISION);
 				eastWestSplit.setResizeWeight(EW_SPLIT_DIVISION);
-			});
+		});
 	}
 
 	public JPanel createNorthPanel() {
 		JPanel northPanel = new JPanel();
-
-	        CustomTableModel.EventsListModel eventsTableModel =
-			new CustomTableModel.EventsListModel();
-		
-	        JScrollPane eventsTable = new JScrollPane(new JTable(eventsTableModel));
-		
-		controller.addListener(eventsTableModel);
-		
+        CustomTableModel.EventsListModel eventsTableModel =
+        			new CustomTableModel.EventsListModel();
+        JScrollPane eventsTable = new JScrollPane(new JTable(eventsTableModel));
+		controller.addListener(eventsTableModel);			
 		northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.X_AXIS));
-
+		
 		northPanel.add(eventsEditor);
 		eventsEditor.setBorder(BorderFactory.createTitledBorder("Events editor"));
-
+		
 		northPanel.add(eventsTable);
 		eventsTable.setBorder(BorderFactory.createTitledBorder("Event List"));
 
 		northPanel.add(reportsArea);
 		reportsArea.setBorder(BorderFactory.createTitledBorder("Reports Area"));
+		
 		return northPanel;
 	}
 
 	public JPanel createSouthWestPanel() {
 		JPanel southWestPanel = new JPanel();
-		
-		String[] tags = {"data", "test"},
-			dataRow1 = {"1", "hello"},
-			dataRow2 = {"2", "hello"};
-		ArrayList<String[]> data = new ArrayList<>();
-		data.add(dataRow1);
-		data.add(dataRow2);
 
 		CustomTableModel.VehicleListModel vehiclesModel = new CustomTableModel.VehicleListModel();
 		CustomTableModel.RoadListModel roadsModel = new CustomTableModel.RoadListModel();
 		CustomTableModel.JunctionListModel junctionsModel = new CustomTableModel.JunctionListModel();
-		JScrollPane table1 = new JScrollPane(new JTable(vehiclesModel)),
-			table2 = new JScrollPane(new JTable(roadsModel)),
-			table3 = new JScrollPane(new JTable(junctionsModel));
+		JScrollPane table1 = new JScrollPane(new JTable(vehiclesModel));
+		JScrollPane	table2 = new JScrollPane(new JTable(roadsModel));
+		JScrollPane	table3 = new JScrollPane(new JTable(junctionsModel));
 
 		controller.addListener(vehiclesModel);
 		controller.addListener(roadsModel);

@@ -12,7 +12,6 @@ import es.ucm.fdi.sim.objects.Vehicle;
 import es.ucm.fdi.sim.objects.RoadMap;
 import es.ucm.fdi.ini.Ini;
 
-import java.util.ArrayList;
 import java.io.OutputStream;
 import java.io.IOException;
 
