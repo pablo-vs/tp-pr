@@ -30,13 +30,46 @@ public class SimWindow extends JPanel{
 	
 	private Controller controller;
 	private CustomTextComponent eventsEditor, reportsArea;
+	/*
+	 * Events editor needs contextual menu support
+	 * 
+	 * 	Add template
+	 * 		New RR Junction
+	 * 		New MC Junction
+	 * 		New Junction
+	 * 		New Dirt Road
+	 * 		New Lanes Road
+	 * 		New Road
+	 * 		New Bike
+	 * 		New Car
+	 * 		New Vehicle
+	 * 		Make vehicle faulty
+	 * -------------
+	 * Load
+	 * Save
+	 * Clear
+	 * 
+	 */
+	
+	/*
+	 * It needs to be possible to choose simulation objects.
+	 */
 	private CustomGraphLayout graph;
 	private JSpinner steps;
 	private JTextField time;
 	
 	private enum Actions{
-		LOAD_EVENT("Load"), SAVE_EVENT("Save"), CLEAR_EDITOR("Clear"), 
-		INSERT_EVENT_DATA("Insert"), PLAY("Play"), RESET("Reset"), EXIT("Exit");
+		LOAD_EVENT("Load"), 
+		SAVE_EVENT("Save"), 
+		CLEAR_EDITOR("Clear"), 
+		INSERT_EVENT_DATA("Insert"), 
+		PLAY("Play"), 
+		RESET("Reset"), 
+		EXIT("Exit"),
+		REPORT("Report"), 
+		SAVE_REPORT("Save Report"), 
+		DELETE_REPORT("Delete Report");
+		
 		String s;	
 		private Actions(String s){
 			this.s = s;
@@ -50,20 +83,19 @@ public class SimWindow extends JPanel{
 	public SimWindow(Controller cont) {
 		JFrame jf = new JFrame("Traffic Simulator");
 		controller = cont;
-		
-		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		setLayout(new BorderLayout());
 		eventsEditor = new CustomTextComponent(true);
 		reportsArea = new CustomTextComponent(false);
 		graph = new CustomGraphLayout();
 		
+		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		jf.setLayout(new BorderLayout());	
+		setLayout(new BorderLayout());
+		
 		addActions();
-		addToolBar();
 		addButtonBar();
+		addToolBar(jf); //THIS IS NOT WORKING YET (?). ToolBar is not properly placed
 		addCenterPanel(jf);
 		
-		jf.setLayout(new BorderLayout());
 		jf.add(this, BorderLayout.CENTER);
 	}
 	
@@ -118,14 +150,44 @@ public class SimWindow extends JPanel{
 		new SimulatorAction(Actions.EXIT, "exit.png", "Exit the program",
 				KeyEvent.VK_E, "control shift E", ()->System.exit(0))
 					.register(this);
+		new SimulatorAction(Actions.REPORT, "report.png", "Show reports", 
+				KeyEvent.VK_T, " control shift T", ()->{
+					//PENDING
+				}).register(this);
+		new SimulatorAction(Actions.SAVE_REPORT, "save_report.png", "Save reports", 
+				KeyEvent.VK_P, " control shift P", ()->{
+					//PENDING
+				}).register(this);
+		new SimulatorAction(Actions.DELETE_REPORT, "delete_report.png", "Delete reports", 
+				KeyEvent.VK_D, " control shift D", ()->{
+					//PENDING
+				}).register(this);
 	}
 	
-	public void addToolBar(){
+	public void addToolBar(JFrame jf){
 		JToolBar tb = new JToolBar();
 		
 		//PENDING
+		tb.setFloatable(false);
+		tb.add(new JMenu("File"));
 		
-		add(tb, BorderLayout.NORTH);
+		/*
+		 * SUBMENUS
+		 * File
+		 * 		Load Events
+		 * 		Save Events
+		 * 		--
+		 * 		Save Report
+		 * 		--
+		 * 		Exit
+		 * Simulator
+		 * 		Run
+		 * 		Reset
+		 * 		Redirect output
+		 * Reports
+		 * 		Generate
+		 * 		Clear
+		 */
 		
 	}
 	
@@ -145,26 +207,28 @@ public class SimWindow extends JPanel{
 		
 		JToolBar bar = new JToolBar();
 		bar.setFloatable(false);
+		//MAIN BUTTONS
 		bar.add(m.get(""+Actions.LOAD_EVENT));
 		bar.add(m.get(""+Actions.SAVE_EVENT));
 		bar.add(m.get(""+Actions.CLEAR_EDITOR));
 		bar.add(m.get(""+Actions.INSERT_EVENT_DATA));
 		bar.add(m.get(""+Actions.PLAY));
 		bar.add(m.get(""+Actions.RESET));
-		bar.addSeparator();
-		
+		bar.addSeparator();		
 		//Here goes the spinner
 		steps.setMaximumSize(new Dimension(100, 50));
 		bar.add(stepsLabel);
 		bar.add(steps);
-		bar.addSeparator();
-		
+		bar.addSeparator();	
 		//Here go the JTextPanes
 		time.setMaximumSize(new Dimension(100, 50));
 		bar.add(timeLabel);
 		bar.add(time);
-		
+		//LAST BUTTONS
 		bar.addSeparator();
+		bar.add(m.get(""+Actions.REPORT));
+		bar.add(m.get(""+Actions.SAVE_REPORT));
+		bar.add(m.get(""+Actions.DELETE_REPORT));
 		bar.add(m.get(""+Actions.EXIT));
 		add(bar, BorderLayout.NORTH);
 	}
