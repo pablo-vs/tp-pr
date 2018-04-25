@@ -1,7 +1,9 @@
 package es.ucm.fdi.sim.objects;
 
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.sim.objects.Road;
@@ -208,7 +210,21 @@ public class Vehicle extends SimObject{
 		return faulty;
 	}
 
-
+	/**
+	 * Return a  description of the object.
+	 *
+	 * @param out A <code>Map<String, String></code> which will contain the representation of the object.
+	 */
+	@Override
+	public void describe(Map<String, String> out) {
+		super.describe(out);
+		out.put("Road", currentRoad.getID());
+		out.put("Location", ""+position);
+		out.put("Speed", ""+currentVel);
+		out.put("Km", ""+kilometrage);
+		out.put("Faulty Units", ""+brokenTime);
+		out.put("Faulty Units", "[" + itinerary.stream().map((j) -> j.getID()).collect(Collectors.joining(",")) + "]");
+	}
 	
 	/**
 	 * Fills the given map with the details of the state of the object.

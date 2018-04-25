@@ -1,14 +1,17 @@
 package es.ucm.fdi.sim.objects;
 
 
+import java.util.Map;
+
 import es.ucm.fdi.ini.IniSection;
+import es.ucm.fdi.sim.Describable;
 
 /**
  *	Abstract class grouping the behavior of every object of the simulation.
  *
  *	@version 26.02.2018
  */
-public abstract class SimObject {
+public abstract class SimObject implements Describable {
 	private String id;
 	private String report_header;
 	
@@ -56,6 +59,16 @@ public abstract class SimObject {
 	*/
 	public int hashCode() {
 		return id.hashCode();
+	}
+	
+	/**
+	 * Return a  description of the object.
+	 *
+	 * @param out A <code>Map<String, String></code> which will contain the representation of the object.
+	 */
+	@Override
+	public void describe(Map<String, String> out) {
+		out.put("ID", id);
 	}
 	
 	/**

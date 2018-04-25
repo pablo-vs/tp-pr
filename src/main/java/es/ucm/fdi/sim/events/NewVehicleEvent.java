@@ -1,6 +1,7 @@
 package es.ucm.fdi.sim.events;
 
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
 import java.lang.IllegalArgumentException;
 
@@ -61,11 +62,12 @@ public class NewVehicleEvent extends Event {
 	/**
 	 * Return a  description of the event.
 	 *
-	 * @return A <code>String</code> representing the event.
+	 * @param out A <code>Map<String, String></code> which will contain the representation of the event.
 	 */
 	@Override
-	public String getDescription() {
-		return "New vehicle " + vehicleID;
+	public void describe(Map<String, String> out) {
+		super.describe(out);
+		out.put("Type", "New vehicle " + vehicleID);
 	}
 
 	/**

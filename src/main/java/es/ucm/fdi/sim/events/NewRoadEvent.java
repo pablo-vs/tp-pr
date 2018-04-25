@@ -1,6 +1,7 @@
 package es.ucm.fdi.sim.events;
 
 import java.lang.IllegalArgumentException;
+import java.util.Map;
 
 import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.sim.objects.Road;
@@ -98,11 +99,12 @@ public class NewRoadEvent extends Event {
 	/**
 	 * Return a  description of the event.
 	 *
-	 * @return A <code>String</code> representing the event.
+	 * @param out A <code>Map<String, String></code> which will contain the representation of the event.
 	 */
 	@Override
-	public String getDescription() {
-		return "New road " + roadID;
+	public void describe(Map<String, String> out) {
+		super.describe(out);
+		out.put("Type", "New road " + roadID);
 	}
     
 	/**

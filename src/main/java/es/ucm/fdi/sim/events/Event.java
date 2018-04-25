@@ -1,8 +1,9 @@
 package es.ucm.fdi.sim.events;
 
-import java.util.List;
+import java.util.List;	
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.lang.NumberFormatException;
@@ -11,6 +12,7 @@ import es.ucm.fdi.exceptions.ObjectNotFoundException;
 import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.sim.objects.Junction;
 import es.ucm.fdi.sim.objects.RoadMap;
+import es.ucm.fdi.sim.Describable;
 
 import java.lang.IllegalArgumentException;
 
@@ -19,7 +21,7 @@ import java.lang.IllegalArgumentException;
  *
  * @version 10.03.2018
  */
-public abstract class Event {
+public abstract class Event implements Describable{
 
 	private int time;
 
@@ -56,9 +58,12 @@ public abstract class Event {
 	/**
 	 * Return a  description of the event.
 	 *
-	 * @return A <code>String</code> representing the event.
+	 * @param out A <code>Map<String, String></code> which will contain the representation of the event.
 	 */
-	public abstract String getDescription();
+	@Override
+	public void describe(Map<String, String> out) {
+		out.put("Time", ""+time);
+	}
 	
 	protected Junction verifyJunction(RoadMap r, String id) {
 		Junction j = r.getJunction(id);

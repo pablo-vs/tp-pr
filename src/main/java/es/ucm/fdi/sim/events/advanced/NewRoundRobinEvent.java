@@ -1,6 +1,7 @@
 package es.ucm.fdi.sim.events.advanced;
 
 import java.lang.IllegalArgumentException;
+import java.util.Map;
 
 import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.sim.objects.RoadMap;
@@ -54,6 +55,17 @@ public class NewRoundRobinEvent extends NewJunctionEvent {
 
 	public RoundRobin createRoundRobin() {
 		return new RoundRobin(junctionID, min, max);
+	}
+	
+	/**
+	 * Return a  description of the event.
+	 *
+	 * @param out A <code>Map<String, String></code> which will contain the representation of the event.
+	 */
+	@Override
+	public void describe(Map<String, String> out) {
+		super.describe(out);
+		out.put("Type", "New RoundRobin " + junctionID);
 	}
     
 	/**

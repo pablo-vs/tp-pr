@@ -1,6 +1,7 @@
 package es.ucm.fdi.sim.events.advanced;
 
 import java.lang.IllegalArgumentException;
+import java.util.Map;
 
 import es.ucm.fdi.exceptions.ObjectNotFoundException;
 import es.ucm.fdi.ini.IniSection;
@@ -66,6 +67,17 @@ public class NewDirtRoadEvent extends NewRoadEvent {
 					+ roadID + " at time " + getTime() + ".\n" + e.getMessage(), e);
 		}
 		return newDirtRoad;
+	}
+	
+	/**
+	 * Return a  description of the event.
+	 *
+	 * @param out A <code>Map<String, String></code> which will contain the representation of the event.
+	 */
+	@Override
+	public void describe(Map<String, String> out) {
+		super.describe(out);
+		out.put("Type", "New DirtRoad " + roadID);
 	}
     
 	/**

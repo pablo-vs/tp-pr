@@ -1,6 +1,7 @@
 package es.ucm.fdi.sim.objects;
 
 import java.util.List;
+import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.ArrayDeque;
@@ -273,25 +274,44 @@ public class Junction extends SimObject{
 	}
 
 	/**
+	 * Return a  description of the object.
+	 *
+	 * @param out A <code>Map<String, String></code> which will contain the representation of the object.
+	 */
+	@Override
+	public void describe(Map<String, String> out) {
+		super.describe(out);
+		out.put("Green", currentOpenQueue > -1 ? describeQueue(incomingRoads.get(currentOpenQueue)) : "[]");
+		out.put("Red", "[" + describeQueues(true) + "]");
+	}
+	
+	/**
 	 * Fills the given map with the details of the state of the object.
 	 *
 	 * @param out Map to store the report.
 	 */
 	public void fillReportDetails(IniSection out) {
+		out.setValue("queues", describeQueues(false));
+	}
+	
+	protected String describeQueues(boolean excludeGreen) {
 		boolean first = true;
 		StringBuilder aux = new StringBuilder();
 		
 		for(IncomingRoad queue : incomingRoads){
-			if(!first){
-				aux.append(",");
-			} else {
-				first = false;
+			if(!(queue.getTrafficLight() && excludeGreen)) {
+				if(!first){
+					aux.append(",");
+				} else {
+					first = false;
+				}
+				
+				aux.append("(");
+				aux.append(describeQueue(queue));
+				aux.append(")");
 			}
-			aux.append("(");
-			aux.append(describeQueue(queue));
-			aux.append(")");
 		}
-		out.setValue("queues", aux.toString());
+		return aux.toString();
 	}
 	
 	protected String describeQueue(IncomingRoad queue) {

@@ -285,8 +285,8 @@ public class SimWindow extends JPanel{
 
 	public JPanel createNorthPanel() {
 		JPanel northPanel = new JPanel();
-        CustomTableModel.EventsListModel eventsTableModel =
-        			new CustomTableModel.EventsListModel();
+        CustomTableModeleventsTableModel =
+        			new CustomTableModel();
         JScrollPane eventsTable = new JScrollPane(new JTable(eventsTableModel));
 		controller.addListener(eventsTableModel);			
 		northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.X_AXIS));
