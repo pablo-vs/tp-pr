@@ -123,6 +123,10 @@ public class Controller {
 		}
 	}
 
+	public void setOutput(OutputStream os){
+		output = os;
+	}
+	
 	/**
 	* Resets the simulator.
 	*/

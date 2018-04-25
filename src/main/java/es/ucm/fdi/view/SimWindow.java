@@ -31,7 +31,7 @@ public class SimWindow extends JPanel{
 	private Controller controller;
 	private CustomTextComponent eventsEditor, reportsArea;
 	/*
-	 * Events editor needs contextual menu support
+	 * Events editor needs contextual menu support [just adding it now]
 	 * 
 	 * 	Add template
 	 * 		New RR Junction
@@ -47,8 +47,7 @@ public class SimWindow extends JPanel{
 	 * -------------
 	 * Load
 	 * Save
-	 * Clear
-	 * 
+	 * Clear 
 	 */
 	
 	/*
@@ -94,13 +93,14 @@ public class SimWindow extends JPanel{
 		
 		addActions();
 		addButtonBar();
-		addToolBar(jf); //THIS IS NOT WORKING YET (?). ToolBar is not properly placed
+		addToolBar(jf);
 		addCenterPanel(jf);
 		
 		jf.add(this, BorderLayout.CENTER);
 	}
 	
 	public void addActions(){
+		//LOADS EVENTS
 		new SimulatorAction(Actions.LOAD_EVENT, "open.png", "Loads an input file",
 				KeyEvent.VK_L, "control shift L", ()->{
 					try{
@@ -109,6 +109,7 @@ public class SimWindow extends JPanel{
 						
 					}
 				}).register(this);
+		//SAVES EVENTS
 		new SimulatorAction(Actions.SAVE_EVENT, "save.png", "Saves the event data in a file",
 				KeyEvent.VK_S, "control shift S", ()->{
 					try{
@@ -117,10 +118,12 @@ public class SimWindow extends JPanel{
 						
 					}
 				}).register(this);
+		//CLEARS EVENT EDITOR
 		new SimulatorAction(Actions.CLEAR_EDITOR, "clear.png", "Clears the current event data",
 				KeyEvent.VK_C, "control shift C", ()->{
 					eventsEditor.clear();
 				}).register(this);
+		//ADDS EVENT DATA TO TABLE
 		new SimulatorAction(Actions.INSERT_EVENT_DATA, "events.png", "Adds the event data to the event queue",
 				KeyEvent.VK_I, "control shift I", ()->{
 					try {
@@ -131,6 +134,7 @@ public class SimWindow extends JPanel{
 						System.err.println("Invalid event file!");
 					}
 				}).register(this);
+		//RUNS FOR INDICATED STEPS 
 		new SimulatorAction(Actions.PLAY, "play.png", "Executes the indicated steps",
 				KeyEvent.VK_X, "control shift X", ()->{
 					try{
@@ -142,26 +146,31 @@ public class SimWindow extends JPanel{
 						//doStuff
 					}
 				}).register(this);
+		//RESETS SIMULATOR
 		new SimulatorAction(Actions.RESET, "reset.png", "Resets the simulation to its initial point",
 				KeyEvent.VK_R, "control shift R", ()->{
 					time.setText("0");
 					controller.reset();
 					graph.updateGraph(controller.getSimulator().getRoadMap());
 				}).register(this);
+		//EXITS THE PROGRAM
 		new SimulatorAction(Actions.EXIT, "exit.png", "Exit the program",
 				KeyEvent.VK_E, "control shift E", ()->System.exit(0))
 					.register(this);
+		//SHOWS REPORTS IN TEXT AREA
 		new SimulatorAction(Actions.REPORT, "report.png", "Show reports", 
 				KeyEvent.VK_T, " control shift T", ()->{
 					//PENDING
 				}).register(this);
+		//SAVES REPORTS
 		new SimulatorAction(Actions.SAVE_REPORT, "save_report.png", "Save reports", 
 				KeyEvent.VK_P, " control shift P", ()->{
 					//PENDING
 				}).register(this);
+		//CLEARS REPORT AREA
 		new SimulatorAction(Actions.DELETE_REPORT, "delete_report.png", "Delete reports", 
 				KeyEvent.VK_D, " control shift D", ()->{
-					//PENDING
+					reportsArea.clear();
 				}).register(this);
 	}
 	
@@ -267,12 +276,14 @@ public class SimWindow extends JPanel{
 		controller.addListener(eventsTableModel);			
 		northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.X_AXIS));
 		
+		//WE NEED TO CREATE AND ADD JPOPUPMENU HERE
 		northPanel.add(eventsEditor);
 		eventsEditor.setBorder(BorderFactory.createTitledBorder("Events editor"));
 		
 		northPanel.add(eventsTable);
 		eventsTable.setBorder(BorderFactory.createTitledBorder("Event List"));
 
+		//WE NEED TO CREATE JPOPUPMENU HERE
 		northPanel.add(reportsArea);
 		reportsArea.setBorder(BorderFactory.createTitledBorder("Reports Area"));
 		
