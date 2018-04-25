@@ -1,6 +1,7 @@
 package es.ucm.fdi.sim.events;
 
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
 import java.lang.IllegalArgumentException;
 
@@ -15,9 +16,9 @@ import es.ucm.fdi.exceptions.UnreachableJunctionException;
  * Represents the New Vehicle event.
  */
 public class NewVehicleEvent extends Event {
-	private int maxSpeed;
-	private String vehicleID;
-	private List<String> itinerary;
+	protected int maxSpeed;
+	protected String vehicleID;
+	protected List<String> itinerary;
 
 	/**
 	 * Empty constructor.
@@ -61,11 +62,12 @@ public class NewVehicleEvent extends Event {
 	/**
 	 * Return a  description of the event.
 	 *
-	 * @return A <code>String</code> representing the event.
+	 * @param out A <code>Map<String, String></code> which will contain the representation of the event.
 	 */
 	@Override
-	public String getDescription() {
-		return "New vehicle " + vehicleID;
+	public void describe(Map<String, String> out) {
+		super.describe(out);
+		out.put("Type", "New vehicle " + vehicleID);
 	}
 
 	/**
@@ -74,25 +76,10 @@ public class NewVehicleEvent extends Event {
 	 * @return The corresponding Vehicle.
 	 */
 	public Vehicle createVehicle(RoadMap r) {
-		List<Junction> it = new ArrayList<Junction>();
 		Vehicle result;
 
 		try{
-			it.add(r.getJunction(itinerary.get(0)));
-			for(int i = 1; i < itinerary.size(); ++i){
-				Junction j = r.getJunction(itinerary.get(i));
-				if(j == null) {
-					throw new ObjectNotFoundException("No junction with id: "
-									  + itinerary.get(i));
-				} else if (it.get(i-1).getRoadToJunction(j) == null) {
-					throw new UnreachableJunctionException("Cannot get from "
-									       + it.get(i-1).getID()
-									       + " to " + j.getID());
-				} else {
-					it.add(j);
-				}
-			}
-
+			List<Junction> it = createItinerary(r);
 			result = new Vehicle(vehicleID, maxSpeed, it);
 			
 		} catch(ObjectNotFoundException e){
@@ -103,6 +90,21 @@ public class NewVehicleEvent extends Event {
 		return result;
 	}
 
+	protected List<Junction> createItinerary(RoadMap r) {
+		List<Junction> it = new ArrayList<Junction>();
+		it.add(r.getJunction(itinerary.get(0)));
+		for(int i = 1; i < itinerary.size(); ++i){
+			Junction j = verifyJunction(r, itinerary.get(i));
+			if (it.get(i-1).getRoadToJunction(j) == null) {
+				throw new UnreachableJunctionException("Cannot get from "
+								       + it.get(i-1).getID()
+								       + " to " + j.getID());
+			} else {
+				it.add(j);
+			}
+		}
+		return it;
+	}
     
 	@Override
 	public boolean equals(Object o){

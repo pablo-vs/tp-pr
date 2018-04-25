@@ -1,6 +1,7 @@
 package es.ucm.fdi.sim.events.advanced;
 
 import java.util.List;
+import java.util.Map;
 import java.lang.IllegalArgumentException;
 
 import es.ucm.fdi.ini.IniSection;
@@ -65,13 +66,24 @@ public class NewBicycleEvent extends NewVehicleEvent {
 	public Bicycle createBicycle(RoadMap r) {
 		Bicycle result;
 		try{
-			result = new Bicycle(super.createVehicle(r));
+			result = new Bicycle(vehicleID, maxSpeed, createItinerary(r));
 			
 		} catch (IllegalArgumentException e) {
 			throw new IllegalArgumentException("Error: could not create Bicycle.\n"
 							   + e.getMessage(), e);
 		}
 		return result;
+	}
+	
+	/**
+	 * Return a  description of the event.
+	 *
+	 * @param out A <code>Map<String, String></code> which will contain the representation of the event.
+	 */
+	@Override
+	public void describe(Map<String, String> out) {
+		super.describe(out);
+		out.put("Type", "New Bicycle " + vehicleID);
 	}
 	   
 	/**

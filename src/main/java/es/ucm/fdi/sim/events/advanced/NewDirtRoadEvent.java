@@ -1,7 +1,9 @@
 package es.ucm.fdi.sim.events.advanced;
 
 import java.lang.IllegalArgumentException;
+import java.util.Map;
 
+import es.ucm.fdi.exceptions.ObjectNotFoundException;
 import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.sim.objects.RoadMap;
 import es.ucm.fdi.sim.objects.advanced.DirtRoad;
@@ -58,12 +60,24 @@ public class NewDirtRoadEvent extends NewRoadEvent {
 	public DirtRoad createDirtRoad(RoadMap r) {
 		DirtRoad newDirtRoad;
 		try {
-			newDirtRoad = new DirtRoad(super.createRoad(r));
-						
-		} catch (IllegalArgumentException e){
-			throw new IllegalArgumentException("Error: Could not create DirtRoad.\n" + e.getMessage(), e);
+			newDirtRoad = new DirtRoad(roadID, length, maxVel, verifyJunction(r, ini), verifyJunction(r, end));
+				
+		} catch (IllegalArgumentException | ObjectNotFoundException e){
+			throw new IllegalArgumentException("Error: Could not create DirtRoad "
+					+ roadID + " at time " + getTime() + ".\n" + e.getMessage(), e);
 		}
 		return newDirtRoad;
+	}
+	
+	/**
+	 * Return a  description of the event.
+	 *
+	 * @param out A <code>Map<String, String></code> which will contain the representation of the event.
+	 */
+	@Override
+	public void describe(Map<String, String> out) {
+		super.describe(out);
+		out.put("Type", "New DirtRoad " + roadID);
 	}
     
 	/**

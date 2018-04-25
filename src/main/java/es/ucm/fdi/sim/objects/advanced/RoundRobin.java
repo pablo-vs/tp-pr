@@ -8,13 +8,14 @@ import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.sim.objects.Junction;
 import es.ucm.fdi.sim.objects.Road;
 import es.ucm.fdi.sim.objects.Vehicle;
+import es.ucm.fdi.sim.objects.Junction.IncomingRoad;
 
 /**
  * Class that models <code>RoundRobins</code> in the simulation.
  */
 public class RoundRobin extends Junction {
-	private int minTimeSlice, maxTimeSlice, currentIntervalTime, timeConsumed;
-	private boolean fullyUsed, notUsed;
+	private int minTimeSlice, maxTimeSlice, currentIntervalTime = 0, timeConsumed = 0;
+	private boolean fullyUsed = false, notUsed = false;
 	private List<Integer> intervals;
 	
 	/**
@@ -25,13 +26,7 @@ public class RoundRobin extends Junction {
 	 * @param max		Maximum time the currently open lane will remain open.
 	 */
 	public RoundRobin(String id, int min, int max){
-		super(id);
-		minTimeSlice = min;
-		maxTimeSlice = max;
-		currentIntervalTime = 0;
-		timeConsumed = 1;
-		fullyUsed = notUsed = false;
-		intervals = new ArrayList<Integer>();
+		this(id, new ArrayList<Road>(), new ArrayList<Road>(), min, max);
 	}
 	
 	/**
@@ -48,24 +43,9 @@ public class RoundRobin extends Junction {
 		super(id,incoming,outgoing);
 		minTimeSlice = min;
 		maxTimeSlice = max;
-		currentIntervalTime = 0;
-		timeConsumed = 0;
-		fullyUsed = notUsed = false;
-		intervals = new ArrayList<Integer>();
+		intervals = new ArrayList<>();
 	}
 
-	/**
-	 * Constructor from Junction.
-	 */
-	public RoundRobin(Junction j, int min, int max) {
-		super(j);
-		minTimeSlice = min;
-		maxTimeSlice = max;
-		currentIntervalTime = 0;
-		timeConsumed = 0;
-		fullyUsed = notUsed = false;
-		intervals = new ArrayList<Integer>();
-	}
 	
 	/**
 	 * Lets the next <code>Vehicle</code> waiting in the open lane move to the next <code>Road</code>
@@ -108,7 +88,7 @@ public class RoundRobin extends Junction {
 	@Override
 	protected void updateTrafficLights(){
 		if(incomingRoads.size() > 0){
-			if(timeConsumed >= currentIntervalTime){
+			if(timeConsumed >= currentIntervalTime-1 || getCurrentOpenQueue() == -1) {
 				if(fullyUsed){
 					intervals.set(super.getCurrentOpenQueue(), 
 							Math.min(currentIntervalTime+1, maxTimeSlice));
@@ -120,7 +100,7 @@ public class RoundRobin extends Junction {
 				super.updateTrafficLights();			
 				fullyUsed = notUsed = true;
 				currentIntervalTime = intervals.get(super.getCurrentOpenQueue());
-				timeConsumed = 1;			
+				timeConsumed = 0;			
 			} else {
 				timeConsumed++;
 			}	
@@ -135,4 +115,25 @@ public class RoundRobin extends Junction {
     	super.fillReportDetails(out);
     	out.setValue("type", "rr");
     }
+	
+	@Override
+	protected String describeQueue(IncomingRoad queue) {
+		boolean firstVehicle;
+		StringBuilder aux = new StringBuilder();
+		
+		aux.append(queue.getRoad().getID());
+		aux.append(queue.getTrafficLight() ? ",green:" + (currentIntervalTime-timeConsumed) + ",[" : ",red,[");
+		
+		firstVehicle = true;
+		for(Vehicle v : queue){
+			if(!firstVehicle){
+				aux.append(",");
+			} else {
+				firstVehicle = false;
+			}
+			aux.append(v.getID());
+		}
+		aux.append("]");
+		return aux.toString();
+	}
 }

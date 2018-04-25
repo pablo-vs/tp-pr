@@ -1,6 +1,7 @@
 package es.ucm.fdi.sim.events.advanced;
 
 import java.util.List;
+import java.util.Map;
 import java.lang.IllegalArgumentException;
 
 import es.ucm.fdi.ini.IniSection;
@@ -77,7 +78,7 @@ public class NewCarEvent extends NewVehicleEvent {
 	public Car createCar(RoadMap r) {
 		Car result;
 		try{
-			result = new Car(super.createVehicle(r), resistance,
+			result = new Car(vehicleID, maxSpeed, createItinerary(r), resistance,
 					 faultMax, faultProb, seed);
 			
 		} catch (IllegalArgumentException e) {
@@ -85,6 +86,17 @@ public class NewCarEvent extends NewVehicleEvent {
 							   + e.getMessage(), e);
 		}
 		return result;
+	}
+	
+	/**
+	 * Return a  description of the event.
+	 *
+	 * @param out A <code>Map<String, String></code> which will contain the representation of the event.
+	 */
+	@Override
+	public void describe(Map<String, String> out) {
+		super.describe(out);
+		out.put("Type", "New Car " + vehicleID);
 	}
 	   
 	/**

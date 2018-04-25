@@ -170,7 +170,7 @@ public class Simulator {
 	* @param error An error message
 	*/
 	private void fireUpdateEvent(EventType type, String error) {
-		UpdateEvent event = new UpdateEvent(type, roadMap, eventList, timer);
+		UpdateEvent event = new UpdateEvent(type);
 		for(Listener l : listeners) {
 			SwingUtilities.invokeLater(()->l.update(event, error));
 		}
@@ -199,28 +199,14 @@ public class Simulator {
 
 	public class UpdateEvent {
 		private EventType type;
-		private List<Vehicle> vehicles;
-		private List<Road> roads;
-		private List<Junction> junctions;
-		private List<Event> eventQueue;
-		private int time;
+		private List<Vehicle> vehicles = roadMap.getVehicles();
+		private List<Road> roads = roadMap.getRoads();
+		private List<Junction> junctions = roadMap.getJunctions();
+		private List<Event> eventQueue = eventList.valuesList();
+		private int time = timer;
 
 		public UpdateEvent(EventType type) {
 			this.type = type;
-			vehicles = new ArrayList<>();
-			junctions = new ArrayList<>();
-			roads = new ArrayList<>();
-			eventQueue = new ArrayList<>();
-			time = 0;
-		}
-
-		public UpdateEvent(EventType type, RoadMap map, MultiTreeMap<Integer, Event> eventQueue, int time) {
-			this.type = type;
-			vehicles = map.getVehicles();
-			junctions = map.getJunctions();
-			roads = map.getRoads();
-			this.eventQueue = eventQueue.valuesList();
-			this.time = time;
 		}
 
 		public EventType getType() {

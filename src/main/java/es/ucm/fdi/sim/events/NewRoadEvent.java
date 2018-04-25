@@ -1,6 +1,7 @@
 package es.ucm.fdi.sim.events;
 
 import java.lang.IllegalArgumentException;
+import java.util.Map;
 
 import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.sim.objects.Road;
@@ -14,8 +15,8 @@ import es.ucm.fdi.exceptions.ObjectNotFoundException;
  * @version 10.03.2018
  */
 public class NewRoadEvent extends Event {
-	private String roadID, ini, end;
-	private int length, maxVel;
+	protected String roadID, ini, end;
+	protected int length, maxVel;
 
 	/**
 	 * Empty constructor.
@@ -67,19 +68,14 @@ public class NewRoadEvent extends Event {
 		Junction iniJ, endJ;
 		Road newRoad;
 		try {
-			iniJ = r.getJunction(ini);
-			endJ = r.getJunction(end);
-			if(iniJ == null){
-				throw new ObjectNotFoundException("Error: no junction with id " + ini);
-			}
-			if(endJ == null){
-				throw new ObjectNotFoundException("Error: no junction with id " + end);
-			}
+			iniJ = verifyJunction(r, ini);
+			endJ = verifyJunction(r, end);
 			newRoad = new Road(roadID, length, maxVel, iniJ, endJ);
 			
 			
 		} catch (ObjectNotFoundException e){
-			throw new IllegalArgumentException("Error: Could not create road " + roadID + " at time " + getTime() + ".\n" + e.getMessage(), e);
+			throw new IllegalArgumentException("Error: Could not create road "
+		+ roadID + " at time " + getTime() + ".\n" + e.getMessage(), e);
 		}
 		return newRoad;
 	}
@@ -103,11 +99,12 @@ public class NewRoadEvent extends Event {
 	/**
 	 * Return a  description of the event.
 	 *
-	 * @return A <code>String</code> representing the event.
+	 * @param out A <code>Map<String, String></code> which will contain the representation of the event.
 	 */
 	@Override
-	public String getDescription() {
-		return "New road " + roadID;
+	public void describe(Map<String, String> out) {
+		super.describe(out);
+		out.put("Type", "New road " + roadID);
 	}
     
 	/**

@@ -5,13 +5,15 @@ import java.util.List;
 import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.sim.objects.Junction;
 import es.ucm.fdi.sim.objects.Road;
+import es.ucm.fdi.sim.objects.Vehicle;
+import es.ucm.fdi.sim.objects.Junction.IncomingRoad;
 
 /**
  * Class that models the behavior of <code>MostCrowed</code> <code>Junctions</code> in the 
  * simulation.
  */
 public class MostCrowed extends Junction{
-	private int timeInterval, usedTimeUnits;
+	private int timeInterval = 0, usedTimeUnits = 0;
 
 	/**
 	 * Constructor for the class.
@@ -20,8 +22,6 @@ public class MostCrowed extends Junction{
 	 */
 	public MostCrowed(String id){
 		super(id);
-		timeInterval = 0;
-		usedTimeUnits = 0;
 	}
 	
 	/**
@@ -33,15 +33,6 @@ public class MostCrowed extends Junction{
 	 */
 	public MostCrowed(String id, List<Road> incoming, List<Road> outgoing){
 		super(id,incoming,outgoing);
-		timeInterval = 0;
-		usedTimeUnits = 0;
-	}
-
-	/**
-	 * Constructor from Junction.
-	 */
-	public MostCrowed(Junction j) {
-		super(j);
 	}
 	
 	/**
@@ -50,8 +41,9 @@ public class MostCrowed extends Junction{
 	 * @return Next <code>Road</code> whose traffic light should be set to green.
 	 */
 	public int findRoadToUpdate(){ //Assumes list isn't empty
-		int max = 0;
-		for(int i=0;i<incomingRoads.size();++i){
+		int size = incomingRoads.size();
+		int max = (getCurrentOpenQueue()+1) % size;
+		for(int i = 0; i < size; ++i){
 			if(incomingRoads.get(i).getWaiting() > incomingRoads.get(max).getWaiting()){
 				max = i;
 			}
@@ -65,14 +57,17 @@ public class MostCrowed extends Junction{
 	 */
 	@Override
 	protected void updateTrafficLights(){
-		if(incomingRoads.size() > 0 && timeInterval == usedTimeUnits){
-			if(super.getCurrentOpenQueue() != -1) {
-				incomingRoads.get(super.getCurrentOpenQueue()).setTrafficLight(false);
+		int open, next;
+		if(incomingRoads.size() > 0 && timeInterval <= usedTimeUnits){
+			if(getCurrentOpenQueue() != -1) {
+				open = getCurrentOpenQueue();
+				incomingRoads.get(open).setTrafficLight(false);
 			}
-			super.setCurrentOpenQueue(findRoadToUpdate());
-			incomingRoads.get(super.getCurrentOpenQueue()).setTrafficLight(true);
+			next = findRoadToUpdate();
+			setCurrentOpenQueue(next);
+			incomingRoads.get(next).setTrafficLight(true);
 			timeInterval = Math.max(
-					incomingRoads.get(super.getCurrentOpenQueue()).getWaiting()/2,
+					incomingRoads.get(getCurrentOpenQueue()).getWaiting()/2,
 					1);
 			usedTimeUnits = 0;
 		}
@@ -94,6 +89,27 @@ public class MostCrowed extends Junction{
 	public void fillReportDetails(IniSection out) {
 		super.fillReportDetails(out);
 		out.setValue("type", "mc");
+	}
+	
+	@Override
+	protected String describeQueue(IncomingRoad queue) {
+		boolean firstVehicle;
+		StringBuilder aux = new StringBuilder();
+		
+		aux.append(queue.getRoad().getID());
+		aux.append(queue.getTrafficLight() ? ",green:" + (timeInterval-usedTimeUnits) + ",[" : ",red,[");
+		
+		firstVehicle = true;
+		for(Vehicle v : queue){
+			if(!firstVehicle){
+				aux.append(",");
+			} else {
+				firstVehicle = false;
+			}
+			aux.append(v.getID());
+		}
+		aux.append("]");
+		return aux.toString();
 	}
 
 	/**

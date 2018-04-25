@@ -1,6 +1,7 @@
 package es.ucm.fdi.sim.objects;
 
 import java.lang.String;
+import java.util.Map;
 
 import es.ucm.fdi.util.MultiTreeMap;
 import es.ucm.fdi.ini.IniSection;
@@ -39,13 +40,6 @@ public class Road extends SimObject{
 		ini.addOutgoingRoad(this);
 		end.addIncomingRoad(this);
 		vehicleList = new MultiTreeMap<Integer, Vehicle>((Integer a, Integer b) -> b-a);
-	}
-
-	/**
-	 * Copy constructor.
-	 */
-	public Road(Road r) {
-		this(r.getID(), r.length, r.maxVel, r.ini, r.end);
 	}
 	
 	/**
@@ -158,11 +152,30 @@ public class Road extends SimObject{
 	}
 	
 	/**
+	 * Return a  description of the object.
+	 *
+	 * @param out A <code>Map<String, String></code> which will contain the representation of the object.
+	 */
+	@Override
+	public void describe(Map<String, String> out) {
+		super.describe(out);
+		out.put("Source", ini.getID());
+		out.put("Target", end.getID());
+		out.put("Length", ""+length);
+		out.put("Max Speed", ""+maxVel);
+		out.put("Vehicles", "[" + describeVehicles() + "]");
+	}
+	
+	/**
 	 * Fills the given map with the details of the state of the object.
 	 *
 	 * @param out Map to store the report.
 	 */
 	public void fillReportDetails(IniSection out) {
+		out.setValue("state", describeVehicles());
+	}
+	
+	private String describeVehicles() {
 		boolean first = true;
 		StringBuilder aux = new StringBuilder(vehicleList.size()*20);
 		
@@ -179,6 +192,6 @@ public class Road extends SimObject{
 			aux.append(v.getPosition());
 			aux.append(")");
 		}
-		out.setValue("state", aux.toString());
+		return aux.toString();
 	}
 }

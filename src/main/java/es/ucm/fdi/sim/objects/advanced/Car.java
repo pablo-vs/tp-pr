@@ -12,7 +12,7 @@ import es.ucm.fdi.sim.objects.Vehicle;
  */
 public class Car extends Vehicle {
 	private double faultyProbability;
-	private int resistanceKM, maxFaultyDuration, lastTraveled; 
+	private int resistanceKM, maxFaultyDuration, lastTraveled = 0; 
 	private Random prng;
 	private long seed;
 	
@@ -36,7 +36,6 @@ public class Car extends Vehicle {
 		faultyProbability = prob;
 		this.seed = seed;
 		prng = new Random(seed);
-		lastTraveled = 0;
 	}
 	
 	/**
@@ -50,27 +49,9 @@ public class Car extends Vehicle {
 	 */
 	public Car(String id, int maxVel, List<Junction> itinerary, int resistance, 
 		   int faultyDuration, double prob){
-		super(id, maxVel, itinerary);
-		resistanceKM = resistance;
-		maxFaultyDuration = faultyDuration;
-		faultyProbability = prob;
-		seed = System.currentTimeMillis(); //VS DOING IT IN EVENTS
-		prng = new Random(seed);
-		lastTraveled = 0;
+		this(id, maxVel, itinerary, resistance, faultyDuration, prob, System.currentTimeMillis());
 	}
 
-	/**
-	 * Constructor from Vehicle.
-	 */
-	public Car(Vehicle v, int resistance, int faultyDuration, double prob, long seed) {
-	        super(v);
-		resistanceKM = resistance;
-		maxFaultyDuration = faultyDuration;
-		faultyProbability = prob;
-		this.seed = seed;
-		prng = new Random(seed);
-		lastTraveled = 0;
-	}
 	
 	/**
 	 * Adapted method that checks whether this <code>Car</code> can break this step.
@@ -79,7 +60,7 @@ public class Car extends Vehicle {
 	public void move(){
 		if(!isFaulty() && resistanceKM < lastTraveled 
 		   && prng.nextDouble() < faultyProbability){
-			setBrokenTime(1+prng.nextInt(maxFaultyDuration-1));
+			setBrokenTime(1+prng.nextInt(maxFaultyDuration));
 		}
 		super.move();
 		if(!isFaulty()){
@@ -96,20 +77,13 @@ public class Car extends Vehicle {
 		lastTraveled = 0;
 	}
 
-	public void setFaultProbability(double prob) {
-		if(0 < prob || prob > 1) {
-			throw new IllegalArgumentException("Seed must be in [0,1]");
-		} else {
-			faultyProbability = prob;
-		}
-	}
 
 	/**
 	 * Adapted method that adds the type to the report.
 	 */
 	@Override
 	public void fillReportDetails(IniSection out) {
-		super.fillReportDetails(out);
 		out.setValue("type", "car");
+		super.fillReportDetails(out);
 	}
 }

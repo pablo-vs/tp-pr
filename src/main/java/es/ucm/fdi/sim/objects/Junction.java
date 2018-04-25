@@ -1,6 +1,7 @@
 package es.ucm.fdi.sim.objects;
 
 import java.util.List;
+import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.ArrayDeque;
@@ -20,7 +21,7 @@ public class Junction extends SimObject{
 	protected List<IncomingRoad> incomingRoads;
 	
 	private static String junction_header = "junction_report";	
-	private int currentOpenQueue;
+	private int currentOpenQueue = -1;
 	private List<Road> outgoingRoads;
 	private HashMap<Road, IncomingRoad> roadToQueueMap;
 	private HashMap<Junction, Road> junctionToRoadMap;
@@ -114,13 +115,7 @@ public class Junction extends SimObject{
 	 * @param id	ID of current <code>Junction</code>.
 	 */
 	public Junction(String id) {
-		super(id, junction_header);
-		incomingRoads = new ArrayList<IncomingRoad>();
-		outgoingRoads = new ArrayList<Road>();
-		roadToQueueMap = new HashMap<Road, IncomingRoad>();
-		junctionToRoadMap = new HashMap<Junction, Road>();
-
-		currentOpenQueue = -1;
+		this(id, new ArrayList<Road>(), new ArrayList<Road>());
 	}
 
 	/**
@@ -144,17 +139,6 @@ public class Junction extends SimObject{
 		for(int i = 0; i < outgoing.size(); i++){
 			addOutgoingRoad(outgoing.get(i));
 		}
-	}
-
-	/**
-	 * Copy constructor.
-	 */
-	public Junction(Junction j) {
-		super(j.getID(), junction_header);
-		this.incomingRoads = new ArrayList<IncomingRoad>(j.incomingRoads);
-		this.outgoingRoads = new ArrayList<Road>(j.outgoingRoads);
-		roadToQueueMap = new HashMap<Road, IncomingRoad>();
-		junctionToRoadMap = new HashMap<Junction, Road>();
 	}
 	
 	/**
@@ -290,35 +274,63 @@ public class Junction extends SimObject{
 	}
 
 	/**
+	 * Return a  description of the object.
+	 *
+	 * @param out A <code>Map<String, String></code> which will contain the representation of the object.
+	 */
+	@Override
+	public void describe(Map<String, String> out) {
+		super.describe(out);
+		out.put("Green", currentOpenQueue > -1 ? describeQueue(incomingRoads.get(currentOpenQueue)) : "[]");
+		out.put("Red", "[" + describeQueues(true) + "]");
+	}
+	
+	/**
 	 * Fills the given map with the details of the state of the object.
 	 *
 	 * @param out Map to store the report.
 	 */
 	public void fillReportDetails(IniSection out) {
-		boolean first = true, firstVehicle;
+		out.setValue("queues", describeQueues(false));
+	}
+	
+	protected String describeQueues(boolean excludeGreen) {
+		boolean first = true;
 		StringBuilder aux = new StringBuilder();
 		
 		for(IncomingRoad queue : incomingRoads){
-			if(!first){
-				aux.append(",");
-			} else {
-				first = false;
-			}
-			aux.append("(");
-			aux.append(queue.getRoad().getID());
-			aux.append(queue.getTrafficLight() ? ",green,[" : ",red,[");
-			
-			firstVehicle = true;
-			for(Vehicle v : queue){
-				if(!firstVehicle){
+			if(!(queue.getTrafficLight() && excludeGreen)) {
+				if(!first){
 					aux.append(",");
 				} else {
-					firstVehicle = false;
+					first = false;
 				}
-				aux.append(v.getID());
+				
+				aux.append("(");
+				aux.append(describeQueue(queue));
+				aux.append(")");
 			}
-			aux.append("])");
 		}
-		out.setValue("queues", aux.toString());
+		return aux.toString();
+	}
+	
+	protected String describeQueue(IncomingRoad queue) {
+		boolean firstVehicle;
+		StringBuilder aux = new StringBuilder();
+		
+		aux.append(queue.getRoad().getID());
+		aux.append(queue.getTrafficLight() ? ",green,[" : ",red,[");
+		
+		firstVehicle = true;
+		for(Vehicle v : queue){
+			if(!firstVehicle){
+				aux.append(",");
+			} else {
+				firstVehicle = false;
+			}
+			aux.append(v.getID());
+		}
+		aux.append("]");
+		return aux.toString();
 	}
 }

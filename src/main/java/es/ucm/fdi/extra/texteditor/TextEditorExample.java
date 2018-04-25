@@ -167,8 +167,8 @@ public class TextEditorExample extends JFrame implements ActionListener {
 
 	public static String readFile(File file) {
 		String s = "";
-		try {
-			s = new Scanner(file).useDelimiter("\\A").next();
+		try (Scanner scan = new Scanner(file).useDelimiter("\\A")){
+			s = scan.next();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}

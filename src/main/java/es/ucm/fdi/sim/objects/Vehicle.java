@@ -1,7 +1,9 @@
 package es.ucm.fdi.sim.objects;
 
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.sim.objects.Road;
@@ -18,8 +20,8 @@ public class Vehicle extends SimObject{
 	private static String vehicle_header = "vehicle_report";
 	private Road currentRoad;
 	private List<Junction> itinerary;
-	private int maxVel, currentVel, position, brokenTime, kilometrage, nextJunction;
-	private boolean arrived, inQueue;
+	private int maxVel = 0, currentVel = 0, position = 0, brokenTime = 0, kilometrage = 0, nextJunction = 0;
+	private boolean arrived = false, inQueue = false;
 	
 	
 	/**
@@ -33,13 +35,6 @@ public class Vehicle extends SimObject{
 		super(id, vehicle_header);
 		this.itinerary = new ArrayList<Junction>(itinerary);
 		this.maxVel = maxVel;
-		currentVel = 0;
-		position = 0;
-		brokenTime = 0;
-		kilometrage = 0;
-		nextJunction = 0; //Points to the position in the itinerary
-		arrived = false;
-		inQueue = false;
 		moveToNextRoad();
 	}
 
@@ -57,21 +52,7 @@ public class Vehicle extends SimObject{
 		it.add(ini); it.add(end);
 		this.itinerary = it;
 		this.maxVel = maxVel;
-		currentVel = 0;
-		position = 0;
-		brokenTime = 0;
-		kilometrage = 0;
-		nextJunction = 0; //Points to the position in the itinerary
-		arrived = false;
-		inQueue = false;
 		moveToNextRoad();
-	}
-
-	/**
-	 * Copy constructor
-	 */
-	public Vehicle(Vehicle v) {
-		this(v.getID(), v.maxVel, v.itinerary);
 	}
 	
 	/**
@@ -229,7 +210,21 @@ public class Vehicle extends SimObject{
 		return faulty;
 	}
 
-
+	/**
+	 * Return a  description of the object.
+	 *
+	 * @param out A <code>Map<String, String></code> which will contain the representation of the object.
+	 */
+	@Override
+	public void describe(Map<String, String> out) {
+		super.describe(out);
+		out.put("Road", currentRoad.getID());
+		out.put("Location", ""+position);
+		out.put("Speed", ""+currentVel);
+		out.put("Km", ""+kilometrage);
+		out.put("Faulty Units", ""+brokenTime);
+		out.put("Faulty Units", "[" + itinerary.stream().map((j) -> j.getID()).collect(Collectors.joining(",")) + "]");
+	}
 	
 	/**
 	 * Fills the given map with the details of the state of the object.

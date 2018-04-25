@@ -1,6 +1,7 @@
 package es.ucm.fdi.sim.events;
 
 import java.lang.IllegalArgumentException;
+import java.util.Map;
 
 import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.sim.objects.RoadMap;
@@ -13,7 +14,7 @@ import es.ucm.fdi.sim.objects.Junction;
  * @version 10.03.2018
  */
 public class NewJunctionEvent extends Event {
-	private String junctionID;
+	protected String junctionID;
 
 	/**
 	 * Empty constructor.
@@ -61,11 +62,12 @@ public class NewJunctionEvent extends Event {
 	/**
 	 * Return a  description of the event.
 	 *
-	 * @return A <code>String</code> representing the event.
+	 * @param out A <code>Map<String, String></code> which will contain the representation of the event.
 	 */
 	@Override
-	public String getDescription() {
-		return "New junction " + junctionID;
+	public void describe(Map<String, String> out) {
+		super.describe(out);
+		out.put("Type", "New junction " + junctionID);
 	}
     
 	/**
