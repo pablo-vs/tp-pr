@@ -1,5 +1,8 @@
 package es.ucm.fdi.view;
 
+import java.io.IOException;
+import java.io.OutputStream;
+
 import java.awt.Dimension;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -23,11 +26,13 @@ public class CustomTextComponent extends JPanel {
 	private JFileChooser fileChooser;
 	private JTextArea textArea;
 	private JPopupMenu popupMenu;
+	private TextOutputStream asOutputStream;
 	
 	public CustomTextComponent(boolean isEditable){
 		fileChooser = new JFileChooser();
 		setLayout(new GridLayout());
 		textArea = new JTextArea();
+		asOutputStream = new TextOutputStream();
 		textArea.setEditable(isEditable);
 		textArea.setLineWrap(true);
 		textArea.setWrapStyleWord(true);
@@ -98,5 +103,23 @@ public class CustomTextComponent extends JPanel {
 
 	public void clear(){
 		textArea.setText("");
+	}
+	
+	public OutputStream buildStreamToText(){
+		return asOutputStream;
+	}
+	
+	private class TextOutputStream extends OutputStream{
+		private JTextArea area;
+		
+		public TextOutputStream(){
+			area = textArea; 
+		}
+		
+		@Override
+		public void write(int b) throws IOException{
+			textArea.append(String.valueOf((char)b));
+			textArea.setCaretPosition(area.getDocument().getLength());
+		}
 	}
 }

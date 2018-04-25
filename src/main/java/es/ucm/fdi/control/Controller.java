@@ -123,8 +123,12 @@ public class Controller {
 		}
 	}
 
-	public void setOutput(OutputStream os){
-		output = os;
+	public void redirectOutput(OutputStream os){
+		if(output != os){
+			output = os;
+		}else{
+			output = null;
+		}
 	}
 	
 	/**
@@ -148,6 +152,10 @@ public class Controller {
 	 */
 	public void run(int steps) throws IOException {
 		sim.execute(steps, output);
+	}
+	
+	public void dumpOutput(OutputStream os) throws IOException{
+		sim.dumpOutput(os);
 	}
 
 	/**

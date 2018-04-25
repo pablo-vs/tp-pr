@@ -68,7 +68,8 @@ public class SimWindow extends JPanel{
 		REPORT("Report"), 
 		LOAD_REPORT("Load Report"),
 		SAVE_REPORT("Save Report"), 
-		DELETE_REPORT("Delete Report");
+		DELETE_REPORT("Delete Report"),
+		REDIRECT_OUTPUT("Redirect Output");
 		
 		String s;	
 		private Actions(String s){
@@ -160,17 +161,31 @@ public class SimWindow extends JPanel{
 		//SHOWS REPORTS IN TEXT AREA
 		new SimulatorAction(Actions.REPORT, "report.png", "Show reports", 
 				KeyEvent.VK_T, " control shift T", ()->{
-					//PENDING
+					reportsArea.clear();
+					try{
+						controller.dumpOutput(reportsArea.buildStreamToText());
+					}catch(IOException e){
+						//doStuff
+					}
 				}).register(this);
 		//SAVES REPORTS
 		new SimulatorAction(Actions.SAVE_REPORT, "save_report.png", "Save reports", 
 				KeyEvent.VK_P, " control shift P", ()->{
-					//PENDING
+					try{
+						reportsArea.save();
+					}catch(IOException e){
+						//doStuff
+					}
 				}).register(this);
 		//CLEARS REPORT AREA
 		new SimulatorAction(Actions.DELETE_REPORT, "delete_report.png", "Delete reports", 
 				KeyEvent.VK_D, " control shift D", ()->{
 					reportsArea.clear();
+				}).register(this);
+		//REDIRECTS OUTPUT
+		new SimulatorAction(Actions.REDIRECT_OUTPUT, "report.png", "Redirects output", 
+				KeyEvent.VK_O, " control shift O", ()->{
+					controller.redirectOutput(reportsArea.buildStreamToText());
 				}).register(this);
 	}
 	
@@ -184,16 +199,16 @@ public class SimWindow extends JPanel{
 		file.add(new JMenuItem(m.get(""+Actions.LOAD_EVENT)));
 		file.add(new JMenuItem(m.get(""+Actions.SAVE_EVENT)));
 		file.addSeparator();
-		file.add(new JMenuItem("Save Report"));
+		file.add(new JMenuItem(m.get(""+Actions.SAVE_REPORT)));
 		file.addSeparator();
 		file.add(new JMenuItem(m.get(""+Actions.EXIT)));
 	
 		simulator.add(new JMenuItem(m.get(""+Actions.PLAY)));
 		simulator.add(new JMenuItem(m.get(""+Actions.RESET)));
-		simulator.add(new JMenuItem("Redirect output"));
+		simulator.add(new JMenuItem(m.get(""+Actions.REDIRECT_OUTPUT)));
 		
 		reports.add(new JMenuItem(m.get(""+Actions.REPORT)));
-		reports.add(new JMenuItem("Clear"));
+		reports.add(new JMenuItem(m.get(""+Actions.DELETE_REPORT)));
 		
 		menu.add(file);
 		menu.add(simulator);

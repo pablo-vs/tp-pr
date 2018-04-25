@@ -76,14 +76,7 @@ public class Simulator {
 			this.timer++;
 				
 			// 5. Write report in OutputStream (if it is not null)
-			if(outputFile != null) {
-				try {
-					prepareReport().store(outputFile);
-				}
-				catch(IOException e) {
-					throw new IOException("Error while writing report", e);
-				}
-			}
+			dumpOutput(outputFile);
 		}
 		fireUpdateEvent(EventType.ADVANCED);
 	}
@@ -132,6 +125,22 @@ public class Simulator {
 	 */
 	public int getTimer(){
 		return timer;
+	}
+	
+	/**
+	 * Dumps output to the indicated output stream
+	 * 
+	 * @param outputFile
+	 */
+	public void dumpOutput(OutputStream outputFile) throws IOException{
+		if(outputFile != null) {
+			try {
+				prepareReport().store(outputFile);
+			}
+			catch(IOException e) {
+				throw new IOException("Error while writing report", e);
+			}
+		}
 	}
 	
 	/**
