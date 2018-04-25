@@ -53,7 +53,7 @@ public class NewRoundRobinEvent extends NewJunctionEvent {
 	}
 
 	public RoundRobin createRoundRobin() {
-		return new RoundRobin(super.createJunction(), min, max);
+		return new RoundRobin(junctionID, min, max);
 	}
     
 	/**

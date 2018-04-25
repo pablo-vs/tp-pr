@@ -25,13 +25,6 @@ public class DirtRoad extends Road{
 	}
 
 	/**
-	 * Constructor from Road.
-	 */
-	public DirtRoad(Road r) {
-		super(r);
-	}
-	
-	/**
 	 * Calculates the <code>reductionFactor</code> for this <code>DirtRoad</code>
 	 * 
 	 * @return The <code>reductionFactor</code> for this <code>DirtRoad</code>.
@@ -56,7 +49,7 @@ public class DirtRoad extends Road{
 	 */
 	@Override
 	public void fillReportDetails(IniSection out) {
+		out.setValue("type", "dirt");
     	super.fillReportDetails(out);
-    	out.setValue("type", "dirt");
-    }
+	}
 }

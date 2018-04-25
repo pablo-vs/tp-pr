@@ -65,7 +65,7 @@ public class NewBicycleEvent extends NewVehicleEvent {
 	public Bicycle createBicycle(RoadMap r) {
 		Bicycle result;
 		try{
-			result = new Bicycle(super.createVehicle(r));
+			result = new Bicycle(vehicleID, maxSpeed, createItinerary(r));
 			
 		} catch (IllegalArgumentException e) {
 			throw new IllegalArgumentException("Error: could not create Bicycle.\n"

@@ -129,7 +129,6 @@ public class RoadMap {
 		if(checkIdUnicity(id)) {
 			simObjects.put(id, j);
 			junctions.add(j);
-			junctionsRO = Collections.unmodifiableList(junctions);
 		} else {
 			throw new IllegalArgumentException("Duplicated id: " + id);
 		}
@@ -145,7 +144,6 @@ public class RoadMap {
 		if(checkIdUnicity(id)) {
 			simObjects.put(id, r);
 			roads.add(r);
-			roadsRO = Collections.unmodifiableList(roads);
 		} else {
 			throw new IllegalArgumentException("Duplicated id: " + id);
 		}
@@ -161,7 +159,6 @@ public class RoadMap {
 		if(checkIdUnicity(id)) {
 			simObjects.put(id, v);
 			vehicles.add(v);
-			vehiclesRO = Collections.unmodifiableList(vehicles);
 		} else {
 			throw new IllegalArgumentException("Duplicated id: " + id);
 		}

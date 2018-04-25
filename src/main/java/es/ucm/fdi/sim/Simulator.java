@@ -81,7 +81,7 @@ public class Simulator {
 					prepareReport().store(outputFile);
 				}
 				catch(IOException e) {
-					throw new IOException("Error while writing report", e);
+					throw new IOException("Error while writing report" + e.getMessage(), e);
 				}
 			}
 		}

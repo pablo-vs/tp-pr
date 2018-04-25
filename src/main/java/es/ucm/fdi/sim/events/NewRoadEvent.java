@@ -14,8 +14,8 @@ import es.ucm.fdi.exceptions.ObjectNotFoundException;
  * @version 10.03.2018
  */
 public class NewRoadEvent extends Event {
-	private String roadID, ini, end;
-	private int length, maxVel;
+	protected String roadID, ini, end;
+	protected int length, maxVel;
 
 	/**
 	 * Empty constructor.
@@ -67,19 +67,14 @@ public class NewRoadEvent extends Event {
 		Junction iniJ, endJ;
 		Road newRoad;
 		try {
-			iniJ = r.getJunction(ini);
-			endJ = r.getJunction(end);
-			if(iniJ == null){
-				throw new ObjectNotFoundException("Error: no junction with id " + ini);
-			}
-			if(endJ == null){
-				throw new ObjectNotFoundException("Error: no junction with id " + end);
-			}
+			iniJ = verifyJunction(r, ini);
+			endJ = verifyJunction(r, end);
 			newRoad = new Road(roadID, length, maxVel, iniJ, endJ);
 			
 			
 		} catch (ObjectNotFoundException e){
-			throw new IllegalArgumentException("Error: Could not create road " + roadID + " at time " + getTime() + ".\n" + e.getMessage(), e);
+			throw new IllegalArgumentException("Error: Could not create road "
+		+ roadID + " at time " + getTime() + ".\n" + e.getMessage(), e);
 		}
 		return newRoad;
 	}

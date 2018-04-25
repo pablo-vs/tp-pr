@@ -55,11 +55,7 @@ public abstract class SimObject {
 	* @return a unique hash of the object
 	*/
 	public int hashCode() {
-		int result = 0;
-		for (char c : id.toCharArray()) {
-			result = result*26 + c;
-		}
-		return result;
+		return id.hashCode();
 	}
 	
 	/**

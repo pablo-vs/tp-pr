@@ -40,13 +40,6 @@ public class Road extends SimObject{
 		end.addIncomingRoad(this);
 		vehicleList = new MultiTreeMap<Integer, Vehicle>((Integer a, Integer b) -> b-a);
 	}
-
-	/**
-	 * Copy constructor.
-	 */
-	public Road(Road r) {
-		this(r.getID(), r.length, r.maxVel, r.ini, r.end);
-	}
 	
 	/**
 	 * Inserts a <code>Vehicle</code> in the current <code>Road</code>.

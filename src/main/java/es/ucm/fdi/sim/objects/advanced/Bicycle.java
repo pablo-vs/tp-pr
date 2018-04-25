@@ -26,13 +26,6 @@ public class Bicycle extends Vehicle {
 	}
 
 	/**
-	 * Constructor from Vehicle.
-	 */
-	public Bicycle(Vehicle v) {
-		super(v);
-	}
-	
-	/**
 	 * Adjusted method that sets {@link Vehicle#brokenTime} only if {@link Vehicle#currentVel}
 	 * is larger than half of {@link Vehicle#maxVel}.
 	 */
@@ -48,7 +41,7 @@ public class Bicycle extends Vehicle {
 	 */
 	@Override
 	public void fillReportDetails(IniSection out) {
-		super.fillReportDetails(out);
 		out.setValue("type", "bike");
+		super.fillReportDetails(out);
 	}
 }

@@ -18,7 +18,7 @@ public class ControllerTest {
 	@Test
 	public void constructorTest() throws Exception {
 		//File path constructors
-		String inputPathCorrect = "resources/examples/sim/input1.ini",
+		String inputPathCorrect = "src/main/resources/examples/sim/input1.ini",
 			inputPathIncorrect = "thisshouldnotexist.ini",
 			outputPath = "input.ini.out";
 
@@ -37,7 +37,7 @@ public class ControllerTest {
 
 	@Test
 	public void simulatorIOTest() throws Exception {
-		String inputPath = "resources/examples/sim/input1.ini",
+		String inputPath = "src/main/resources/examples/sim/input1.ini",
 			expectedOutputPath = inputPath + ".eout";
 		
 		FileInputStream inputStream = new FileInputStream(inputPath);
@@ -53,8 +53,6 @@ public class ControllerTest {
 		output = new Ini(redirectToIniStream);
 		
 		assertEquals("Output does not match expected", output, expectedOutput);
-
-		System.err.println("God's in his heaven, all's right with the world");
 	}
 
 }

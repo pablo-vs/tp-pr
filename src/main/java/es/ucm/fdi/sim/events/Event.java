@@ -7,8 +7,11 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.lang.NumberFormatException;
 
+import es.ucm.fdi.exceptions.ObjectNotFoundException;
 import es.ucm.fdi.ini.IniSection;
+import es.ucm.fdi.sim.objects.Junction;
 import es.ucm.fdi.sim.objects.RoadMap;
+
 import java.lang.IllegalArgumentException;
 
 /**
@@ -56,6 +59,15 @@ public abstract class Event {
 	 * @return A <code>String</code> representing the event.
 	 */
 	public abstract String getDescription();
+	
+	protected Junction verifyJunction(RoadMap r, String id) {
+		Junction j = r.getJunction(id);
+		if(j == null) {
+			throw new ObjectNotFoundException(
+					"No junction with id: " + id);
+		}
+		return j;
+	}
 	
 	/**
 	 *	Abstract parent of all the <code>EventBuilders</code>
