@@ -58,7 +58,7 @@ public class Car extends Vehicle {
 	 */
 	@Override
 	public void move(){
-		if(!isFaulty() && resistanceKM <= lastTraveled 
+		if(!isFaulty() && resistanceKM < lastTraveled 
 		   && prng.nextDouble() < faultyProbability){
 			setBrokenTime(1+prng.nextInt(maxFaultyDuration));
 		}

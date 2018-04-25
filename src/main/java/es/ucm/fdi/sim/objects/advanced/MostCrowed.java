@@ -41,12 +41,11 @@ public class MostCrowed extends Junction{
 	 * @return Next <code>Road</code> whose traffic light should be set to green.
 	 */
 	public int findRoadToUpdate(){ //Assumes list isn't empty
-		int max = 0;
 		int size = incomingRoads.size();
-		int open = super.getCurrentOpenQueue();
-		for(int i=open;i<size+open;++i){
-			if(incomingRoads.get(i%size).getWaiting() > incomingRoads.get(max).getWaiting()){
-				max = i%size;
+		int max = (getCurrentOpenQueue()+1) % size;
+		for(int i = 0; i < size; ++i){
+			if(incomingRoads.get(i).getWaiting() > incomingRoads.get(max).getWaiting()){
+				max = i;
 			}
 		}
 		return max;
@@ -60,15 +59,15 @@ public class MostCrowed extends Junction{
 	protected void updateTrafficLights(){
 		int open, next;
 		if(incomingRoads.size() > 0 && timeInterval <= usedTimeUnits){
-			if(super.getCurrentOpenQueue() != -1) {
-				open = super.getCurrentOpenQueue();
+			if(getCurrentOpenQueue() != -1) {
+				open = getCurrentOpenQueue();
 				incomingRoads.get(open).setTrafficLight(false);
 			}
 			next = findRoadToUpdate();
-			super.setCurrentOpenQueue(next);
+			setCurrentOpenQueue(next);
 			incomingRoads.get(next).setTrafficLight(true);
 			timeInterval = Math.max(
-					incomingRoads.get(super.getCurrentOpenQueue()).getWaiting()/2,
+					incomingRoads.get(getCurrentOpenQueue()).getWaiting()/2,
 					1);
 			usedTimeUnits = 0;
 		}
