@@ -19,6 +19,7 @@ import es.ucm.fdi.view.CustomTableModel;
 import es.ucm.fdi.view.CustomGraphLayout;
 import es.ucm.fdi.view.CustomTextComponent;
 
+//NEED TO ADD STATUS BAR
 public class SimWindow extends JPanel{
 	/**
 	 * Generated serialVersionUID
