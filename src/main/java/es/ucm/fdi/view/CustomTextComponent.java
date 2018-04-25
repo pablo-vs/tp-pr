@@ -105,7 +105,7 @@ public class CustomTextComponent extends JPanel {
 		textArea.setText("");
 	}
 	
-	public OutputStream buildStreamToText(){
+	public OutputStream getStreamToText(){
 		return asOutputStream;
 	}
 	

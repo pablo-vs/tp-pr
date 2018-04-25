@@ -163,7 +163,7 @@ public class SimWindow extends JPanel{
 				KeyEvent.VK_T, " control shift T", ()->{
 					reportsArea.clear();
 					try{
-						controller.dumpOutput(reportsArea.buildStreamToText());
+						controller.dumpOutput(reportsArea.getStreamToText());
 					}catch(IOException e){
 						//doStuff
 					}
@@ -185,7 +185,7 @@ public class SimWindow extends JPanel{
 		//REDIRECTS OUTPUT
 		new SimulatorAction(Actions.REDIRECT_OUTPUT, "report.png", "Redirects output", 
 				KeyEvent.VK_O, " control shift O", ()->{
-					controller.redirectOutput(reportsArea.buildStreamToText());
+					controller.redirectOutput(reportsArea.getStreamToText());
 				}).register(this);
 	}
 	
