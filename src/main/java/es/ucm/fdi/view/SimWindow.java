@@ -67,6 +67,7 @@ public class SimWindow extends JPanel{
 		RESET("Reset"), 
 		EXIT("Exit"),
 		REPORT("Report"), 
+		LOAD_REPORT("Load Report"),
 		SAVE_REPORT("Save Report"), 
 		DELETE_REPORT("Delete Report");
 		
@@ -165,28 +166,32 @@ public class SimWindow extends JPanel{
 	}
 	
 	public void addToolBar(JFrame jf){
-		JToolBar tb = new JToolBar();
+		JMenuBar menu = new JMenuBar();
+		JMenu file = new JMenu("File");
+		JMenu simulator = new JMenu("Simulator");
+		JMenu reports = new JMenu("Reports");
+		ActionMap m = getActionMap();
 		
-		//PENDING
-		tb.setFloatable(false);
-		tb.add(new JMenu("File"));
+		file.add(new JMenuItem(m.get(""+Actions.LOAD_EVENT)));
+		file.add(new JMenuItem(m.get(""+Actions.SAVE_EVENT)));
+		file.addSeparator();
+		file.add(new JMenuItem("Save Report"));
+		file.addSeparator();
+		file.add(new JMenuItem(m.get(""+Actions.EXIT)));
+	
+		simulator.add(new JMenuItem(m.get(""+Actions.PLAY)));
+		simulator.add(new JMenuItem(m.get(""+Actions.RESET)));
+		simulator.add(new JMenuItem("Redirect output"));
 		
+		reports.add(new JMenuItem(m.get(""+Actions.REPORT)));
+		reports.add(new JMenuItem("Clear"));
+		
+		menu.add(file);
+		menu.add(simulator);
+		menu.add(reports);
+		jf.add(menu, BorderLayout.NORTH);
 		/*
-		 * SUBMENUS
-		 * File
-		 * 		Load Events
-		 * 		Save Events
-		 * 		--
-		 * 		Save Report
-		 * 		--
-		 * 		Exit
-		 * Simulator
-		 * 		Run
-		 * 		Reset
-		 * 		Redirect output
-		 * Reports
-		 * 		Generate
-		 * 		Clear
+		 * Requires finishing implementation
 		 */
 		
 	}
