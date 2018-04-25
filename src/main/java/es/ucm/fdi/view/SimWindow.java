@@ -1,6 +1,6 @@
 package es.ucm.fdi.view;
 
-import java.io.IOException;
+import java.io.IOException;	
 
 import javax.swing.*;
 
@@ -9,17 +9,20 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.JSpinner;
 
+import java.util.List;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.lang.IllegalArgumentException;
 
 import es.ucm.fdi.control.Controller;
 import es.ucm.fdi.control.SimulatorAction;
+import es.ucm.fdi.sim.Simulator;
+import es.ucm.fdi.sim.Describable;
 import es.ucm.fdi.view.CustomTableModel;
 import es.ucm.fdi.view.CustomGraphLayout;
 import es.ucm.fdi.view.CustomTextComponent;
 
-public class SimWindow extends JPanel{
+public class SimWindow extends JPanel implements Simulator.Listener {
 	/**
 	 * Generated serialVersionUID
 	 */
@@ -30,6 +33,7 @@ public class SimWindow extends JPanel{
 	
 	private Controller controller;
 	private CustomTextComponent eventsEditor, reportsArea;
+	private CustomTableModel eventsQueueTableModel, vehiclesTableModel, roadsTableModel, junctionsTableModel;
 	/*
 	 * Events editor needs contextual menu support [just adding it now]
 	 * 
@@ -81,6 +85,46 @@ public class SimWindow extends JPanel{
 		}
 	}
 	
+	private enum Tables {
+		EVENT_LIST(
+				"#",
+				"Time",
+				"Type"
+				),
+		VEHICLES(
+				"ID",
+				"Road",
+				"Location",
+				"Speed",
+				"Km",
+				"Faulty Units",
+				"Itinerary"
+				),
+		ROADS(
+				"ID",
+				"Source",
+				"Target",
+				"Length",
+				"Max Speed",
+				"Vehicles"
+				),
+		JUNCTIONS(
+				"ID",
+				"Green",
+				"Red"
+				);
+		
+		String[] tags;
+		
+		private Tables(String ... tags){
+			this.tags = tags;
+		}
+		
+		public String[] getTags() {
+			return tags;
+		}
+	}
+	
 	public SimWindow(Controller cont) {
 		JFrame jf = new JFrame("Traffic Simulator");
 		controller = cont;
@@ -98,6 +142,7 @@ public class SimWindow extends JPanel{
 		addCenterPanel(jf);
 		
 		jf.add(this, BorderLayout.CENTER);
+		controller.addListener(this);
 	}
 	
 	public void addActions(){
@@ -285,10 +330,8 @@ public class SimWindow extends JPanel{
 
 	public JPanel createNorthPanel() {
 		JPanel northPanel = new JPanel();
-        CustomTableModeleventsTableModel =
-        			new CustomTableModel();
-        JScrollPane eventsTable = new JScrollPane(new JTable(eventsTableModel));
-		controller.addListener(eventsTableModel);			
+        eventsQueueTableModel = new CustomTableModel(Tables.EVENT_LIST.getTags());
+        JScrollPane eventsTable = new JScrollPane(new JTable(eventsQueueTableModel));	
 		northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.X_AXIS));
 		
 		//WE NEED TO CREATE AND ADD JPOPUPMENU HERE
@@ -308,17 +351,13 @@ public class SimWindow extends JPanel{
 	public JPanel createSouthWestPanel() {
 		JPanel southWestPanel = new JPanel();
 
-		CustomTableModel.VehicleListModel vehiclesModel = new CustomTableModel.VehicleListModel();
-		CustomTableModel.RoadListModel roadsModel = new CustomTableModel.RoadListModel();
-		CustomTableModel.JunctionListModel junctionsModel = new CustomTableModel.JunctionListModel();
-		JScrollPane table1 = new JScrollPane(new JTable(vehiclesModel));
-		JScrollPane	table2 = new JScrollPane(new JTable(roadsModel));
-		JScrollPane	table3 = new JScrollPane(new JTable(junctionsModel));
+		vehiclesTableModel = new CustomTableModel(Tables.VEHICLES.getTags());
+		roadsTableModel = new CustomTableModel(Tables.ROADS.getTags());
+		junctionsTableModel = new CustomTableModel(Tables.JUNCTIONS.getTags());
+		JScrollPane table1 = new JScrollPane(new JTable(vehiclesTableModel));
+		JScrollPane	table2 = new JScrollPane(new JTable(roadsTableModel));
+		JScrollPane	table3 = new JScrollPane(new JTable(junctionsTableModel));
 
-		controller.addListener(vehiclesModel);
-		controller.addListener(roadsModel);
-		controller.addListener(junctionsModel);
-		
 		southWestPanel.setLayout(new BoxLayout(southWestPanel, BoxLayout.Y_AXIS));
 
 		southWestPanel.add(table1);
@@ -341,6 +380,26 @@ public class SimWindow extends JPanel{
 		panel.setBorder(BorderFactory.createTitledBorder("Road Map"));
 		panel.add(graph, BorderLayout.CENTER);
 		return panel;
+	}
+	
+	public void update(Simulator.UpdateEvent ue, String error) {
+		switch(ue.getType()) {
+		case RESET:
+			vehiclesTableModel.clear();
+			roadsTableModel.clear();
+			junctionsTableModel.clear();
+			eventsQueueTableModel.clear();
+		case ERROR:
+		case REGISTERED:
+			break;
+		case ADVANCED:
+			vehiclesTableModel.setElements(ue.getVehicles());
+			roadsTableModel.setElements(ue.getRoads());
+			junctionsTableModel.setElements(ue.getJunctions());
+		case NEW_EVENT:
+			eventsQueueTableModel.setElements(ue.getEventQueue());
+			break;
+		}
 	}
 
 }
