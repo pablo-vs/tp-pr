@@ -116,7 +116,9 @@ public class Main {
 	 * 
 	 * @throws IOException
 	 */
-	public static void test(String path) throws IOException {
+	public static boolean test(String path) throws IOException {
+
+		boolean success = true;
 
 		File dir = new File(path);
 
@@ -132,12 +134,15 @@ public class Main {
 			});
 
 		for (File file : files) {
-			test(file.getAbsolutePath(), file.getAbsolutePath() + ".out", file.getAbsolutePath() + ".eout",10);
+			if(!test(file.getAbsolutePath(), file.getAbsolutePath() + ".out", file.getAbsolutePath() + ".eout",10)) {
+				success = false;
+			}
 		}
+		return success;
 
 	}
 
-	private static void test(String inFile, String outFile, String expectedOutFile, int timeLimit) throws IOException {
+	private static boolean test(String inFile, String outFile, String expectedOutFile, int timeLimit) throws IOException {
 		_outFile = outFile;
 		_inFile = inFile;
 		_timeLimit = timeLimit;
@@ -145,6 +150,7 @@ public class Main {
 		boolean equalOutput = (new Ini(_outFile)).equals(new Ini(expectedOutFile));
 		System.err.println("Result for: '" + _inFile + "' : "
 				   + (equalOutput ? "OK!" : ("not equal to expected output +'" + expectedOutFile + "'")));
+		return equalOutput;
 	}
 
 	/**

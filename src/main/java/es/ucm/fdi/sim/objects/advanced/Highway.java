@@ -28,14 +28,6 @@ public class Highway extends Road{
 	}
 
 	/**
-	 * Constructor from Road.
-	 */
-	public Highway(Road r, int nLanes) {
-		super(r);
-	        lanes = nLanes;
-	}
-	
-	/**
 	 * Calculates the <code>baseSpeed</code> based on the formula
 	 * 
 	 * @return The <code>baseSpeed</code> for this <code>Highway</code>.
@@ -65,7 +57,7 @@ public class Highway extends Road{
 	 */
 	@Override
 	public void fillReportDetails(IniSection out) {
+		out.setValue("type", "lanes");
     	super.fillReportDetails(out);
-    	out.setValue("type", "lanes");
     }
 }

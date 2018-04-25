@@ -20,7 +20,7 @@ public class Junction extends SimObject{
 	protected List<IncomingRoad> incomingRoads;
 	
 	private static String junction_header = "junction_report";	
-	private int currentOpenQueue;
+	private int currentOpenQueue = -1;
 	private List<Road> outgoingRoads;
 	private HashMap<Road, IncomingRoad> roadToQueueMap;
 	private HashMap<Junction, Road> junctionToRoadMap;
@@ -114,13 +114,7 @@ public class Junction extends SimObject{
 	 * @param id	ID of current <code>Junction</code>.
 	 */
 	public Junction(String id) {
-		super(id, junction_header);
-		incomingRoads = new ArrayList<IncomingRoad>();
-		outgoingRoads = new ArrayList<Road>();
-		roadToQueueMap = new HashMap<Road, IncomingRoad>();
-		junctionToRoadMap = new HashMap<Junction, Road>();
-
-		currentOpenQueue = -1;
+		this(id, new ArrayList<Road>(), new ArrayList<Road>());
 	}
 
 	/**
@@ -144,17 +138,6 @@ public class Junction extends SimObject{
 		for(int i = 0; i < outgoing.size(); i++){
 			addOutgoingRoad(outgoing.get(i));
 		}
-	}
-
-	/**
-	 * Copy constructor.
-	 */
-	public Junction(Junction j) {
-		super(j.getID(), junction_header);
-		this.incomingRoads = new ArrayList<IncomingRoad>(j.incomingRoads);
-		this.outgoingRoads = new ArrayList<Road>(j.outgoingRoads);
-		roadToQueueMap = new HashMap<Road, IncomingRoad>();
-		junctionToRoadMap = new HashMap<Junction, Road>();
 	}
 	
 	/**
@@ -295,7 +278,7 @@ public class Junction extends SimObject{
 	 * @param out Map to store the report.
 	 */
 	public void fillReportDetails(IniSection out) {
-		boolean first = true, firstVehicle;
+		boolean first = true;
 		StringBuilder aux = new StringBuilder();
 		
 		for(IncomingRoad queue : incomingRoads){
@@ -305,20 +288,29 @@ public class Junction extends SimObject{
 				first = false;
 			}
 			aux.append("(");
-			aux.append(queue.getRoad().getID());
-			aux.append(queue.getTrafficLight() ? ",green,[" : ",red,[");
-			
-			firstVehicle = true;
-			for(Vehicle v : queue){
-				if(!firstVehicle){
-					aux.append(",");
-				} else {
-					firstVehicle = false;
-				}
-				aux.append(v.getID());
-			}
-			aux.append("])");
+			aux.append(describeQueue(queue));
+			aux.append(")");
 		}
 		out.setValue("queues", aux.toString());
+	}
+	
+	protected String describeQueue(IncomingRoad queue) {
+		boolean firstVehicle;
+		StringBuilder aux = new StringBuilder();
+		
+		aux.append(queue.getRoad().getID());
+		aux.append(queue.getTrafficLight() ? ",green,[" : ",red,[");
+		
+		firstVehicle = true;
+		for(Vehicle v : queue){
+			if(!firstVehicle){
+				aux.append(",");
+			} else {
+				firstVehicle = false;
+			}
+			aux.append(v.getID());
+		}
+		aux.append("]");
+		return aux.toString();
 	}
 }

@@ -77,7 +77,7 @@ public class NewCarEvent extends NewVehicleEvent {
 	public Car createCar(RoadMap r) {
 		Car result;
 		try{
-			result = new Car(super.createVehicle(r), resistance,
+			result = new Car(vehicleID, maxSpeed, createItinerary(r), resistance,
 					 faultMax, faultProb, seed);
 			
 		} catch (IllegalArgumentException e) {

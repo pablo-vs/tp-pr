@@ -13,7 +13,7 @@ import es.ucm.fdi.sim.objects.Junction;
  * @version 10.03.2018
  */
 public class NewJunctionEvent extends Event {
-	private String junctionID;
+	protected String junctionID;
 
 	/**
 	 * Empty constructor.

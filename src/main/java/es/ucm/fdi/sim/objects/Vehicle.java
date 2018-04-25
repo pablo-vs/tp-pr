@@ -18,8 +18,8 @@ public class Vehicle extends SimObject{
 	private static String vehicle_header = "vehicle_report";
 	private Road currentRoad;
 	private List<Junction> itinerary;
-	private int maxVel, currentVel, position, brokenTime, kilometrage, nextJunction;
-	private boolean arrived, inQueue;
+	private int maxVel = 0, currentVel = 0, position = 0, brokenTime = 0, kilometrage = 0, nextJunction = 0;
+	private boolean arrived = false, inQueue = false;
 	
 	
 	/**
@@ -33,13 +33,6 @@ public class Vehicle extends SimObject{
 		super(id, vehicle_header);
 		this.itinerary = new ArrayList<Junction>(itinerary);
 		this.maxVel = maxVel;
-		currentVel = 0;
-		position = 0;
-		brokenTime = 0;
-		kilometrage = 0;
-		nextJunction = 0; //Points to the position in the itinerary
-		arrived = false;
-		inQueue = false;
 		moveToNextRoad();
 	}
 
@@ -57,21 +50,7 @@ public class Vehicle extends SimObject{
 		it.add(ini); it.add(end);
 		this.itinerary = it;
 		this.maxVel = maxVel;
-		currentVel = 0;
-		position = 0;
-		brokenTime = 0;
-		kilometrage = 0;
-		nextJunction = 0; //Points to the position in the itinerary
-		arrived = false;
-		inQueue = false;
 		moveToNextRoad();
-	}
-
-	/**
-	 * Copy constructor
-	 */
-	public Vehicle(Vehicle v) {
-		this(v.getID(), v.maxVel, v.itinerary);
 	}
 	
 	/**

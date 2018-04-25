@@ -48,7 +48,7 @@ public class NewMostCrowedEvent extends NewJunctionEvent {
 	}
 
 	public MostCrowed createMostCrowed() {
-		return new MostCrowed(super.createJunction());
+		return new MostCrowed(junctionID);
 	}
     
 	/**
