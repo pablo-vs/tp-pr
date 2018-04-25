@@ -13,12 +13,15 @@ import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.lang.IllegalArgumentException;
 
+import es.ucm.fdi.sim.Simulator;
 import es.ucm.fdi.control.Controller;
 import es.ucm.fdi.control.SimulatorAction;
-import es.ucm.fdi.sim.Simulator;
-import es.ucm.fdi.view.CustomTableModel;
-import es.ucm.fdi.view.CustomGraphLayout;
-import es.ucm.fdi.view.CustomTextComponent;
+
+import es.ucm.fdi.view.util.Tables;
+import es.ucm.fdi.view.util.Actions;
+import es.ucm.fdi.view.customcomponents.CustomGraphLayout;
+import es.ucm.fdi.view.customcomponents.CustomTableModel;
+import es.ucm.fdi.view.customcomponents.CustomTextComponent;
 
 public class SimWindow extends JPanel implements Simulator.Listener {
 	/**
@@ -57,71 +60,7 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 	 */
 	private CustomGraphLayout graph;
 	private JSpinner steps;
-	private JTextField time;
-	
-	private enum Actions{
-		LOAD_EVENT("Load"), 
-		SAVE_EVENT("Save"), 
-		CLEAR_EDITOR("Clear"), 
-		INSERT_EVENT_DATA("Insert"), 
-		PLAY("Play"), 
-		RESET("Reset"), 
-		EXIT("Exit"),
-		REPORT("Report"), 
-		LOAD_REPORT("Load Report"),
-		SAVE_REPORT("Save Report"), 
-		DELETE_REPORT("Delete Report"),
-		REDIRECT_OUTPUT("Redirect Output");
-		
-		String s;	
-		private Actions(String s){
-			this.s = s;
-		}
-		
-		public String toString(){
-			return s;
-		}
-	}
-	
-	private enum Tables {
-		EVENT_LIST(
-				"#",
-				"Time",
-				"Type"
-				),
-		VEHICLES(
-				"ID",
-				"Road",
-				"Location",
-				"Speed",
-				"Km",
-				"Faulty Units",
-				"Itinerary"
-				),
-		ROADS(
-				"ID",
-				"Source",
-				"Target",
-				"Length",
-				"Max Speed",
-				"Vehicles"
-				),
-		JUNCTIONS(
-				"ID",
-				"Green",
-				"Red"
-				);
-		
-		String[] tags;
-		
-		private Tables(String ... tags){
-			this.tags = tags;
-		}
-		
-		public String[] getTags() {
-			return tags;
-		}
-	}
+	private JTextField time;	
 	
 	public SimWindow(Controller cont) {
 		JFrame jf = new JFrame("Traffic Simulator");

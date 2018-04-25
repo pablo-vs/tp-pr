@@ -1,4 +1,4 @@
-package es.ucm.fdi.view;
+package es.ucm.fdi.view.customcomponents;
 
 import java.util.List;		
 import java.util.ArrayList;

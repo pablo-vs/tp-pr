@@ -1,4 +1,4 @@
-package es.ucm.fdi.view;
+package es.ucm.fdi.view.customcomponents;
 
 import java.awt.BorderLayout;
 import java.util.Random;
