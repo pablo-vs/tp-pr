@@ -33,8 +33,14 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 	private final double EW_SPLIT_DIVISION = 0.5;
 	
 	private Controller controller;
-	private CustomTextComponent eventsEditor, reportsArea;
-	private CustomTableModel eventsQueueTableModel, vehiclesTableModel, roadsTableModel, junctionsTableModel;
+	private CustomTextComponent eventsEditor = new CustomTextComponent(true);
+	private CustomTextComponent reportsArea = new CustomTextComponent(false);
+	
+	private JTable eventsQueueTable = new JTable(new CustomTableModel(Tables.EVENT_LIST.getTags()));
+	private JTable vehiclesTable = new JTable(new CustomTableModel(Tables.VEHICLES.getTags()));
+	private JTable roadsTable = new JTable(new CustomTableModel(Tables.ROADS.getTags()));
+	private JTable junctionsTable = new JTable(new CustomTableModel(Tables.JUNCTIONS.getTags()));
+	
 	/*
 	 * Events editor needs contextual menu support [just adding it now]
 	 * 
@@ -65,8 +71,7 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 	public SimWindow(Controller cont) {
 		JFrame jf = new JFrame("Traffic Simulator");
 		controller = cont;
-		eventsEditor = new CustomTextComponent(true);
-		reportsArea = new CustomTextComponent(false);
+
 		graph = new CustomGraphLayout();
 		
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -122,9 +127,6 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 				KeyEvent.VK_X, "control shift X", ()->{
 					try{
 						controller.run((Integer)steps.getValue());
-						time.setText(Integer.toString(controller
-								.getSimulator().getTimer()));
-						graph.updateGraph(controller.getSimulator().getRoadMap());
 					} catch (IOException e) {
 						//doStuff
 					}
@@ -132,9 +134,7 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 		//RESETS SIMULATOR
 		new SimulatorAction(Actions.RESET, "reset.png", "Resets the simulation to its initial point",
 				KeyEvent.VK_R, "control shift R", ()->{
-					time.setText("0");
 					controller.reset();
-					graph.updateGraph(controller.getSimulator().getRoadMap());
 				}).register(this);
 		//EXITS THE PROGRAM
 		new SimulatorAction(Actions.EXIT, "exit.png", "Exit the program",
@@ -267,16 +267,16 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 
 	public JPanel createNorthPanel() {
 		JPanel northPanel = new JPanel();
-        eventsQueueTableModel = new CustomTableModel(Tables.EVENT_LIST.getTags());
-        JScrollPane eventsTable = new JScrollPane(new JTable(eventsQueueTableModel));	
+		
+        JScrollPane eventsTableScroll = new JScrollPane(eventsQueueTable);	
 		northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.X_AXIS));
 		
 		//WE NEED TO CREATE AND ADD JPOPUPMENU HERE
 		northPanel.add(eventsEditor);
 		eventsEditor.setBorder(BorderFactory.createTitledBorder("Events editor"));
 		
-		northPanel.add(eventsTable);
-		eventsTable.setBorder(BorderFactory.createTitledBorder("Event List"));
+		northPanel.add(eventsTableScroll);
+		eventsTableScroll.setBorder(BorderFactory.createTitledBorder("Event List"));
 
 		//WE NEED TO CREATE JPOPUPMENU HERE
 		northPanel.add(reportsArea);
@@ -288,12 +288,9 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 	public JPanel createSouthWestPanel() {
 		JPanel southWestPanel = new JPanel();
 
-		vehiclesTableModel = new CustomTableModel(Tables.VEHICLES.getTags());
-		roadsTableModel = new CustomTableModel(Tables.ROADS.getTags());
-		junctionsTableModel = new CustomTableModel(Tables.JUNCTIONS.getTags());
-		JScrollPane table1 = new JScrollPane(new JTable(vehiclesTableModel));
-		JScrollPane	table2 = new JScrollPane(new JTable(roadsTableModel));
-		JScrollPane	table3 = new JScrollPane(new JTable(junctionsTableModel));
+		JScrollPane table1 = new JScrollPane(vehiclesTable);
+		JScrollPane	table2 = new JScrollPane(roadsTable);
+		JScrollPane	table3 = new JScrollPane(junctionsTable);
 
 		southWestPanel.setLayout(new BoxLayout(southWestPanel, BoxLayout.Y_AXIS));
 
@@ -320,21 +317,36 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 	}
 	
 	public void update(Simulator.UpdateEvent ue, String error) {
+		CustomTableModel vehiclesModel = (CustomTableModel) vehiclesTable.getModel();
+		CustomTableModel junctionsModel = (CustomTableModel) junctionsTable.getModel();
+		CustomTableModel roadsModel= (CustomTableModel) roadsTable.getModel();
+		CustomTableModel eventsModel = (CustomTableModel) eventsQueueTable.getModel();
+		
 		switch(ue.getType()) {
 		case RESET:
-			vehiclesTableModel.clear();
-			roadsTableModel.clear();
-			junctionsTableModel.clear();
-			eventsQueueTableModel.clear();
+			time.setText("0");
+			graph.updateGraph(controller.getSimulator().getRoadMap());
+			
+			vehiclesModel.clear();
+			roadsModel.clear();
+			junctionsModel.clear();
+			eventsModel.clear();
 		case ERROR:
 		case REGISTERED:
 			break;
 		case ADVANCED:
-			vehiclesTableModel.setElements(ue.getVehicles());
-			roadsTableModel.setElements(ue.getRoads());
-			junctionsTableModel.setElements(ue.getJunctions());
+			time.setText(Integer.toString(controller.getSimulator().getTimer()));
+			graph.updateGraph(controller.getSimulator().getRoadMap());
+			
+			reportsArea.clear();
+			vehiclesModel.getSelected(vehiclesTable.getSelectedRows());
+			
+			vehiclesModel.setElements(ue.getVehicles());
+			roadsModel.setElements(ue.getRoads());
+			junctionsModel.setElements(ue.getJunctions());
+			break;
 		case NEW_EVENT:
-			eventsQueueTableModel.setElements(ue.getEventQueue());
+			eventsModel.setElements(ue.getEventQueue(), "#");
 			break;
 		}
 	}

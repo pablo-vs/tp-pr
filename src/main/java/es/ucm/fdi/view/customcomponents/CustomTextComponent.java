@@ -23,15 +23,14 @@ public class CustomTextComponent extends JPanel {
 	 * Generated serial UID
 	 */
 	private static final long serialVersionUID = 8279020056163205261L;
-	private JFileChooser fileChooser;
-	private JTextArea textArea;
-	private JPopupMenu popupMenu;
+	private JFileChooser fileChooser = new JFileChooser();
+	private JTextArea textArea = new JTextArea();
+	private JPopupMenu popupMenu = new JPopupMenu();
 	private TextOutputStream asOutputStream;
 	
 	public CustomTextComponent(boolean isEditable){
-		fileChooser = new JFileChooser();
 		setLayout(new GridLayout());
-		textArea = new JTextArea();
+		
 		asOutputStream = new TextOutputStream();
 		textArea.setEditable(isEditable);
 		textArea.setLineWrap(true);
@@ -42,7 +41,6 @@ public class CustomTextComponent extends JPanel {
 		setLayout(new BorderLayout());
 		add(area, BorderLayout.CENTER);
 		
-		popupMenu = new JPopupMenu();
 		textArea.addMouseListener(new MouseListener() {
 
 			@Override
@@ -108,6 +106,8 @@ public class CustomTextComponent extends JPanel {
 	public OutputStream getStreamToText(){
 		return asOutputStream;
 	}
+	
+	
 	
 	private class TextOutputStream extends OutputStream{
 		private JTextArea area;
