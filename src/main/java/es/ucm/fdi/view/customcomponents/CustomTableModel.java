@@ -9,6 +9,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.event.TableModelListener;
 import javax.swing.event.TableModelEvent;
 
+import es.ucm.fdi.exceptions.ObjectNotFoundException;
 import es.ucm.fdi.sim.Describable;
 
 /**
@@ -22,6 +23,7 @@ public class CustomTableModel extends AbstractTableModel {
 	 */
 	private static final long serialVersionUID = -4823431851535170164L;
 	private List<Map<String, String>> data = new ArrayList<Map<String, String>>();
+	private List<? extends Describable> origin;
 	private String[] columnTags;
 	
 	public CustomTableModel(String[] columnTags){
@@ -50,16 +52,37 @@ public class CustomTableModel extends AbstractTableModel {
 	
 	public void clear() {
 		data.clear();
+		origin = null;
 		change();
 	}
 
+	public List<? extends Describable> getSelected(int[] rows) {
+		List<Describable> selection = new ArrayList<Describable>();
+		for(int i : rows) {
+			try {
+				selection.add(origin.get(i));
+			} catch(IndexOutOfBoundsException e) {
+				throw new ObjectNotFoundException("Table origin and selection mismatch:\n" + e.getMessage(), e);
+			}
+		}
+		return selection;
+	}
+	
 	public void setElements(List<? extends Describable> newData) {
+		setElements(newData, "__");
+	}
+	
+	public void setElements(List<? extends Describable> newData, String orderTag) {
 		data.clear();
+		int i = 0;
 		for(Describable obj : newData) {
 			Map<String, String> map = new HashMap<String, String>();
 			obj.describe(map);
+			map.put(orderTag, ""+i);
 			data.add(map);
+			++i;
 		}
+		origin = newData;
 		change();
 	}
 	
