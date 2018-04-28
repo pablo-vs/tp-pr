@@ -5,7 +5,7 @@ import java.io.IOException;
 import javax.swing.*;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 
 import javax.swing.JSpinner;
 
@@ -27,33 +27,19 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 	/**
 	 * Generated serialVersionUID
 	 */
-	private static final long serialVersionUID = -2574375309247665340L;
+	private static final long serialVersionUID = 
+			-2574375309247665340L;
 
+	private static final String TEMPLATE_PATH = 
+			"src/main/resources/templates";
+	private static final String TEMPLATE_INDEX_FILE = "Index.ini";
+	
 	private final double NS_SPLIT_DIVISION = 0.3;
 	private final double EW_SPLIT_DIVISION = 0.5;
 	
 	private Controller controller;
 	private CustomTextComponent eventsEditor, reportsArea;
 	private CustomTableModel eventsQueueTableModel, vehiclesTableModel, roadsTableModel, junctionsTableModel;
-	/*
-	 * Events editor needs contextual menu support [just adding it now]
-	 * 
-	 * 	Add template
-	 * 		New RR Junction
-	 * 		New MC Junction
-	 * 		New Junction
-	 * 		New Dirt Road
-	 * 		New Lanes Road
-	 * 		New Road
-	 * 		New Bike
-	 * 		New Car
-	 * 		New Vehicle
-	 * 		Make vehicle faulty
-	 * -------------
-	 * Load
-	 * Save
-	 * Clear 
-	 */
 	
 	/*
 	 * It needs to be possible to choose simulation objects.
@@ -270,15 +256,46 @@ public class SimWindow extends JPanel implements Simulator.Listener {
         eventsQueueTableModel = new CustomTableModel(Tables.EVENT_LIST.getTags());
         JScrollPane eventsTable = new JScrollPane(new JTable(eventsQueueTableModel));	
 		northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.X_AXIS));
+		ActionMap m = getActionMap();
 		
 		//WE NEED TO CREATE AND ADD JPOPUPMENU HERE
+		JPopupMenu eventJPM = new JPopupMenu();
+		JMenu templateMenu = new JMenu("Add template");
+		/*
+		 * ADD FILES WITH INDEX OF TEMPLATE FILES
+		 * 
+		 * 
+		 * Format
+		 * 
+		 * Action Name Tooltip
+		 * 
+		 * Use loop to create actions below
+		 */
+		templateMenu.add(new JMenuItem("New RR Junction"));
+		templateMenu.add(new JMenuItem("New MC Junction"));
+		templateMenu.add(new JMenuItem("New Junction"));
+		templateMenu.add(new JMenuItem("New Dirt Road"));
+		templateMenu.add(new JMenuItem("New Lanes Road"));
+		templateMenu.add(new JMenuItem("New Road"));
+		templateMenu.add(new JMenuItem("New Bike"));
+		templateMenu.add(new JMenuItem("New Car"));
+		templateMenu.add(new JMenuItem("New Vehicle"));
+		templateMenu.add(new JMenuItem("Make Vehicle Faulty"));
+		eventJPM.add(templateMenu);
+		eventJPM.addSeparator();
+		eventJPM.add(m.get(""+Actions.LOAD_EVENT));
+		eventJPM.add(m.get(""+Actions.SAVE_EVENT));
+		eventJPM.add(m.get(""+Actions.CLEAR_EDITOR));
+		
+		eventsEditor.setPopupMenu(eventJPM);
 		northPanel.add(eventsEditor);
 		eventsEditor.setBorder(BorderFactory.createTitledBorder("Events editor"));
+		
 		
 		northPanel.add(eventsTable);
 		eventsTable.setBorder(BorderFactory.createTitledBorder("Event List"));
 
-		//WE NEED TO CREATE JPOPUPMENU HERE
+		//DO WE NEED ANOTHER JPOPUPMENU?
 		northPanel.add(reportsArea);
 		reportsArea.setBorder(BorderFactory.createTitledBorder("Reports Area"));
 		
