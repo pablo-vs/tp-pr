@@ -1,7 +1,6 @@
 package es.ucm.fdi.view;
 
 import java.io.IOException;	
-import java.io.FileReader;
 
 import javax.swing.*;
 
@@ -46,26 +45,6 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 	private JTable vehiclesTable = new JTable(new CustomTableModel(Tables.VEHICLES.getTags()));
 	private JTable roadsTable = new JTable(new CustomTableModel(Tables.ROADS.getTags()));
 	private JTable junctionsTable = new JTable(new CustomTableModel(Tables.JUNCTIONS.getTags()));
-	
-	/*
-	 * Events editor needs contextual menu support [just adding it now]
-	 * 
-	 * 	Add template
-	 * 		New RR Junction
-	 * 		New MC Junction
-	 * 		New Junction
-	 * 		New Dirt Road
-	 * 		New Lanes Road
-	 * 		New Road
-	 * 		New Bike
-	 * 		New Car
-	 * 		New Vehicle
-	 * 		Make vehicle faulty
-	 * -------------
-	 * Load
-	 * Save
-	 * Clear 
-	 */
 	
 	/*
 	 * It needs to be possible to choose simulation objects.
@@ -281,14 +260,6 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 		//WE NEED TO CREATE AND ADD JPOPUPMENU HERE
 		JPopupMenu eventJPM = new JPopupMenu();
 		JMenu templateMenu = new JMenu("Add template");
-		/*
-		 * ADD FILES WITH INDEX OF TEMPLATE FILES
-		 * 
-		 * Format
-		 * 
-		 * Action Name Tooltip 
-		 * Use loop to create actions below
-		 */
 		try{
 			StringBuilder sb = new StringBuilder(TEMPLATE_PATH);
 			sb.append(TEMPLATE_INDEX_FILE);
