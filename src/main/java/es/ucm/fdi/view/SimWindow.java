@@ -48,16 +48,18 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 	/*
 	 * It needs to be possible to choose simulation objects.
 	 */
+	private JTextField contextualBar = new JTextField();
 	private CustomGraphLayout graph;
 	private JSpinner steps;
 	private JTextField time;	
 	
 	public SimWindow(Controller cont) {
 		JFrame jf = new JFrame("Traffic Simulator");
-		controller = cont;
-
 		graph = new CustomGraphLayout();
+		controller = cont;
 		
+		contextualBar.setEditable(false);
+		contextualBar.setHorizontalAlignment(JTextField.CENTER);
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		jf.setLayout(new BorderLayout());	
 		setLayout(new BorderLayout());
@@ -68,6 +70,8 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 		addCenterPanel(jf);
 		
 		jf.add(this, BorderLayout.CENTER);
+		jf.add(contextualBar, BorderLayout.SOUTH);
+		contextualBar.setText("Welcome to UCM's Custom Traffic Simulator");
 		controller.addListener(this);
 	}
 	
@@ -76,7 +80,9 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 		new SimulatorAction(Actions.LOAD_EVENT, "open.png", "Loads an input file",
 				KeyEvent.VK_L, "control shift L", ()->{
 					try{
-						eventsEditor.load();
+						if(eventsEditor.load()){
+							contextualBar.setText("Events loaded from file");
+						}
 					}catch(IOException e){
 						
 					}
@@ -85,7 +91,9 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 		new SimulatorAction(Actions.SAVE_EVENT, "save.png", "Saves the event data in a file",
 				KeyEvent.VK_S, "control shift S", ()->{
 					try{
-						eventsEditor.save();
+						if(eventsEditor.save()){
+							contextualBar.setText("Events saved to file");
+						}
 					}catch(IOException e){
 						
 					}
@@ -94,6 +102,7 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 		new SimulatorAction(Actions.CLEAR_EDITOR, "clear.png", "Clears the current event data",
 				KeyEvent.VK_C, "control shift C", ()->{
 					eventsEditor.clear();
+					contextualBar.setText("Event editor cleared");
 				}).register(this);
 		//ADDS EVENT DATA TO TABLE
 		new SimulatorAction(Actions.INSERT_EVENT_DATA, "events.png", "Adds the event data to the event queue",
@@ -102,6 +111,7 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 						controller.readEvents(
 								new ByteArrayInputStream(eventsEditor.getText()
 										.getBytes(StandardCharsets.UTF_8)));
+						contextualBar.setText("Events added to event queue");
 					} catch(IOException e) {
 						System.err.println("IO error while reading event!");
 					} catch(IllegalArgumentException e) {
@@ -113,6 +123,8 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 				KeyEvent.VK_X, "control shift X", ()->{
 					try{
 						controller.run((Integer)steps.getValue());
+						contextualBar.setText("Simulation ran for " 
+								+ steps.getValue() + " steps");
 					} catch (IOException e) {
 						//doStuff
 					}
@@ -121,6 +133,7 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 		new SimulatorAction(Actions.RESET, "reset.png", "Resets the simulation to its initial point",
 				KeyEvent.VK_R, "control shift R", ()->{
 					controller.reset();
+					contextualBar.setText("Simulator settings reset");
 				}).register(this);
 		//EXITS THE PROGRAM
 		new SimulatorAction(Actions.EXIT, "exit.png", "Exit the program",
@@ -132,6 +145,7 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 					reportsArea.clear();
 					try{
 						controller.dumpOutput(reportsArea.getStreamToText());
+						contextualBar.setText("Reports added to Report Area");
 					}catch(IOException e){
 						//doStuff
 					}
@@ -140,7 +154,10 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 		new SimulatorAction(Actions.SAVE_REPORT, "save_report.png", "Save reports", 
 				KeyEvent.VK_P, " control shift P", ()->{
 					try{
-						reportsArea.save();
+						if(reportsArea.save()){
+							contextualBar.setText("Reports saved to file");
+						}
+						
 					}catch(IOException e){
 						//doStuff
 					}
@@ -149,11 +166,13 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 		new SimulatorAction(Actions.DELETE_REPORT, "delete_report.png", "Delete reports", 
 				KeyEvent.VK_D, " control shift D", ()->{
 					reportsArea.clear();
+					contextualBar.setText("Report area cleared");
 				}).register(this);
 		//REDIRECTS OUTPUT
 		new SimulatorAction(Actions.REDIRECT_OUTPUT, "report.png", "Redirects output", 
 				KeyEvent.VK_O, " control shift O", ()->{
 					controller.redirectOutput(reportsArea.getStreamToText());
+					contextualBar.setText("Output redirection preferences updated");
 				}).register(this);
 	}
 	
@@ -281,6 +300,7 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 				nextItem.addActionListener(new ActionListener(){
 					public void actionPerformed(ActionEvent ae){
 						eventsEditor.append(text);
+						contextualBar.setText("Template added to event editor");
 					}
 					
 				});
