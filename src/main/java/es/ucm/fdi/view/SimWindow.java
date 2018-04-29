@@ -7,15 +7,17 @@ import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
-
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.lang.IllegalArgumentException;
 
 import es.ucm.fdi.sim.Simulator;
 import es.ucm.fdi.control.Controller;
 import es.ucm.fdi.control.SimulatorAction;
-
+import es.ucm.fdi.ini.Ini;
+import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.view.util.Tables;
 import es.ucm.fdi.view.util.Actions;
 import es.ucm.fdi.view.customcomponents.CustomGraphLayout;
@@ -30,7 +32,7 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 			-2574375309247665340L;
 
 	private static final String TEMPLATE_PATH = 
-			"src/main/resources/templates";
+			"./src/main/resources/templates/";
 	private static final String TEMPLATE_INDEX_FILE = "Index.ini";
 	
 	private final double NS_SPLIT_DIVISION = 0.3;
@@ -287,21 +289,38 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 		 * Action Name Tooltip 
 		 * Use loop to create actions below
 		 */
-		try(FileReader fr = new FileReader(TEMPLATE_INDEX_FILE)){
+		try{
+			StringBuilder sb = new StringBuilder(TEMPLATE_PATH);
+			sb.append(TEMPLATE_INDEX_FILE);
+			Ini indexInfo = new Ini(sb.toString());
+			JMenuItem nextItem;
+			
+			for(IniSection is : indexInfo.getSections()){
+				sb = new StringBuilder(TEMPLATE_PATH);
+				nextItem = new JMenuItem();
+				
+				nextItem.setText(is.getValue("option"));
+				nextItem.setToolTipText(is.getValue("tooltip"));
+				sb.append(is.getValue("file"));
+				
+				
+				final String text = new String(Files.readAllBytes
+						(Paths.get(sb.toString())) );
+				nextItem.addActionListener(new ActionListener(){
+					public void actionPerformed(ActionEvent ae){
+						eventsEditor.append(text);
+					}
+					
+				});
+				
+				templateMenu.add(nextItem);
+			}
 			
 		}catch(IOException e){
 			
+			System.err.println("Error reading template files.");
 		}
-		templateMenu.add(new JMenuItem("New RR Junction"));
-		templateMenu.add(new JMenuItem("New MC Junction"));
-		templateMenu.add(new JMenuItem("New Junction"));
-		templateMenu.add(new JMenuItem("New Dirt Road"));
-		templateMenu.add(new JMenuItem("New Lanes Road"));
-		templateMenu.add(new JMenuItem("New Road"));
-		templateMenu.add(new JMenuItem("New Bike"));
-		templateMenu.add(new JMenuItem("New Car"));
-		templateMenu.add(new JMenuItem("New Vehicle"));
-		templateMenu.add(new JMenuItem("Make Vehicle Faulty"));
+		
 		eventJPM.add(templateMenu);
 		eventJPM.addSeparator();
 		eventJPM.add(m.get(""+Actions.LOAD_EVENT));

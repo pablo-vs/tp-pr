@@ -74,6 +74,10 @@ public class CustomTextComponent extends JPanel {
 		
 	}
 	
+	public void append(String s){
+		textArea.append(s);
+	}
+	
 	public void setPopupMenu(JPopupMenu pm){
 		popupMenu = pm;
 	}
