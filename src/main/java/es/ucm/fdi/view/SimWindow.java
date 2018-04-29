@@ -1,13 +1,12 @@
 package es.ucm.fdi.view;
 
 import java.io.IOException;	
+import java.io.FileReader;
 
 import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
-
-import javax.swing.JSpinner;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
@@ -283,13 +282,16 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 		/*
 		 * ADD FILES WITH INDEX OF TEMPLATE FILES
 		 * 
-		 * 
 		 * Format
 		 * 
-		 * Action Name Tooltip
-		 * 
+		 * Action Name Tooltip 
 		 * Use loop to create actions below
 		 */
+		try(FileReader fr = new FileReader(TEMPLATE_INDEX_FILE)){
+			
+		}catch(IOException e){
+			
+		}
 		templateMenu.add(new JMenuItem("New RR Junction"));
 		templateMenu.add(new JMenuItem("New MC Junction"));
 		templateMenu.add(new JMenuItem("New Junction"));
