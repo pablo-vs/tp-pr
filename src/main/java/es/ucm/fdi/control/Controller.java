@@ -20,6 +20,7 @@ import es.ucm.fdi.sim.events.MakeVehicleFaultyEvent;
 import es.ucm.fdi.sim.Simulator;
 import es.ucm.fdi.ini.Ini;
 import es.ucm.fdi.ini.IniSection;
+
 import java.lang.IllegalArgumentException;
 
 /**

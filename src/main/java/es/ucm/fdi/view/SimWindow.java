@@ -1,26 +1,25 @@
 package es.ucm.fdi.view;
 
-import java.io.IOException;	
-
 import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;	
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.lang.IllegalArgumentException;
 
-import es.ucm.fdi.sim.Simulator;
 import es.ucm.fdi.control.Controller;
 import es.ucm.fdi.control.SimulatorAction;
 import es.ucm.fdi.ini.Ini;
 import es.ucm.fdi.ini.IniSection;
+import es.ucm.fdi.sim.Simulator;
 import es.ucm.fdi.view.util.Tables;
 import es.ucm.fdi.view.util.Actions;
-import es.ucm.fdi.view.customcomponents.CustomGraphLayout;
 import es.ucm.fdi.view.customcomponents.CustomTableModel;
+import es.ucm.fdi.view.customcomponents.CustomGraphLayout;
 import es.ucm.fdi.view.customcomponents.CustomTextComponent;
 
 public class SimWindow extends JPanel implements Simulator.Listener {
@@ -100,7 +99,9 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 		new SimulatorAction(Actions.INSERT_EVENT_DATA, "events.png", "Adds the event data to the event queue",
 				KeyEvent.VK_I, "control shift I", ()->{
 					try {
-						controller.readEvents(new ByteArrayInputStream(eventsEditor.getText().getBytes(StandardCharsets.UTF_8)));
+						controller.readEvents(
+								new ByteArrayInputStream(eventsEditor.getText()
+										.getBytes(StandardCharsets.UTF_8)));
 					} catch(IOException e) {
 						System.err.println("IO error while reading event!");
 					} catch(IllegalArgumentException e) {
@@ -172,7 +173,9 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 	
 		simulator.add(new JMenuItem(m.get(""+Actions.PLAY)));
 		simulator.add(new JMenuItem(m.get(""+Actions.RESET)));
-		simulator.add(new JMenuItem(m.get(""+Actions.REDIRECT_OUTPUT)));
+		JCheckBox redirectOutput = new JCheckBox("Redirect Output");
+		redirectOutput.setAction(m.get(""+Actions.REDIRECT_OUTPUT));
+		simulator.add(redirectOutput);
 		
 		reports.add(new JMenuItem(m.get(""+Actions.REPORT)));
 		reports.add(new JMenuItem(m.get(""+Actions.DELETE_REPORT)));
@@ -257,7 +260,6 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 		northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.X_AXIS));
 		ActionMap m = getActionMap();
 		
-		//WE NEED TO CREATE AND ADD JPOPUPMENU HERE
 		JPopupMenu eventJPM = new JPopupMenu();
 		JMenu templateMenu = new JMenu("Add template");
 		try{
@@ -273,10 +275,9 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 				nextItem.setText(is.getValue("option"));
 				nextItem.setToolTipText(is.getValue("tooltip"));
 				sb.append(is.getValue("file"));
-				
-				
+					
 				final String text = new String(Files.readAllBytes
-						(Paths.get(sb.toString())) );
+						(Paths.get(sb.toString())), "UTF-8");				
 				nextItem.addActionListener(new ActionListener(){
 					public void actionPerformed(ActionEvent ae){
 						eventsEditor.append(text);

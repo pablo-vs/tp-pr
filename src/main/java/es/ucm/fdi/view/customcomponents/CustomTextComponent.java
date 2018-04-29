@@ -1,14 +1,10 @@
 package es.ucm.fdi.view.customcomponents;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 
 import java.awt.Dimension;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Scanner;
 import java.nio.file.Files;
 
 import javax.swing.*;
