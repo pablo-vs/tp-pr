@@ -133,7 +133,7 @@ public class Simulator {
 	 * 
 	 * @param outputFile
 	 */
-	public void dumpOutput(OutputStream outputFile) throws IOException{
+	public void dumpOutput(OutputStream outputFile) throws IOException {
 		if(outputFile != null) {
 			try {
 				prepareReport().store(outputFile);

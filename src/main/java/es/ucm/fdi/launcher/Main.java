@@ -21,6 +21,7 @@ import org.apache.commons.cli.ParseException;
 import es.ucm.fdi.ini.Ini;
 import es.ucm.fdi.control.Controller;
 import es.ucm.fdi.view.SimWindow;
+import es.ucm.fdi.exceptions.SimulatorException;
 
 public class Main {
 
@@ -165,8 +166,12 @@ public class Main {
 		if(_timeLimit == null) {
 			_timeLimit = _timeLimitDefaultValue;
 		}
-		
-		control.run(_timeLimit);
+
+		try {
+			control.run(_timeLimit);
+		} catch (SimulatorException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private static void start(String[] args) throws IOException {

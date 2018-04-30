@@ -20,6 +20,9 @@ import es.ucm.fdi.sim.events.MakeVehicleFaultyEvent;
 import es.ucm.fdi.sim.Simulator;
 import es.ucm.fdi.ini.Ini;
 import es.ucm.fdi.ini.IniSection;
+import es.ucm.fdi.exceptions.SimulatorException;
+import es.ucm.fdi.exceptions.ObjectNotFoundException;
+import es.ucm.fdi.exceptions.UnreachableJunctionException;
 
 import java.lang.IllegalArgumentException;
 
@@ -151,8 +154,14 @@ public class Controller {
 	 *
 	 * @param steps The number of ticks to simulate.
 	 */
-	public void run(int steps) throws IOException {
-		sim.execute(steps, output);
+	public void run(int steps) throws SimulatorException {
+		try {
+			sim.execute(steps, output);
+		} catch(IllegalArgumentException | IOException |
+			ObjectNotFoundException | UnreachableJunctionException e) {
+			throw new SimulatorException("Error while running simulation.\n"
+						     + e.getMessage(), e);
+		}
 	}
 	
 	public void dumpOutput(OutputStream os) throws IOException{
