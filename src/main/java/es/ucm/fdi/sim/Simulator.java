@@ -2,6 +2,7 @@ package es.ucm.fdi.sim;
 
 import java.util.List;
 import java.util.ArrayList;
+
 import javax.swing.SwingUtilities;
 
 import es.ucm.fdi.sim.events.Event;

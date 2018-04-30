@@ -1,5 +1,6 @@
 package es.ucm.fdi.view.customcomponents;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.InputStream;
@@ -7,11 +8,6 @@ import java.io.InputStreamReader;
 import java.io.BufferedReader;
 
 import java.awt.Dimension;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Scanner;
 import java.nio.file.Files;
 
 import javax.swing.*;
@@ -77,24 +73,36 @@ public class CustomTextComponent extends JPanel {
 		
 	}
 	
+	public void append(String s){
+		textArea.append(s);
+	}
+	
 	public void setPopupMenu(JPopupMenu pm){
 		popupMenu = pm;
 	}
 	
-	public void load() throws IOException{
+	public boolean load() throws IOException{
 		int returnVal = fileChooser.showSaveDialog(null);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			File file = fileChooser.getSelectedFile();
 			textArea.setText(new String(
 					Files.readAllBytes(file.toPath()), "UTF-8"));	
+			
+			return true;
+		} else {
+			return false;
 		}
 	}
 	
-	public void save() throws IOException{
+	public boolean save() throws IOException{
 		int returnVal = fileChooser.showSaveDialog(null);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			File file = fileChooser.getSelectedFile();
 			Files.write(file.toPath(), textArea.getText().getBytes("UTF-8"));
+			
+			return true;
+		} else {
+			return false;
 		}
 	}
 	
