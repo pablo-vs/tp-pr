@@ -186,10 +186,24 @@ public class Simulator {
 		fireUpdateEvent(type, "");
 	}
 
-	public interface Listener {
+	/**
+	 * Interface which allows implementers to get information from the <code>Simulator</code>
+	 * when certain events occur.
+	 */
+  	public interface Listener {
+		/**
+		 * This method will be called whenever an event occurs in a <code>Simulator</code>
+		 * in which this instance is registered as a Listener.
+		 *
+		 * @param ue <code>UpdateEvent</code> containing the details of the event.
+		 * @param error An error message.
+		 */
 		public void update(UpdateEvent ue, String error);
 	}
 
+	/**
+	 * Types of events that can be fired by a <code>Simulator</code>.
+	 */
 	public enum EventType {
 		REGISTERED,
 		RESET,
@@ -198,6 +212,10 @@ public class Simulator {
 		ERROR;
 	}
 
+	/**
+	 * Contains the information of an event, including type and
+	 * complete state of the <code>Simulator</code> at the current moment.
+	 */
 	public class UpdateEvent {
 		private EventType type;
 		private List<Vehicle> vehicles = roadMap.getVehicles();
@@ -214,22 +232,47 @@ public class Simulator {
 			return type;
 		}
 
+		/**
+		 * Getter method for {@link UpdateEvent#vehicles}.
+		 *
+		 * @return The list of <code>Vehicles</code>.
+		 */
 		public List<Vehicle> getVehicles() {
 			return vehicles;
 		}
 
+		/**
+		 * Getter method for {@link UpdateEvent#junctions}.
+		 *
+		 * @return The list of <code>Junctions</code>.
+		 */
 		public List<Junction> getJunctions() {
 			return junctions;
 		}
 
+		/**
+		 * Getter method for {@link UpdateEvent#roads}.
+		 *
+		 * @return The list of <code>Roads</code>.
+		 */
 		public List<Road> getRoads() {
 			return roads;
 		}
 
+		/**
+		 * Getter method for {@link UpdateEvent#eventQueue}.
+		 *
+		 * @return The list of pending <code>Events</code>.
+		 */
 		public List<Event> getEventQueue() {
 			return eventQueue;
 		}
 
+		/**
+		 * Getter method for {@link UpdateEvent#time}.
+		 *
+		 * @return The current time.
+		 */
 		public int getCurrentTime() {
 			return time;
 		}

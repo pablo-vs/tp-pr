@@ -1,6 +1,7 @@
 package es.ucm.fdi.view.customcomponents;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.util.Random;
 import java.util.Map;
 import java.util.HashMap;
@@ -51,8 +52,10 @@ public class CustomGraphLayout extends JPanel {
 		}
 
 		for(Road r : rm.getRoads()){	
-		 	Edge e = new Edge(r.getID(), junctionToNode.get(r.getIni())
-		 			, junctionToNode.get(r.getEnd()), r.getLength());		 			 	
+		 	Edge e = new Edge(r.getID(), junctionToNode.get(r.getIni()),
+					  junctionToNode.get(r.getEnd()), r.getLength(),
+					  r.equals(r.getEnd().getOpenRoad().getRoad())
+					  ? Color.GREEN : Color.RED);
 		 	for(Vehicle v : r.getVehicles().innerValues()){
 			 	e.addDot(new Dot(v.getID(), v.getPosition()));
 			}

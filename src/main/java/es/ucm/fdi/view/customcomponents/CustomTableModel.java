@@ -49,13 +49,21 @@ public class CustomTableModel extends AbstractTableModel {
 	public String getColumnName(int i){
 		return columnTags[i];
 	}
-	
+
+	/**
+	 * Clear the data in the model.
+	 */
 	public void clear() {
 		data.clear();
 		origin = null;
 		change();
 	}
 
+	/**
+	 * Return selected objects from the origin of the data
+	 *
+	 * @param rows An array of selected row indexes.
+	 */
 	public List<? extends Describable> getSelected(int[] rows) {
 		List<Describable> selection = new ArrayList<Describable>();
 		for(int i : rows) {
@@ -67,11 +75,24 @@ public class CustomTableModel extends AbstractTableModel {
 		}
 		return selection;
 	}
-	
+
+	/**
+	 * Changes the model data.
+	 *
+	 * @param newData A <code>List</code> of <code>Describable</code> objects which contains the
+	 * new data.
+	 */
 	public void setElements(List<? extends Describable> newData) {
 		setElements(newData, "__");
 	}
-	
+
+	/**
+	 * Changes the model data, reserving a column for row index.
+	 *
+	 * @param newData A <code>List</code> of <code>Describable</code> objects which contains the
+	 * new data.
+	 * @param orderTag The tag of the column which will contain the row index.
+	 */
 	public void setElements(List<? extends Describable> newData, String orderTag) {
 		data.clear();
 		int i = 0;

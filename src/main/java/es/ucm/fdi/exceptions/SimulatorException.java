@@ -2,6 +2,9 @@ package es.ucm.fdi.exceptions;
 
 import java.lang.Throwable;
 
+/**
+ * Most general exception in the simulator.
+ */
 public class SimulatorException extends Exception {
 
 	private static final long serialVersionUID = 34L;

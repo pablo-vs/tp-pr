@@ -72,7 +72,12 @@ public class CustomTextComponent extends JPanel {
 		});
 		
 	}
-	
+
+	/**
+	 * Appends text to the TextArea.
+	 *
+	 * @param s The text to append.
+	 */
 	public void append(String s){
 		textArea.append(s);
 	}
@@ -80,7 +85,11 @@ public class CustomTextComponent extends JPanel {
 	public void setPopupMenu(JPopupMenu pm){
 		popupMenu = pm;
 	}
-	
+
+	/**
+	 * Launches a <code>JFileChooser</code> to load a file's contents to
+	 * the TextArea.
+	 */
 	public boolean load() throws IOException{
 		int returnVal = fileChooser.showSaveDialog(null);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -93,7 +102,11 @@ public class CustomTextComponent extends JPanel {
 			return false;
 		}
 	}
-	
+
+	/**
+	 * Launches a <code>JFileChooser</code> to save the TextArea's contents to
+	 * the desired file.
+	 */
 	public boolean save() throws IOException{
 		int returnVal = fileChooser.showSaveDialog(null);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -105,19 +118,35 @@ public class CustomTextComponent extends JPanel {
 			return false;
 		}
 	}
-	
+
+	/**
+	 * @return The text currently in the area.
+	 */
 	public String getText() {
 		return textArea.getText();
 	}
 
+	/**
+	 * Substitutes the current text for the given.
+	 *
+	 * @param text The new text.
+	 */
 	public void setText(String text) {
 		textArea.setText(text);
 	}
 
+	/**
+	 * Removes all the text from the TextArea.
+	 */
 	public void clear(){
 		textArea.setText("");
 	}
-	
+
+	/**
+	 * Returns the text in the TextArea as an <code>OutputStream</code>
+	 *
+	 * @return An <code>OutputStream</code> containing the text.
+	 */
 	public OutputStream getStreamToText(){
 		return asOutputStream;
 	}

@@ -27,6 +27,7 @@ import es.ucm.fdi.view.customcomponents.CustomTableModel;
 import es.ucm.fdi.view.customcomponents.CustomGraphLayout;
 import es.ucm.fdi.view.customcomponents.CustomTextComponent;
 import es.ucm.fdi.exceptions.SimulatorException;
+import es.ucm.fdi.exceptions.ObjectNotFoundException;
 
 public class SimWindow extends JPanel implements Simulator.Listener {
 	/**
@@ -375,7 +376,13 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 		return panel;
 	}
 
-	
+	/**
+	 * Receives an <code>UpdateEvent</code> from the <code>Simulator</code>
+	 * and updates the GUI accordingly.
+	 *
+	 * @param ue The <code>UpdateEvent</code> containing the details of the event.
+	 * @param error An error message, possibly null.
+	 */
 	public void update(Simulator.UpdateEvent ue, String error) {
 		CustomTableModel vehiclesModel = (CustomTableModel) vehiclesTable.getModel();
 		CustomTableModel junctionsModel = (CustomTableModel) junctionsTable.getModel();
@@ -397,7 +404,6 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 			break;
 			
 		case REGISTERED:
-			JOptionPane.showMessageDialog(null, "Hola", "Majo", JOptionPane.ERROR_MESSAGE);
 			break;
 			
 		case ADVANCED:
@@ -423,22 +429,25 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 		CustomTableModel roadsModel= (CustomTableModel) roadsTable.getModel();
 				
 		ByteArrayOutputStream reports = new ByteArrayOutputStream();
-			
-		List<SimObject> selectedObjects = (List<SimObject>)
-			junctionsModel.getSelected(junctionsTable.getSelectedRows());
-			
-		selectedObjects.addAll((List<SimObject>)
-				       roadsModel.getSelected(roadsTable.getSelectedRows()));
-			
-		selectedObjects.addAll((List<SimObject>) vehiclesModel
-				       .getSelected(vehiclesTable.getSelectedRows()));
+
 		try {
+			List<SimObject> selectedObjects = (List<SimObject>)
+				junctionsModel.getSelected(junctionsTable.getSelectedRows());
+			
+			selectedObjects.addAll((List<SimObject>)
+					       roadsModel.getSelected(roadsTable.getSelectedRows()));
+			
+			selectedObjects.addAll((List<SimObject>) vehiclesModel
+					       .getSelected(vehiclesTable.getSelectedRows()));
+	
 			for(SimObject obj : selectedObjects) {
 				obj.report(controller.getSimulator().getTimer())
 					.store(reports);
 				reports.write('\n');
 			}
 			reportsArea.setText(reports.toString("UTF-8"));
+		} catch(ObjectNotFoundException e) {
+			showErrorMessage("Error while getting selected items.\n" + e.getMessage());
 		} catch(IOException e) {
 			showErrorMessage("Could not write selected reports:\n" + e.getMessage());
 		}
