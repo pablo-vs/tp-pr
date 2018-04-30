@@ -10,10 +10,12 @@ import java.awt.event.*;
 import javax.swing.JSpinner;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.lang.IllegalArgumentException;
 
 import es.ucm.fdi.sim.Simulator;
+import es.ucm.fdi.sim.objects.SimObject;
 import es.ucm.fdi.control.Controller;
 import es.ucm.fdi.control.SimulatorAction;
 
@@ -367,6 +369,7 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 			roadsModel.clear();
 			junctionsModel.clear();
 			eventsModel.clear();
+			break;
 		case ERROR:
 		case REGISTERED:
 			break;
@@ -375,7 +378,24 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 			graph.updateGraph(controller.getSimulator().getRoadMap());
 			
 			reportsArea.clear();
-			vehiclesModel.getSelected(vehiclesTable.getSelectedRows());
+			ByteArrayOutputStream reports = new ByteArrayOutputStream();
+			try {
+				for(Object obj : junctionsModel.getSelected(junctionsTable.getSelectedRows())) {
+					((SimObject)obj).report(controller.getSimulator().getTimer()).store(reports);
+					reports.write('\n');
+				}
+				for(Object obj : roadsModel.getSelected(roadsTable.getSelectedRows())) {
+					((SimObject)obj).report(controller.getSimulator().getTimer()).store(reports);
+					reports.write('\n');
+				}
+				for(Object obj : vehiclesModel.getSelected(vehiclesTable.getSelectedRows())) {
+					((SimObject)obj).report(controller.getSimulator().getTimer()).store(reports);
+					reports.write('\n');
+				}
+				reportsArea.setText(reports.toString("UTF-8"));
+			} catch(IOException e) {
+				e.printStackTrace();
+			}
 			
 			vehiclesModel.setElements(ue.getVehicles());
 			roadsModel.setElements(ue.getRoads());
