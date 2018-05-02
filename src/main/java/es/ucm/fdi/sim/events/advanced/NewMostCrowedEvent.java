@@ -2,6 +2,7 @@ package es.ucm.fdi.sim.events.advanced;
 
 import java.lang.IllegalArgumentException;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.sim.objects.RoadMap;
@@ -45,7 +46,10 @@ public class NewMostCrowedEvent extends NewJunctionEvent {
 	 */
 	@Override
 	public void execute(RoadMap r){
+		Logger log = Logger.getLogger(NewMostCrowedEvent.class.getName());
+		log.info("Attempting to execute NewMostCrowedEvent...");
 		r.addJunction(createMostCrowed());
+		log.info("Event executed");
 	}
 
 	public MostCrowed createMostCrowed() {
@@ -80,9 +84,13 @@ public class NewMostCrowedEvent extends NewJunctionEvent {
 			NewMostCrowedEvent event = null;
 			        
 			if(TAG.equals(ini.getTag()) && isCorrectType(ini, TYPE)) {
-				try{
-					event = new NewMostCrowedEvent(super.build(ini));
+				try {
+					Logger log = Logger
+						.getLogger(NewMostCrowedEvent.class.getName());
+					log.info("Attempting to parse NewMostCrowedEvent...");
 					
+					event = new NewMostCrowedEvent(super.build(ini));
+					log.info("Event parsed");
 				} catch(Exception e){
 					throw new IllegalArgumentException("Error while parsing event:\n" + e.getMessage(), e);
 				}	

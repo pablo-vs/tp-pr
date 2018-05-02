@@ -2,6 +2,7 @@ package es.ucm.fdi.sim;
 
 import java.lang.Exception;	
 import java.lang.IllegalArgumentException;
+import es.ucm.fdi.exceptions.SimulatorException;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -20,8 +21,8 @@ public class SimulatorTest{
 		assertTrue(Main.test("src/main/resources/examples/advanced"));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = SimulatorException.class )
 	public void errorTest() throws Exception {
-		assertTrue(Main.test("src/main/resources/examples/err"));
+		Main.test("src/main/resources/examples/err");
 	}
 }

@@ -5,6 +5,8 @@ import java.io.OutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 import es.ucm.fdi.sim.events.Event;
 import es.ucm.fdi.sim.events.NewVehicleEvent;
@@ -49,17 +51,7 @@ public class Controller {
 	private Simulator sim;
 	private InputStream input;
 	private OutputStream output;
-
-	/**
-	 * Empty constructor, sets IO to stdin and stdout.
-	 */
-	public Controller() throws IOException {
-		sim = new Simulator();
-		input = System.in;
-		output = System.out;
-		readEvents(input);
-	}
-
+	
 	/**
 	 * Constructor with streams, allows IO to/from resources other than files.
 	 *
@@ -67,47 +59,14 @@ public class Controller {
 	 * @param output An <code>OutputStream</code> to send the reports.
 	 */
 	public Controller(InputStream input, OutputStream output) throws IOException {
+		Logger.getLogger(Controller.class.getName())
+			.info("Initiating Controller...");
 		sim = new Simulator();
 		this.input = input;
 		this.output = output;
 		readEvents(input);
 	}
-
-	/**
-	 * Constructor with input file path and output to stdout.
-	 *
-	 * @param inputPath The path of the input file.
-	 */
-	public Controller(String inputPath) throws IOException {
-		sim = new Simulator();
-		output = System.out;
-		try(FileInputStream inputStream = new FileInputStream(inputPath)){
-			input = inputStream;
-			readEvents(input);  
-		} catch(IOException e) {
-			throw new IOException("Could not open or read file " + inputPath, e);
-		}
-
-	}
-    
-	/**
-	 * Constructor with file paths.
-	 *
-	 * @param inputPath The path of the input file.
-	 * @param outputPath The path of the output file.
-	 */
-	public Controller(String inputPath, String outputPath) throws IOException {
-		sim = new Simulator();
-		try(FileInputStream inputStream = new FileInputStream(inputPath);
-		    FileOutputStream outputStream = new FileOutputStream(outputPath)) {
-			input = inputStream;
-			output = outputStream;
-			readEvents(input);
-		} catch(IOException e) {
-			throw new IOException("Could not open or read files", e);
-		}
-    	
-	}
+	
 
 	/**
 	 * Reads the events from the input stream and inserts them into the simulator queue.
@@ -115,15 +74,22 @@ public class Controller {
 	 * @param in InputStream from which to read events.
 	*/
 	public void readEvents(InputStream in) throws IOException {
-		Ini events = new Ini(in);
-		for(IniSection sec : events.getSections()) {
-			Event e = parseEvent(sec);
-			if(e == null) {
-				throw new IllegalArgumentException("The tag " + sec.getTag()
-								   + " does not correspond to a valid event");
-			} else {
-				sim.insertEvent(e);
-			}  
+		try {
+			Ini events = new Ini(in);
+			for(IniSection sec : events.getSections()) {
+				Event e = parseEvent(sec);
+				if(e == null) {
+					throw new IllegalArgumentException
+						("The tag " + sec.getTag()
+						 + " does not correspond to a valid event");
+				} else {
+					sim.insertEvent(e);
+				}  
+			}
+		} catch(IllegalArgumentException | IOException e) {
+			Logger.getLogger(Controller.class.getName())
+				.log(Level.WARNING, "Error while reading events", e);
+			throw e;
 		}
 	}
 
@@ -159,6 +125,10 @@ public class Controller {
 			sim.execute(steps, output);
 		} catch(IllegalArgumentException | IOException |
 			ObjectNotFoundException | UnreachableJunctionException e) {
+			
+			Logger.getLogger(Controller.class.getName())
+				.log(Level.WARNING, "Simulation error", e);
+			
 			throw new SimulatorException("Error while running simulation.\n"
 						     + e.getMessage(), e);
 		}

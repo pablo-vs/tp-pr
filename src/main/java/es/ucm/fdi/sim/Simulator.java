@@ -2,6 +2,7 @@ package es.ucm.fdi.sim;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import javax.swing.SwingUtilities;
 
@@ -44,6 +45,8 @@ public class Simulator {
 	 * @param e The <code>Event</code> to insert.
 	 */
 	public void insertEvent(Event e){
+		Logger.getLogger(Simulator.class.getName())
+			.info("Inserting event " + e.getClass().getName());
 		eventList.putValue(e.getTime(), e);
 		fireUpdateEvent(EventType.NEW_EVENT);
 	}
@@ -56,6 +59,8 @@ public class Simulator {
 	 */
 	public void execute(int simulationSteps, OutputStream outputFile) throws IOException {
 		timeLimit = timer + simulationSteps - 1;
+		Logger.getLogger(Simulator.class.getName())
+			.info("Advancing simulator " + simulationSteps + " steps...");
 		while (timer <= timeLimit) {
 			// 1. Execute corresponding events
 			for(Event e : eventList.getOrDefault(timer, new ArrayList<Event>())) {
@@ -79,6 +84,8 @@ public class Simulator {
 			// 5. Write report in OutputStream (if it is not null)
 			dumpOutput(outputFile);
 		}
+		Logger.getLogger(Simulator.class.getName())
+			.info("Advanced");
 		fireUpdateEvent(EventType.ADVANCED);
 	}
 	
@@ -108,6 +115,8 @@ public class Simulator {
 	* Resets the simulator
 	*/
 	public void reset() {
+		Logger.getLogger(Simulator.class.getName())
+			.info("Resetting simulator");
 		eventList = new MultiTreeMap<Integer, Event>();
 		roadMap = new RoadMap();
 		timer = 0;
@@ -152,6 +161,8 @@ public class Simulator {
 	public void addSimulatorListener(Listener l) {
 		listeners.add(l);
 		UpdateEvent event = new UpdateEvent(EventType.REGISTERED);
+		Logger.getLogger(Simulator.class.getName())
+			.fine("Sending UpdateEvent of type REGISTERED");
 		SwingUtilities.invokeLater(()->l.update(event, ""));
 	}
 
@@ -183,6 +194,8 @@ public class Simulator {
 	* @param type The event type
 	*/
 	private void fireUpdateEvent(EventType type) {
+		Logger.getLogger(Simulator.class.getName())
+			.fine("Sending UpdateEvent of type " + type.toString());
 		fireUpdateEvent(type, "");
 	}
 
@@ -205,11 +218,21 @@ public class Simulator {
 	 * Types of events that can be fired by a <code>Simulator</code>.
 	 */
 	public enum EventType {
-		REGISTERED,
-		RESET,
-		NEW_EVENT,
-		ADVANCED,
-		ERROR;
+		REGISTERED("REGISTERED"),
+		RESET("RESET"),
+		NEW_EVENT("NEW_EVENT"),
+		ADVANCED("ADVANCED"),
+		ERROR("ERROR");
+
+		private final String str;
+
+		EventType(String str) {
+			this.str = str;
+		}
+
+		public String toString() {
+			return str;
+		}
 	}
 
 	/**
