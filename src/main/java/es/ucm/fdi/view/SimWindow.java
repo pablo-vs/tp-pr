@@ -12,6 +12,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.lang.IllegalArgumentException;
 import java.util.List;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 
 import es.ucm.fdi.sim.Simulator;
@@ -27,6 +29,7 @@ import es.ucm.fdi.view.customcomponents.CustomGraphLayout;
 import es.ucm.fdi.view.customcomponents.CustomTextComponent;
 import es.ucm.fdi.exceptions.SimulatorException;
 import es.ucm.fdi.exceptions.ObjectNotFoundException;
+import es.ucm.fdi.exceptions.UnreachableJunctionException;
 
 public class SimWindow extends JPanel implements Simulator.Listener {
 	/**
@@ -90,6 +93,9 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 							contextualBar.setText("Events loaded from file");
 						}
 					}catch(IOException e){
+						Logger.getLogger(SimulatorAction.class.getName())
+							.log(Level.WARNING,
+							     "Error while reading events file", e);
 						showErrorMessage("Error while reading events file.\n"
 								 + e.getMessage());
 					}
@@ -102,6 +108,9 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 							contextualBar.setText("Events saved to file");
 						}
 					}catch(IOException e){
+						Logger.getLogger(SimulatorAction.class.getName())
+							.log(Level.WARNING,
+							     "Error while saving events", e);
 						showErrorMessage("Error while saving events.\n"
 								 + e.getMessage());
 					}
@@ -121,8 +130,11 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 										.getBytes(StandardCharsets.UTF_8)));
 						contextualBar.setText("Events added to event queue");
 					} catch(IOException e) {
+						Logger.getLogger(SimulatorAction.class.getName())
+							.log(Level.WARNING,
+							     "IO error while reading event",e );
 						showErrorMessage("IO error while reading event.");
-					} catch(IllegalArgumentException e) {
+					} catch(IllegalArgumentException | ObjectNotFoundException | UnreachableJunctionException e) {
 						showErrorMessage("Invalid event file.\n" +
 							    e.getMessage());
 					}
@@ -156,6 +168,9 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 						controller.dumpOutput(reportsArea.getStreamToText());
 						contextualBar.setText("Reports added to Report Area");
 					}catch(IOException e){
+						Logger.getLogger(SimulatorAction.class.getName())
+							.log(Level.WARNING,
+							     "Error while writing reports", e);
 					        showErrorMessage("Error while writing reports.\n"
 								 + e.getMessage());
 					}
@@ -169,6 +184,9 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 						}
 						
 					}catch(IOException e){
+						Logger.getLogger(SimulatorAction.class.getName())
+							.log(Level.WARNING,
+							     "Error while saving reports", e);
 						showErrorMessage("Error while saving reports.\n"
 								 + e.getMessage());
 					}
@@ -453,6 +471,8 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 	}
 
 	private void showErrorMessage(String title, String message) {
+		Logger.getLogger(SimWindow.class.getName())
+			.info("Showing message: " + title + "\n" + message);
 		JOptionPane.showMessageDialog(null, message, title, JOptionPane.ERROR_MESSAGE);
 	}
 

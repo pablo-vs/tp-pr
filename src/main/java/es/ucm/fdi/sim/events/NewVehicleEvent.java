@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
 import java.lang.IllegalArgumentException;
+import java.util.logging.Logger;
 
 import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.sim.objects.Vehicle;
@@ -55,14 +56,18 @@ public class NewVehicleEvent extends Event {
 	 * @param r The <code>RoadMap</code> of the current simulation.
 	 */
 	@Override
-	public void execute(RoadMap r){	
+	public void execute(RoadMap r){
+		Logger log = Logger.getLogger(NewVehicleEvent.class.getName());
+		log.info("Attempting to parse NewVehicleEvent...");
 	        r.addVehicle(createVehicle(r));
+		log.info("Event executed");
 	}
 
 	/**
 	 * Return a  description of the event.
 	 *
-	 * @param out A <code>Map<String, String></code> which will contain the representation of the event.
+	 * @param out A <code>Map<String, String></code> which will contain theç
+	 * representation of the event.
 	 */
 	@Override
 	public void describe(Map<String, String> out) {
@@ -92,7 +97,8 @@ public class NewVehicleEvent extends Event {
 
 	protected List<Junction> createItinerary(RoadMap r) {
 		List<Junction> it = new ArrayList<Junction>();
-		it.add(r.getJunction(itinerary.get(0)));
+		Junction j1 = verifyJunction(r, itinerary.get(0));
+		it.add(j1);
 		for(int i = 1; i < itinerary.size(); ++i){
 			Junction j = verifyJunction(r, itinerary.get(i));
 			if (it.get(i-1).getRoadToJunction(j) == null) {
@@ -145,6 +151,8 @@ public class NewVehicleEvent extends Event {
 			
 			event = null;
 			if(TAG.equals(ini.getTag())) {
+				Logger log = Logger.getLogger(NewVehicleEvent.class.getName());
+				log.info("Attempting to parse NewVehicleEvent...");
 				try {
 				        
 					time = parseTime(ini);
@@ -155,7 +163,7 @@ public class NewVehicleEvent extends Event {
 					vehicleID = parseID(ini, "id");
 					maxSpeed = parsePositiveInt(ini, "max_speed");					
 					event = new NewVehicleEvent(time, maxSpeed, vehicleID, itinerary);
-					
+					log.info("Event parsed");
 				} catch(IllegalArgumentException e) {
 					throw new IllegalArgumentException("Error while parsing event:\n" + e.getMessage(), e);
 				}

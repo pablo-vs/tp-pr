@@ -2,6 +2,7 @@ package es.ucm.fdi.sim.events;
 
 import java.lang.IllegalArgumentException;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.sim.objects.RoadMap;
@@ -46,7 +47,10 @@ public class NewJunctionEvent extends Event {
 	 */
 	@Override
 	public void execute(RoadMap r){
+		Logger log = Logger.getLogger(NewJunctionEvent.class.getName());
+		log.info("Attempting to parse NewJunctionEvent...");
 		r.addJunction(createJunction());
+		log.info("Event executed");
 	}
 
 	public Junction createJunction() {
@@ -88,18 +92,25 @@ public class NewJunctionEvent extends Event {
 			String id;
 			int time;
 			        
-			if(TAG.equals(ini.getTag()))
-				{
-					try{
-						id = parseID(ini, "id");
-						time = parseTime(ini);
-							
-						event = new NewJunctionEvent(time, id);						
-					} catch(Exception e){
-						throw new IllegalArgumentException("Error while parsing event:\n" + e.getMessage(), e);
-					}	
-				}
-				
+			if(TAG.equals(ini.getTag())) {
+				try{
+					Logger log = Logger
+						.getLogger(NewJunctionEvent.class.getName());
+					
+					log.info("Attempting to parse NewJunctionEvent...");
+					
+					id = parseID(ini, "id");
+					time = parseTime(ini);
+					
+					event = new NewJunctionEvent(time, id);
+					log.info("Event parsed");
+				} catch(Exception e){
+					throw new IllegalArgumentException
+						("Error while parsing event:\n"
+						 + e.getMessage(), e);
+				}	
+			}
+			
 			return event;
 		}
 	}

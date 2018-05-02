@@ -2,6 +2,7 @@ package es.ucm.fdi.sim.events.advanced;
 
 import java.lang.IllegalArgumentException;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import es.ucm.fdi.exceptions.ObjectNotFoundException;
 import es.ucm.fdi.ini.IniSection;
@@ -53,7 +54,10 @@ public class NewHighwayEvent extends NewRoadEvent {
 	 */
 	@Override
 	public void execute(RoadMap r) {
+		Logger log = Logger.getLogger(NewHighwayEvent.class.getName());
+		log.info("Attempting to execute NewHighwayEvent...");
 		r.addRoad(createHighway(r));
+		log.info("Event executed");
 	}
 
 	/**
@@ -102,11 +106,15 @@ public class NewHighwayEvent extends NewRoadEvent {
 			int lanes;
 			
 			if(TAG.equals(ini.getTag()) && isCorrectType(ini, TYPE)) {
-				try{
+				try {
+					Logger log = Logger.getLogger(NewHighwayEvent.class.getName());
+					log.info("Attempting to parse NewHighwayEvent...");
+					
 					NewRoadEvent ev = super.build(ini);
 					lanes = parsePositiveInt(ini, "lanes");
 					event = new NewHighwayEvent(ev, lanes);
-								 
+
+					log.info("Event parsed");
 				} catch (Exception e){
 					throw new IllegalArgumentException("Error while parsing event:\n" + e.getMessage(), e);
 				}	

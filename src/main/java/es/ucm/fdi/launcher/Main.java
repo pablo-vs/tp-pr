@@ -9,6 +9,12 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.logging.Logger;
+import java.util.logging.LogRecord;
+import java.util.logging.Level;
+import java.util.logging.Handler;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.SimpleFormatter;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -117,7 +123,7 @@ public class Main {
 	 * 
 	 * @throws IOException
 	 */
-	public static boolean test(String path) throws IOException {
+	public static boolean test(String path) throws IOException, SimulatorException {
 
 		boolean success = true;
 
@@ -143,7 +149,7 @@ public class Main {
 
 	}
 
-	private static boolean test(String inFile, String outFile, String expectedOutFile, int timeLimit) throws IOException {
+	private static boolean test(String inFile, String outFile, String expectedOutFile, int timeLimit) throws IOException, SimulatorException {
 		_outFile = outFile;
 		_inFile = inFile;
 		_timeLimit = timeLimit;
@@ -159,25 +165,38 @@ public class Main {
 	 * 
 	 * @throws IOException
 	 */
-	private static void startBatchMode() throws IOException {
+	private static void startBatchMode() throws IOException, SimulatorException {
 		Controller control = new Controller(
 						    new FileInputStream(_inFile), _outFile == null ? System.out : new FileOutputStream(_outFile));
 
 		if(_timeLimit == null) {
 			_timeLimit = _timeLimitDefaultValue;
 		}
-
-		try {
-			control.run(_timeLimit);
-		} catch (SimulatorException e) {
-			e.printStackTrace();
-		}
+		control.run(_timeLimit);
 	}
 
-	private static void start(String[] args) throws IOException {
+	private static void start(String[] args) throws IOException, SimulatorException {
 		parseArgs(args);
 		startBatchMode();
 	}
+
+
+	public static void setupLogging(Level level) {
+		Logger log = Logger.getLogger("");
+		for(Handler h : log.getHandlers()) log.removeHandler( h );
+		ConsoleHandler ch = new ConsoleHandler();
+		ch.setFormatter(new SimpleFormatter() {
+				@Override
+				public synchronized String format(LogRecord record) {
+					return record.getMessage() + "\n";
+				}
+			});
+		log.addHandler(ch);
+		log.setLevel(level);
+		ch.setLevel(level);
+		log.info("Logger set up");
+	}
+	
 
 	public static void main(String[] args) throws IOException, InvocationTargetException, InterruptedException {
 
@@ -194,6 +213,9 @@ public class Main {
 		//
 		// test("resources/examples/basic/");
 
+		// Call setupLogging with the desired log level
+		setupLogging(Level.WARNING);
+		
 		// Call start to start the simulator from command line, etc.
 		Controller control = new Controller(new ByteArrayInputStream("".getBytes()), new ByteArrayOutputStream());
 		SimWindow view = new SimWindow(control);

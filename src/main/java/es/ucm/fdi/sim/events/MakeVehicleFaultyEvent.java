@@ -3,6 +3,7 @@ package es.ucm.fdi.sim.events;
 import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.sim.objects.RoadMap;
@@ -38,6 +39,9 @@ public class MakeVehicleFaultyEvent extends Event {
 	
 	@Override
 	public void execute(RoadMap r) throws IllegalArgumentException{
+		Logger log = Logger.getLogger(MakeVehicleFaultyEvent.class.getName());
+		log.info("Attempting to execute MakeVehicleFaultyEvent...");
+		
 		for(String s : vehicles){
 			try{
 				r.getVehicle(s).setBrokenTime(duration);
@@ -45,6 +49,7 @@ public class MakeVehicleFaultyEvent extends Event {
 				throw new IllegalArgumentException("Error: vehicle " + s + " not found.\n" + e.getMessage());
 			}
 		}
+		log.info("Event executed");
 	}
 	
 	@Override
@@ -96,12 +101,15 @@ public class MakeVehicleFaultyEvent extends Event {
 			
 			event = null;
 			if(TAG.equals(ini.getTag())) {
-				try	{
-				    time = parseTime(ini);
+				try {
+					Logger log = Logger
+						.getLogger(MakeVehicleFaultyEvent.class.getName());
+					log.info("Attempting to parse MakeVehicleFaultyEvent...");
+					time = parseTime(ini);
 					duration = parsePositiveInt(ini, "duration");
 					vehicles = parseIDList(ini, "vehicles");
 					vehicles.forEach((id) -> checkIDValidity(id));
-									       							    
+					log.info("Event parsed");
 				} catch(Exception e) {
 				    throw new IllegalArgumentException("Error while parsing event:\n" + e.getMessage(), e);
 				}

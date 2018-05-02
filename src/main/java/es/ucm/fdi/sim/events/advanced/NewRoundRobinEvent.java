@@ -2,6 +2,7 @@ package es.ucm.fdi.sim.events.advanced;
 
 import java.lang.IllegalArgumentException;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.sim.objects.RoadMap;
@@ -50,7 +51,10 @@ public class NewRoundRobinEvent extends NewJunctionEvent {
 	 */
 	@Override
 	public void execute(RoadMap r){
+		Logger log = Logger.getLogger(NewRoundRobinEvent.class.getName());
+		log.info("Attempting to execute NewRoundRobinEvent...");
 		r.addJunction(createRoundRobin());
+		log.info("Event executed");
 	}
 
 	public RoundRobin createRoundRobin() {
@@ -87,11 +91,16 @@ public class NewRoundRobinEvent extends NewJunctionEvent {
 			        
 			if(TAG.equals(ini.getTag()) && isCorrectType(ini, TYPE)) {
 				try{
+					Logger log = Logger
+						.getLogger(NewRoundRobinEvent.class.getName());
+					log.info("Attempting to parse NewRoundRobinEvent...");
+					
 					NewJunctionEvent ev = super.build(ini);
 					min = parsePositiveInt(ini, "min_time_slice");
 					max = parsePositiveInt(ini, "max_time_slice");
 					event = new NewRoundRobinEvent(ev, min, max);
 					
+					log.info("Event parsed");
 				} catch(Exception e){
 					throw new IllegalArgumentException("Error while parsing event:\n" + e.getMessage(), e);
 				}	

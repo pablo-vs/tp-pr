@@ -3,6 +3,7 @@ package es.ucm.fdi.sim.events.advanced;
 import java.util.List;
 import java.util.Map;
 import java.lang.IllegalArgumentException;
+import java.util.logging.Logger;
 
 import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.sim.objects.RoadMap;
@@ -55,7 +56,10 @@ public class NewBicycleEvent extends NewVehicleEvent {
 	 */
 	@Override
 	public void execute(RoadMap r) throws IllegalArgumentException {
+		Logger log = Logger.getLogger(NewBicycleEvent.class.getName());
+		log.info("Attempting to execute NewBicycleEvent...");
 		r.addVehicle(createBicycle(r));
+		log.info("Event executed");
 	}
 
 	/**
@@ -104,11 +108,13 @@ public class NewBicycleEvent extends NewVehicleEvent {
 			
 			if(TAG.equals(ini.getTag()) && isCorrectType(ini, TYPE)) {
 				
-				try	{
-					
+				try {
+					Logger log = Logger.getLogger(NewBicycleEvent.class.getName());
+					log.info("Attempting to parse NewBicycleEvent...");
+		
 					NewVehicleEvent ev = super.build(ini);
 					event = new NewBicycleEvent(ev);
-					
+					log.info("Event parsed");
 				} catch(Exception e) {
 					throw new IllegalArgumentException("Error while parsing event:\n" + e.getMessage(), e);
 				}
