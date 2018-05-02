@@ -20,7 +20,6 @@ import es.ucm.fdi.control.Controller;
 import es.ucm.fdi.control.SimulatorAction;
 import es.ucm.fdi.ini.Ini;
 import es.ucm.fdi.ini.IniSection;
-import es.ucm.fdi.sim.Simulator;
 import es.ucm.fdi.view.util.Tables;
 import es.ucm.fdi.view.util.Actions;
 import es.ucm.fdi.view.customcomponents.CustomTableModel;
