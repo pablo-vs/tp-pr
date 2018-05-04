@@ -229,7 +229,15 @@ public class Main {
 		}
 		control.run(_timeLimit);
 	}
-
+	
+	/**
+	 * Initializes batch or GUI mode, as indicated by args.
+	 * 
+	 * @param args					Command line parameters.
+	 * @throws IOException
+	 * @throws SimulatorException
+	 */
+	@SuppressWarnings("unused")
 	private static void start(String[] args) throws IOException,
 			SimulatorException {
 		
@@ -237,13 +245,9 @@ public class Main {
 		if(_batch){
 			startBatchMode();
 		}else{
-			try{
-				Controller control = new Controller();
-				SimWindow view = new SimWindow(control);
-			}catch(Exception e){
-				System.out.println(e);
-			}
-			System.out.println("TEST");
+			Controller control = new Controller();
+			SimWindow view = new SimWindow(control);
+			//Instance is created to avoid 'Exception while removing reference'
 		}
 	}
 
