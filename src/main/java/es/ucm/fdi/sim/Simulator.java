@@ -117,7 +117,7 @@ public class Simulator {
 	public void reset() {
 		Logger.getLogger(Simulator.class.getName())
 			.info("Resetting simulator");
-		eventList = new MultiTreeMap<Integer, Event>();
+		eventList.clear();
 		roadMap = new RoadMap();
 		timer = 0;
 		fireUpdateEvent(EventType.RESET);

@@ -214,7 +214,7 @@ public class Main {
 		// test("resources/examples/basic/");
 
 		// Call setupLogging with the desired log level
-		setupLogging(Level.WARNING);
+		setupLogging(Level.INFO);
 		
 		// Call start to start the simulator from command line, etc.
 		Controller control = new Controller(new ByteArrayInputStream("".getBytes()), new ByteArrayOutputStream());
