@@ -48,7 +48,7 @@ public class NewJunctionEvent extends Event {
 	@Override
 	public void execute(RoadMap r){
 		Logger log = Logger.getLogger(NewJunctionEvent.class.getName());
-		log.info("Attempting to parse NewJunctionEvent...");
+		log.info("Attempting to execute NewJunctionEvent...");
 		r.addJunction(createJunction());
 		log.info("Event executed");
 	}

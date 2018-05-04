@@ -58,7 +58,7 @@ public class NewVehicleEvent extends Event {
 	@Override
 	public void execute(RoadMap r){
 		Logger log = Logger.getLogger(NewVehicleEvent.class.getName());
-		log.info("Attempting to parse NewVehicleEvent...");
+		log.info("Attempting to execute NewVehicleEvent...");
 	        r.addVehicle(createVehicle(r));
 		log.info("Event executed");
 	}
