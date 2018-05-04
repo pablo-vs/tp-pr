@@ -20,22 +20,30 @@ public class NewDirtRoadEvent extends NewRoadEvent {
 	/**
 	 * Empty constructor.
 	 */
-	public NewDirtRoadEvent(){}
+	public NewDirtRoadEvent() {
+	}
 
 	/**
 	 * Full constructor.
 	 *
-	 * @param t Time of the event.
-	 * @param id ID of the DirtRoad.
-	 * @param ini Initial junction.
-	 * @param end Final junction.
-	 * @param v Maximum speed.
-	 * @param l Length of the road.
+	 * @param t
+	 *            Time of the event.
+	 * @param id
+	 *            ID of the DirtRoad.
+	 * @param ini
+	 *            Initial junction.
+	 * @param end
+	 *            Final junction.
+	 * @param v
+	 *            Maximum speed.
+	 * @param l
+	 *            Length of the road.
 	 */
-	public NewDirtRoadEvent(int t, String id, String ini, String end, int v, int l){
+	public NewDirtRoadEvent(int t, String id, String ini, String end, int v,
+			int l) {
 		super(t, id, ini, end, v, l);
 	}
-	
+
 	/**
 	 * Constructor from NewRoadEvent.
 	 */
@@ -46,7 +54,8 @@ public class NewDirtRoadEvent extends NewRoadEvent {
 	/**
 	 * Instantiates a new road, given the parameters are valid.
 	 *
-	 * @param r The <code>RoadMap</code> of the current simulation.
+	 * @param r
+	 *            The <code>RoadMap</code> of the current simulation.
 	 */
 	@Override
 	public void execute(RoadMap r) {
@@ -64,54 +73,60 @@ public class NewDirtRoadEvent extends NewRoadEvent {
 	public DirtRoad createDirtRoad(RoadMap r) {
 		DirtRoad newDirtRoad;
 		try {
-			newDirtRoad = new DirtRoad(roadID, length, maxVel, verifyJunction(r, ini), verifyJunction(r, end));
-				
-		} catch (IllegalArgumentException | ObjectNotFoundException e){
-			throw new IllegalArgumentException("Error: Could not create DirtRoad "
-					+ roadID + " at time " + getTime() + ".\n" + e.getMessage(), e);
+			newDirtRoad = new DirtRoad(roadID, length, maxVel, verifyJunction(
+					r, ini), verifyJunction(r, end));
+
+		} catch (IllegalArgumentException | ObjectNotFoundException e) {
+			throw new IllegalArgumentException(
+					"Error: Could not create DirtRoad " + roadID + " at time "
+							+ getTime() + ".\n" + e.getMessage(), e);
 		}
 		return newDirtRoad;
 	}
-	
+
 	/**
-	 * Return a  description of the event.
+	 * Return a description of the event.
 	 *
-	 * @param out A <code>Map<String, String></code> which will contain the representation of the event.
+	 * @param out
+	 *            A <code>Map<String, String></code> which will contain the
+	 *            representation of the event.
 	 */
 	@Override
 	public void describe(Map<String, String> out) {
 		super.describe(out);
 		out.put("Type", "New DirtRoad " + roadID);
 	}
-    
+
 	/**
 	 * Builder for this event.
 	 */
-	public static class Builder extends NewRoadEvent.Builder{
-	        public static final String TYPE = "dirt";
+	public static class Builder extends NewRoadEvent.Builder {
+		public static final String TYPE = "dirt";
 
 		/**
-		 * Build the event from a given INI section, returns null if the section tag does
-		 * not match the event tag.
+		 * Build the event from a given INI section, returns null if the section
+		 * tag does not match the event tag.
 		 *
-		 * @param section The <code>IniSection</code> from which to parse the event.
+		 * @param section
+		 *            The <code>IniSection</code> from which to parse the event.
 		 */
 		@Override
-		public NewDirtRoadEvent build(IniSection ini){
+		public NewDirtRoadEvent build(IniSection ini) {
 			NewDirtRoadEvent event = null;
-			
-			if(TAG.equals(ini.getTag()) && isCorrectType(ini, TYPE)) {
+
+			if (TAG.equals(ini.getTag()) && isCorrectType(ini, TYPE)) {
 				try {
-					Logger log = Logger
-						.getLogger(NewDirtRoadEvent.class.getName());
+					Logger log = Logger.getLogger(NewDirtRoadEvent.class
+							.getName());
 					log.info("Attempting to parse NewDirtRoadEvent...");
-					
+
 					NewRoadEvent ev = super.build(ini);
 					event = new NewDirtRoadEvent(ev);
-					log.info("Event parsed");		 
-				} catch (Exception e){
-					throw new IllegalArgumentException("Error while parsing event:\n" + e.getMessage(), e);
-				}	
+					log.info("Event parsed");
+				} catch (Exception e) {
+					throw new IllegalArgumentException(
+							"Error while parsing event:\n" + e.getMessage(), e);
+				}
 			}
 
 			return event;

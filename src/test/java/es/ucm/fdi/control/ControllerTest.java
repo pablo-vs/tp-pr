@@ -1,6 +1,5 @@
 package es.ucm.fdi.control;
 
-import java.io.IOException;
 import java.lang.Exception;
 import java.io.FileInputStream;
 import java.io.ByteArrayOutputStream;
@@ -8,7 +7,6 @@ import java.io.ByteArrayInputStream;
 
 
 import org.junit.Test;
-import org.junit.Assert;
 import static org.junit.Assert.*;
 
 import es.ucm.fdi.ini.Ini;

@@ -460,7 +460,6 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 	}
 
 	@SuppressWarnings("unchecked")
-	// ?
 	private void writeSelectedReports() {
 		CustomTableModel vehiclesModel = (CustomTableModel) vehiclesTable
 				.getModel();

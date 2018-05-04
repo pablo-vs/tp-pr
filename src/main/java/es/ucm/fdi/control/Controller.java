@@ -2,8 +2,6 @@ package es.ucm.fdi.control;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.logging.Logger;
 import java.util.logging.Level;
@@ -63,7 +61,7 @@ public class Controller {
 		sim = new Simulator();
 		this.input = input;
 		this.output = output;
-		readEvents(input);
+		readEvents(this.input);
 	}
 
 	/**

@@ -2,7 +2,6 @@ package es.ucm.fdi.view.customcomponents;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.util.Random;
 import java.util.Map;
 import java.util.HashMap;
 
