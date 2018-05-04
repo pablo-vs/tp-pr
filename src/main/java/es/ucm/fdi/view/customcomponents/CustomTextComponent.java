@@ -3,9 +3,6 @@ package es.ucm.fdi.view.customcomponents;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.BufferedReader;
 
 import java.awt.Dimension;
 import java.nio.file.Files;
@@ -26,20 +23,20 @@ public class CustomTextComponent extends JPanel {
 	private JTextArea textArea = new JTextArea();
 	private JPopupMenu popupMenu = new JPopupMenu();
 	private TextOutputStream asOutputStream;
-	
-	public CustomTextComponent(boolean isEditable){
+
+	public CustomTextComponent(boolean isEditable) {
 		setLayout(new GridLayout());
-		
+
 		asOutputStream = new TextOutputStream();
 		textArea.setEditable(isEditable);
 		textArea.setLineWrap(true);
 		textArea.setWrapStyleWord(true);
-		
+
 		JScrollPane area = new JScrollPane(textArea);
-		setPreferredSize(new Dimension(400,300));
+		setPreferredSize(new Dimension(400, 300));
 		setLayout(new BorderLayout());
 		add(area, BorderLayout.CENTER);
-		
+
 		textArea.addMouseListener(new MouseListener() {
 
 			@Override
@@ -70,33 +67,34 @@ public class CustomTextComponent extends JPanel {
 			public void mouseClicked(MouseEvent e) {
 			}
 		});
-		
+
 	}
 
 	/**
 	 * Appends text to the TextArea.
 	 *
-	 * @param s The text to append.
+	 * @param s
+	 *            The text to append.
 	 */
-	public void append(String s){
+	public void append(String s) {
 		textArea.append(s);
 	}
-	
-	public void setPopupMenu(JPopupMenu pm){
+
+	public void setPopupMenu(JPopupMenu pm) {
 		popupMenu = pm;
 	}
 
 	/**
-	 * Launches a <code>JFileChooser</code> to load a file's contents to
-	 * the TextArea.
+	 * Launches a <code>JFileChooser</code> to load a file's contents to the
+	 * TextArea.
 	 */
-	public boolean load() throws IOException{
+	public boolean load() throws IOException {
 		int returnVal = fileChooser.showSaveDialog(null);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			File file = fileChooser.getSelectedFile();
-			textArea.setText(new String(
-					Files.readAllBytes(file.toPath()), "UTF-8"));	
-			
+			textArea.setText(new String(Files.readAllBytes(file.toPath()),
+					"UTF-8"));
+
 			return true;
 		} else {
 			return false;
@@ -107,12 +105,12 @@ public class CustomTextComponent extends JPanel {
 	 * Launches a <code>JFileChooser</code> to save the TextArea's contents to
 	 * the desired file.
 	 */
-	public boolean save() throws IOException{
+	public boolean save() throws IOException {
 		int returnVal = fileChooser.showSaveDialog(null);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			File file = fileChooser.getSelectedFile();
 			Files.write(file.toPath(), textArea.getText().getBytes("UTF-8"));
-			
+
 			return true;
 		} else {
 			return false;
@@ -129,7 +127,8 @@ public class CustomTextComponent extends JPanel {
 	/**
 	 * Substitutes the current text for the given.
 	 *
-	 * @param text The new text.
+	 * @param text
+	 *            The new text.
 	 */
 	public void setText(String text) {
 		textArea.setText(text);
@@ -138,7 +137,7 @@ public class CustomTextComponent extends JPanel {
 	/**
 	 * Removes all the text from the TextArea.
 	 */
-	public void clear(){
+	public void clear() {
 		textArea.setText("");
 	}
 
@@ -147,22 +146,20 @@ public class CustomTextComponent extends JPanel {
 	 *
 	 * @return An <code>OutputStream</code> containing the text.
 	 */
-	public OutputStream getStreamToText(){
+	public OutputStream getStreamToText() {
 		return asOutputStream;
 	}
-	
-	
-	
-	private class TextOutputStream extends OutputStream{
+
+	private class TextOutputStream extends OutputStream {
 		private JTextArea area;
-		
-		public TextOutputStream(){
-			area = textArea; 
+
+		public TextOutputStream() {
+			area = textArea;
 		}
-		
+
 		@Override
-		public void write(int b) throws IOException{
-			textArea.append(String.valueOf((char)b));
+		public void write(int b) throws IOException {
+			textArea.append(String.valueOf((char) b));
 			textArea.setCaretPosition(area.getDocument().getLength());
 		}
 	}

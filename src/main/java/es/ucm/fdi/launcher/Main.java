@@ -3,16 +3,16 @@ package es.ucm.fdi.launcher;
 import java.io.File;
 import java.io.IOException;
 import java.io.FilenameFilter;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.logging.Logger;
-import java.util.logging.LogRecord;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.logging.Handler;
+import java.util.logging.LogRecord;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.SimpleFormatter;
 
@@ -25,8 +25,8 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
 import es.ucm.fdi.ini.Ini;
-import es.ucm.fdi.control.Controller;
 import es.ucm.fdi.view.SimWindow;
+import es.ucm.fdi.control.Controller;
 import es.ucm.fdi.exceptions.SimulatorException;
 
 public class Main {
@@ -80,6 +80,7 @@ public class Main {
 
 		cmdLineOptions.addOption(Option.builder("h").longOpt("help")
 				.desc("Print this message").build());
+
 		cmdLineOptions.addOption(Option.builder("b").longOpt("batch")
 				.desc("Start the simulator in batch mode").build());
 		cmdLineOptions.addOption(Option.builder("i").longOpt("input").hasArg()
@@ -94,6 +95,7 @@ public class Main {
 						.hasArg()
 						.desc("Ticks to execute the simulator's main loop (default value is "
 								+ _timeLimitDefaultValue + ").").build());
+
 
 		return cmdLineOptions;
 	}
@@ -280,7 +282,10 @@ public class Main {
 			System.out.println("An error occurred:\n" + e.getMessage());
 			throw new SimulatorException("");
 		}
-
+		/*Controller control = new Controller(new ByteArrayInputStream(
+				"".getBytes()), new ByteArrayOutputStream());
+		SimWindow view = new SimWindow(control);
+*/
 	}
 
 }

@@ -1,7 +1,6 @@
 package es.ucm.fdi.sim;
 
 import java.lang.Exception;	
-import java.lang.IllegalArgumentException;
 import es.ucm.fdi.exceptions.SimulatorException;
 
 import org.junit.Test;

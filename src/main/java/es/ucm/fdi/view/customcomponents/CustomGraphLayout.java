@@ -2,7 +2,6 @@ package es.ucm.fdi.view.customcomponents;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.util.Random;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -29,40 +28,39 @@ public class CustomGraphLayout extends JPanel {
 	 */
 	private static final long serialVersionUID = -735338964701982371L;
 	private GraphComponent _graphComp;
-    
-    /**
-     * Empty constructor.
-     */
+
+	/**
+	 * Empty constructor.
+	 */
 	public CustomGraphLayout() {
 		super(new BorderLayout());
-		_graphComp = new GraphComponent();	
+		_graphComp = new GraphComponent();
 		add(_graphComp, BorderLayout.CENTER);
 		setVisible(true);
 	}
 
-	public void updateGraph(RoadMap rm){
+	public void updateGraph(RoadMap rm) {
 		Graph g = new Graph();
-		Map<Junction, Node> junctionToNode 
-			= new HashMap<Junction,Node>();
-	
-		for(Junction j : rm.getJunctions()){
+		Map<Junction, Node> junctionToNode = new HashMap<Junction, Node>();
+
+		for (Junction j : rm.getJunctions()) {
 			Node n = new Node(j.getID());
 			g.addNode(n);
 			junctionToNode.put(j, n);
 		}
 
-		for(Road r : rm.getRoads()){	
-		 	Edge e = new Edge(r.getID(), junctionToNode.get(r.getIni()),
-					  junctionToNode.get(r.getEnd()), r.getLength(),
-					  r.equals(r.getEnd().getOpenRoad().getRoad())
-					  ? Color.GREEN : Color.RED);
-		 	for(Vehicle v : r.getVehicles().innerValues()){
-			 	e.addDot(new Dot(v.getID(), v.getPosition()));
+		for (Road r : rm.getRoads()) {
+			Edge e = new Edge(r.getID(), junctionToNode.get(r.getIni()),
+					junctionToNode.get(r.getEnd()), r.getLength(), r.equals(r
+							.getEnd().getOpenRoad().getRoad()) ? Color.GREEN
+							: Color.RED);
+			for (Vehicle v : r.getVehicles().innerValues()) {
+				e.addDot(new Dot(v.getID(), v.getPosition()));
 			}
-		 	
-		 	g.addEdge(e);
-		 }
-		
+
+			g.addEdge(e);
+		}
+
 		_graphComp.setGraph(g);
 	}
 }

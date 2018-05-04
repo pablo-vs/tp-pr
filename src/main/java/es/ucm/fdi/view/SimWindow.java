@@ -15,14 +15,12 @@ import java.util.List;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
-
 import es.ucm.fdi.sim.Simulator;
 import es.ucm.fdi.sim.objects.SimObject;
 import es.ucm.fdi.control.Controller;
 import es.ucm.fdi.control.SimulatorAction;
 import es.ucm.fdi.ini.Ini;
 import es.ucm.fdi.ini.IniSection;
-import es.ucm.fdi.sim.Simulator;
 import es.ucm.fdi.view.util.Tables;
 import es.ucm.fdi.view.util.Actions;
 import es.ucm.fdi.view.customcomponents.CustomTableModel;
@@ -36,199 +34,213 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 	/**
 	 * Generated serialVersionUID
 	 */
-	private static final long serialVersionUID = 
-			-2574375309247665340L;
+	private static final long serialVersionUID = -2574375309247665340L;
 
-	private static final String TEMPLATE_PATH = 
-			"./src/main/resources/templates/";
+	private static final String TEMPLATE_PATH = "./src/main/resources/templates/";
 	private static final String TEMPLATE_INDEX_FILE = "Index.ini";
-	
+
 	private final double NS_SPLIT_DIVISION = 0.3;
 	private final double EW_SPLIT_DIVISION = 0.5;
-	
+
 	private Controller controller;
 	private CustomTextComponent eventsEditor = new CustomTextComponent(true);
 	private CustomTextComponent reportsArea = new CustomTextComponent(false);
-	
-	private JTable eventsQueueTable = new JTable(new CustomTableModel(Tables.EVENT_LIST.getTags()));
-	private JTable vehiclesTable = new JTable(new CustomTableModel(Tables.VEHICLES.getTags()));
-	private JTable roadsTable = new JTable(new CustomTableModel(Tables.ROADS.getTags()));
-	private JTable junctionsTable = new JTable(new CustomTableModel(Tables.JUNCTIONS.getTags()));
-	
+
+	private JTable eventsQueueTable = new JTable(new CustomTableModel(
+			Tables.EVENT_LIST.getTags()));
+	private JTable vehiclesTable = new JTable(new CustomTableModel(
+			Tables.VEHICLES.getTags()));
+	private JTable roadsTable = new JTable(new CustomTableModel(
+			Tables.ROADS.getTags()));
+	private JTable junctionsTable = new JTable(new CustomTableModel(
+			Tables.JUNCTIONS.getTags()));
+
 	/*
 	 * It needs to be possible to choose simulation objects.
 	 */
 	private JTextField contextualBar = new JTextField();
 	private CustomGraphLayout graph;
 	private JSpinner steps;
-	private JTextField time;	
-	
+	private JTextField time;
+
 	public SimWindow(Controller cont) {
 		JFrame jf = new JFrame("Traffic Simulator");
 		graph = new CustomGraphLayout();
 		controller = cont;
-		
+
 		contextualBar.setEditable(false);
 		contextualBar.setHorizontalAlignment(JTextField.CENTER);
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		jf.setLayout(new BorderLayout());	
+		jf.setLayout(new BorderLayout());
 		setLayout(new BorderLayout());
-		
+
 		addActions();
 		addButtonBar();
 		addToolBar(jf);
 		addCenterPanel(jf);
-		
+
 		jf.add(this, BorderLayout.CENTER);
 		jf.add(contextualBar, BorderLayout.SOUTH);
 		contextualBar.setText("Welcome to UCM's Custom Traffic Simulator");
 		controller.addListener(this);
 	}
-	
-	private void addActions(){
-		//LOADS EVENTS
-		new SimulatorAction(Actions.LOAD_EVENT, "open.png", "Loads an input file",
-				KeyEvent.VK_L, "control shift L", ()->{
-					try{
-						if(eventsEditor.load()){
+
+	private void addActions() {
+		// LOADS EVENTS
+		new SimulatorAction(Actions.LOAD_EVENT, "open.png",
+				"Loads an input file", KeyEvent.VK_L, "control shift L",
+				() -> {
+					try {
+						if (eventsEditor.load()) {
 							contextualBar.setText("Events loaded from file");
 						}
-					}catch(IOException e){
-						Logger.getLogger(SimulatorAction.class.getName())
-							.log(Level.WARNING,
-							     "Error while reading events file", e);
+					} catch (IOException e) {
+						Logger.getLogger(SimulatorAction.class.getName()).log(
+								Level.WARNING,
+								"Error while reading events file", e);
 						showErrorMessage("Error while reading events file.\n"
-								 + e.getMessage());
+								+ e.getMessage());
 					}
 				}).register(this);
-		//SAVES EVENTS
-		new SimulatorAction(Actions.SAVE_EVENT, "save.png", "Saves the event data in a file",
-				KeyEvent.VK_S, "control shift S", ()->{
-					try{
-						if(eventsEditor.save()){
+		// SAVES EVENTS
+		new SimulatorAction(Actions.SAVE_EVENT, "save.png",
+				"Saves the event data in a file", KeyEvent.VK_S,
+				"control shift S", () -> {
+					try {
+						if (eventsEditor.save()) {
 							contextualBar.setText("Events saved to file");
 						}
-					}catch(IOException e){
-						Logger.getLogger(SimulatorAction.class.getName())
-							.log(Level.WARNING,
-							     "Error while saving events", e);
+					} catch (IOException e) {
+						Logger.getLogger(SimulatorAction.class.getName()).log(
+								Level.WARNING, "Error while saving events", e);
 						showErrorMessage("Error while saving events.\n"
-								 + e.getMessage());
+								+ e.getMessage());
 					}
 				}).register(this);
-		//CLEARS EVENT EDITOR
-		new SimulatorAction(Actions.CLEAR_EDITOR, "clear.png", "Clears the current event data",
-				KeyEvent.VK_C, "control shift C", ()->{
+		// CLEARS EVENT EDITOR
+		new SimulatorAction(Actions.CLEAR_EDITOR, "clear.png",
+				"Clears the current event data", KeyEvent.VK_C,
+				"control shift C", () -> {
 					eventsEditor.clear();
 					contextualBar.setText("Event editor cleared");
 				}).register(this);
-		//ADDS EVENT DATA TO TABLE
-		new SimulatorAction(Actions.INSERT_EVENT_DATA, "events.png", "Adds the event data to the event queue",
-				KeyEvent.VK_I, "control shift I", ()->{
+		// ADDS EVENT DATA TO TABLE
+		new SimulatorAction(Actions.INSERT_EVENT_DATA, "events.png",
+				"Adds the event data to the event queue", KeyEvent.VK_I,
+				"control shift I", () -> {
 					try {
-						controller.readEvents(
-								new ByteArrayInputStream(eventsEditor.getText()
-										.getBytes(StandardCharsets.UTF_8)));
+						controller.readEvents(new ByteArrayInputStream(
+								eventsEditor.getText().getBytes(
+										StandardCharsets.UTF_8)));
 						contextualBar.setText("Events added to event queue");
-					} catch(IOException e) {
+					} catch (IOException e) {
 						Logger.getLogger(SimulatorAction.class.getName())
-							.log(Level.WARNING,
-							     "IO error while reading event",e );
+							.log(Level.WARNING, "IO error while reading event"
+								,e);
 						showErrorMessage("IO error while reading event.");
-					} catch(IllegalArgumentException | ObjectNotFoundException | UnreachableJunctionException e) {
-						showErrorMessage("Invalid event file.\n" +
-							    e.getMessage());
+					} catch (IllegalArgumentException | ObjectNotFoundException
+							| UnreachableJunctionException e) {
+						showErrorMessage("Invalid event file.\n"
+								+ e.getMessage());
 					}
 				}).register(this);
-		//RUNS FOR INDICATED STEPS 
-		new SimulatorAction(Actions.PLAY, "play.png", "Executes the indicated steps",
-				KeyEvent.VK_X, "control shift X", ()->{
-					try{
-						controller.run((Integer)steps.getValue());
-						contextualBar.setText("Simulation ran for " 
+		// RUNS FOR INDICATED STEPS
+		new SimulatorAction(Actions.PLAY, "play.png",
+				"Executes the indicated steps", KeyEvent.VK_X,
+				"control shift X", () -> {
+					try {
+						controller.run((Integer) steps.getValue());
+						contextualBar.setText("Simulation ran for "
 								+ steps.getValue() + " steps");
 					} catch (SimulatorException e) {
 						showErrorMessage(e.getMessage());
 					}
 				}).register(this);
-		//RESETS SIMULATOR
-		new SimulatorAction(Actions.RESET, "reset.png", "Resets the simulation to its initial point",
-				KeyEvent.VK_R, "control shift R", ()->{
+		// RESETS SIMULATOR
+		new SimulatorAction(Actions.RESET, "reset.png",
+				"Resets the simulation to its initial point", KeyEvent.VK_R,
+				"control shift R", () -> {
 					controller.reset();
 					contextualBar.setText("Simulator settings reset");
 				}).register(this);
-		//EXITS THE PROGRAM
+		// EXITS THE PROGRAM
 		new SimulatorAction(Actions.EXIT, "exit.png", "Exit the program",
-				KeyEvent.VK_E, "control shift E", ()->System.exit(0))
-					.register(this);
-		//SHOWS REPORTS IN TEXT AREA
-		new SimulatorAction(Actions.REPORT, "report.png", "Show reports", 
-				KeyEvent.VK_T, " control shift T", ()->{
+				KeyEvent.VK_E, "control shift E", () -> System.exit(0))
+				.register(this);
+		// SHOWS REPORTS IN TEXT AREA
+		new SimulatorAction(Actions.REPORT, "report.png", "Show reports",
+				KeyEvent.VK_T, " control shift T", () -> {
 					reportsArea.clear();
-					try{
+					try {
 						controller.dumpOutput(reportsArea.getStreamToText());
 						contextualBar.setText("Reports added to Report Area");
-					}catch(IOException e){
+					} catch (IOException e) {
 						Logger.getLogger(SimulatorAction.class.getName())
-							.log(Level.WARNING,
-							     "Error while writing reports", e);
-					        showErrorMessage("Error while writing reports.\n"
-								 + e.getMessage());
+								.log(Level.WARNING,
+										"Error while writing reports", e);
+						showErrorMessage("Error while writing reports.\n"
+								+ e.getMessage());
 					}
 				}).register(this);
-		//SAVES REPORTS
-		new SimulatorAction(Actions.SAVE_REPORT, "save_report.png", "Save reports", 
-				KeyEvent.VK_P, " control shift P", ()->{
-					try{
-						if(reportsArea.save()){
+		// SAVES REPORTS
+		new SimulatorAction(
+				Actions.SAVE_REPORT,
+				"save_report.png",
+				"Save reports",
+				KeyEvent.VK_P,
+				" control shift P",
+				() -> {
+					try {
+						if (reportsArea.save()) {
 							contextualBar.setText("Reports saved to file");
 						}
-						
-					}catch(IOException e){
-						Logger.getLogger(SimulatorAction.class.getName())
-							.log(Level.WARNING,
-							     "Error while saving reports", e);
+
+					} catch (IOException e) {
+						Logger.getLogger(SimulatorAction.class.getName()).log(
+								Level.WARNING, "Error while saving reports", e);
 						showErrorMessage("Error while saving reports.\n"
-								 + e.getMessage());
+								+ e.getMessage());
 					}
 				}).register(this);
-		//CLEARS REPORT AREA
-		new SimulatorAction(Actions.DELETE_REPORT, "delete_report.png", "Delete reports", 
-				KeyEvent.VK_D, " control shift D", ()->{
+		// CLEARS REPORT AREA
+		new SimulatorAction(Actions.DELETE_REPORT, "delete_report.png",
+				"Delete reports", KeyEvent.VK_D, " control shift D", () -> {
 					reportsArea.clear();
 					contextualBar.setText("Report area cleared");
 				}).register(this);
-		//REDIRECTS OUTPUT
-		new SimulatorAction(Actions.REDIRECT_OUTPUT, "report.png", "Redirects output", 
-				KeyEvent.VK_O, " control shift O", ()->{
+		// REDIRECTS OUTPUT
+		new SimulatorAction(Actions.REDIRECT_OUTPUT, "report.png",
+				"Redirects output", KeyEvent.VK_O, " control shift O",
+				() -> {
 					controller.redirectOutput(reportsArea.getStreamToText());
-					contextualBar.setText("Output redirection preferences updated");
+					contextualBar
+							.setText("Output redirection preferences updated");
 				}).register(this);
 	}
-	
-	private void addToolBar(JFrame jf){
+
+	private void addToolBar(JFrame jf) {
 		JMenuBar menu = new JMenuBar();
 		JMenu file = new JMenu("File");
 		JMenu simulator = new JMenu("Simulator");
 		JMenu reports = new JMenu("Reports");
 		ActionMap m = getActionMap();
-		
-		file.add(new JMenuItem(m.get(""+Actions.LOAD_EVENT)));
-		file.add(new JMenuItem(m.get(""+Actions.SAVE_EVENT)));
+
+		file.add(new JMenuItem(m.get("" + Actions.LOAD_EVENT)));
+		file.add(new JMenuItem(m.get("" + Actions.SAVE_EVENT)));
 		file.addSeparator();
-		file.add(new JMenuItem(m.get(""+Actions.SAVE_REPORT)));
+		file.add(new JMenuItem(m.get("" + Actions.SAVE_REPORT)));
 		file.addSeparator();
-		file.add(new JMenuItem(m.get(""+Actions.EXIT)));
-	
-		simulator.add(new JMenuItem(m.get(""+Actions.PLAY)));
-		simulator.add(new JMenuItem(m.get(""+Actions.RESET)));
+		file.add(new JMenuItem(m.get("" + Actions.EXIT)));
+
+		simulator.add(new JMenuItem(m.get("" + Actions.PLAY)));
+		simulator.add(new JMenuItem(m.get("" + Actions.RESET)));
 		JCheckBox redirectOutput = new JCheckBox("Redirect Output");
-		redirectOutput.setAction(m.get(""+Actions.REDIRECT_OUTPUT));
+		redirectOutput.setAction(m.get("" + Actions.REDIRECT_OUTPUT));
 		simulator.add(redirectOutput);
-		
-		reports.add(new JMenuItem(m.get(""+Actions.REPORT)));
-		reports.add(new JMenuItem(m.get(""+Actions.DELETE_REPORT)));
-		
+
+		reports.add(new JMenuItem(m.get("" + Actions.REPORT)));
+		reports.add(new JMenuItem(m.get("" + Actions.DELETE_REPORT)));
+
 		menu.add(file);
 		menu.add(simulator);
 		menu.add(reports);
@@ -236,9 +248,9 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 		/*
 		 * Requires finishing implementation
 		 */
-		
+
 	}
-	
+
 	private void addButtonBar() {
 		JLabel stepsLabel = new JLabel(" Steps: ");
 		JLabel timeLabel = new JLabel(" Time: ");
@@ -246,120 +258,119 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 
 		steps = new JSpinner();
 		((SpinnerNumberModel) steps.getModel()).setMinimum(0);
-		steps.setPreferredSize(new Dimension(100,10));
-		
+		steps.setPreferredSize(new Dimension(100, 10));
+
 		time = new JTextField();
-		time.setPreferredSize(new Dimension(100,10));
+		time.setPreferredSize(new Dimension(100, 10));
 		time.setEditable(false);
 		time.setText("0");
-		
+
 		JToolBar bar = new JToolBar();
 		bar.setFloatable(false);
-		//MAIN BUTTONS
-		bar.add(m.get(""+Actions.LOAD_EVENT));
-		bar.add(m.get(""+Actions.SAVE_EVENT));
-		bar.add(m.get(""+Actions.CLEAR_EDITOR));
-		bar.add(m.get(""+Actions.INSERT_EVENT_DATA));
-		bar.add(m.get(""+Actions.PLAY));
-		bar.add(m.get(""+Actions.RESET));
-		bar.addSeparator();		
-		//Here goes the spinner
+		// MAIN BUTTONS
+		bar.add(m.get("" + Actions.LOAD_EVENT));
+		bar.add(m.get("" + Actions.SAVE_EVENT));
+		bar.add(m.get("" + Actions.CLEAR_EDITOR));
+		bar.add(m.get("" + Actions.INSERT_EVENT_DATA));
+		bar.add(m.get("" + Actions.PLAY));
+		bar.add(m.get("" + Actions.RESET));
+		bar.addSeparator();
+		// Here goes the spinner
 		steps.setMaximumSize(new Dimension(100, 50));
 		bar.add(stepsLabel);
 		bar.add(steps);
-		bar.addSeparator();	
-		//Here go the JTextPanes
+		bar.addSeparator();
+		// Here go the JTextPanes
 		time.setMaximumSize(new Dimension(100, 50));
 		bar.add(timeLabel);
 		bar.add(time);
-		//LAST BUTTONS
+		// LAST BUTTONS
 		bar.addSeparator();
-		bar.add(m.get(""+Actions.REPORT));
-		bar.add(m.get(""+Actions.SAVE_REPORT));
-		bar.add(m.get(""+Actions.DELETE_REPORT));
-		bar.add(m.get(""+Actions.EXIT));
+		bar.add(m.get("" + Actions.REPORT));
+		bar.add(m.get("" + Actions.SAVE_REPORT));
+		bar.add(m.get("" + Actions.DELETE_REPORT));
+		bar.add(m.get("" + Actions.EXIT));
 		add(bar, BorderLayout.NORTH);
 	}
 
 	private void addCenterPanel(JFrame jf) {
-		JSplitPane eastWestSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, 
-				createSouthWestPanel(), 
-				createSouthEastPanel());		
-		JSplitPane northSouthSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, 
-				createNorthPanel(), 
-				eastWestSplit);
+		JSplitPane eastWestSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
+				createSouthWestPanel(), createSouthEastPanel());
+		JSplitPane northSouthSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
+				createNorthPanel(), eastWestSplit);
 		add(northSouthSplit, BorderLayout.CENTER);
-		
+
 		jf.pack();
 		jf.setSize(1000, 1000);
 		jf.setVisible(true);
 
-		SwingUtilities.invokeLater(()->{
-				northSouthSplit.setDividerLocation(NS_SPLIT_DIVISION);
-				northSouthSplit.setResizeWeight(NS_SPLIT_DIVISION);
-				eastWestSplit.setDividerLocation(EW_SPLIT_DIVISION);
-				eastWestSplit.setResizeWeight(EW_SPLIT_DIVISION);
+		SwingUtilities.invokeLater(() -> {
+			northSouthSplit.setDividerLocation(NS_SPLIT_DIVISION);
+			northSouthSplit.setResizeWeight(NS_SPLIT_DIVISION);
+			eastWestSplit.setDividerLocation(EW_SPLIT_DIVISION);
+			eastWestSplit.setResizeWeight(EW_SPLIT_DIVISION);
 		});
 	}
 
 	private JPanel createNorthPanel() {
 		JPanel northPanel = new JPanel();
-		
-		JScrollPane eventsTableScroll = new JScrollPane(eventsQueueTable);	
+
+		JScrollPane eventsTableScroll = new JScrollPane(eventsQueueTable);
 		northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.X_AXIS));
 		ActionMap m = getActionMap();
-		
+
 		JPopupMenu eventJPM = new JPopupMenu();
 		JMenu templateMenu = new JMenu("Add template");
-		try{
+		try {
 			StringBuilder sb = new StringBuilder(TEMPLATE_PATH);
 			sb.append(TEMPLATE_INDEX_FILE);
 			Ini indexInfo = new Ini(sb.toString());
 			JMenuItem nextItem;
-			
-			for(IniSection is : indexInfo.getSections()){
+
+			for (IniSection is : indexInfo.getSections()) {
 				sb = new StringBuilder(TEMPLATE_PATH);
 				nextItem = new JMenuItem();
-				
+
 				nextItem.setText(is.getValue("option"));
 				nextItem.setToolTipText(is.getValue("tooltip"));
 				sb.append(is.getValue("file"));
-					
-				final String text = new String(Files.readAllBytes
-						(Paths.get(sb.toString())), "UTF-8");				
-				nextItem.addActionListener(new ActionListener(){
-					public void actionPerformed(ActionEvent ae){
+
+				final String text = new String(Files.readAllBytes(Paths.get(sb
+						.toString())), "UTF-8");
+				nextItem.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent ae) {
 						eventsEditor.append(text);
 						contextualBar.setText("Template added to event editor");
 					}
-					
+
 				});
-				
+
 				templateMenu.add(nextItem);
 			}
-			
-		}catch(IOException e){			
-			showErrorMessage("Error reading template files.\n"+e.getMessage());
+
+		} catch (IOException e) {
+			showErrorMessage("Error reading template files.\n" + e.getMessage());
 		}
-		
+
 		eventJPM.add(templateMenu);
 		eventJPM.addSeparator();
-		eventJPM.add(m.get(""+Actions.LOAD_EVENT));
-		eventJPM.add(m.get(""+Actions.SAVE_EVENT));
-		eventJPM.add(m.get(""+Actions.CLEAR_EDITOR));
-		
+		eventJPM.add(m.get("" + Actions.LOAD_EVENT));
+		eventJPM.add(m.get("" + Actions.SAVE_EVENT));
+		eventJPM.add(m.get("" + Actions.CLEAR_EDITOR));
+
 		eventsEditor.setPopupMenu(eventJPM);
 		northPanel.add(eventsEditor);
-		eventsEditor.setBorder(BorderFactory.createTitledBorder("Events editor"));
-		
-		
-		northPanel.add(eventsTableScroll);
-		eventsTableScroll.setBorder(BorderFactory.createTitledBorder("Event List"));
+		eventsEditor.setBorder(BorderFactory
+				.createTitledBorder("Events editor"));
 
-		//DO WE NEED ANOTHER JPOPUPMENU?
+		northPanel.add(eventsTableScroll);
+		eventsTableScroll.setBorder(BorderFactory
+				.createTitledBorder("Event List"));
+
+		// DO WE NEED ANOTHER JPOPUPMENU?
 		northPanel.add(reportsArea);
 		reportsArea.setBorder(BorderFactory.createTitledBorder("Reports Area"));
-		
+
 		return northPanel;
 	}
 
@@ -370,7 +381,8 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 		JScrollPane table2 = new JScrollPane(roadsTable);
 		JScrollPane table3 = new JScrollPane(junctionsTable);
 
-		southWestPanel.setLayout(new BoxLayout(southWestPanel, BoxLayout.Y_AXIS));
+		southWestPanel
+				.setLayout(new BoxLayout(southWestPanel, BoxLayout.Y_AXIS));
 
 		southWestPanel.add(table1);
 		table1.setBorder(BorderFactory.createTitledBorder("Vehicles"));
@@ -395,86 +407,97 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 	}
 
 	/**
-	 * Receives an <code>UpdateEvent</code> from the <code>Simulator</code>
-	 * and updates the GUI accordingly.
+	 * Receives an <code>UpdateEvent</code> from the <code>Simulator</code> and
+	 * updates the GUI accordingly.
 	 *
-	 * @param ue The <code>UpdateEvent</code> containing the details of the event.
-	 * @param error An error message, possibly null.
+	 * @param ue
+	 *            The <code>UpdateEvent</code> containing the details of the
+	 *            event.
+	 * @param error
+	 *            An error message, possibly null.
 	 */
 	public void update(Simulator.UpdateEvent ue, String error) {
-		CustomTableModel vehiclesModel = (CustomTableModel) vehiclesTable.getModel();
-		CustomTableModel junctionsModel = (CustomTableModel) junctionsTable.getModel();
-		CustomTableModel roadsModel= (CustomTableModel) roadsTable.getModel();
-		CustomTableModel eventsModel = (CustomTableModel) eventsQueueTable.getModel();
-		
-		switch(ue.getType()) {
+		CustomTableModel vehiclesModel = (CustomTableModel) vehiclesTable
+				.getModel();
+		CustomTableModel junctionsModel = (CustomTableModel) junctionsTable
+				.getModel();
+		CustomTableModel roadsModel = (CustomTableModel) roadsTable.getModel();
+		CustomTableModel eventsModel = (CustomTableModel) eventsQueueTable
+				.getModel();
+
+		switch (ue.getType()) {
 		case RESET:
 			time.setText("0");
 			graph.updateGraph(controller.getSimulator().getRoadMap());
-			
+
 			vehiclesModel.clear();
 			roadsModel.clear();
 			junctionsModel.clear();
 			eventsModel.clear();
 			break;
-			
+
 		case ERROR:
 			break;
-			
+
 		case REGISTERED:
 			break;
-			
+
 		case ADVANCED:
 			time.setText(Integer.toString(controller.getSimulator().getTimer()));
 			graph.updateGraph(controller.getSimulator().getRoadMap());
-			
+
 			writeSelectedReports();
-			
+
 			vehiclesModel.setElements(ue.getVehicles());
 			roadsModel.setElements(ue.getRoads());
 			junctionsModel.setElements(ue.getJunctions());
 			break;
-			
+
 		case NEW_EVENT:
 			eventsModel.setElements(ue.getEventQueue(), "#");
 			break;
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void writeSelectedReports() {
-		CustomTableModel vehiclesModel = (CustomTableModel) vehiclesTable.getModel();
-		CustomTableModel junctionsModel = (CustomTableModel) junctionsTable.getModel();
-		CustomTableModel roadsModel= (CustomTableModel) roadsTable.getModel();
-				
+		CustomTableModel vehiclesModel = (CustomTableModel) vehiclesTable
+				.getModel();
+		CustomTableModel junctionsModel = (CustomTableModel) junctionsTable
+				.getModel();
+		CustomTableModel roadsModel = (CustomTableModel) roadsTable.getModel();
+
 		ByteArrayOutputStream reports = new ByteArrayOutputStream();
 
 		try {
-			List<SimObject> selectedObjects = (List<SimObject>)
-				junctionsModel.getSelected(junctionsTable.getSelectedRows());
-			
-			selectedObjects.addAll((List<SimObject>)
-					       roadsModel.getSelected(roadsTable.getSelectedRows()));
-			
+			List<SimObject> selectedObjects = (List<SimObject>) junctionsModel
+					.getSelected(junctionsTable.getSelectedRows());
+
+			selectedObjects.addAll((List<SimObject>) roadsModel
+					.getSelected(roadsTable.getSelectedRows()));
+
 			selectedObjects.addAll((List<SimObject>) vehiclesModel
-					       .getSelected(vehiclesTable.getSelectedRows()));
-	
-			for(SimObject obj : selectedObjects) {
-				obj.report(controller.getSimulator().getTimer())
-					.store(reports);
+					.getSelected(vehiclesTable.getSelectedRows()));
+
+			for (SimObject obj : selectedObjects) {
+				obj.report(controller.getSimulator().getTimer()).store(reports);
 				reports.write('\n');
 			}
 			reportsArea.setText(reports.toString("UTF-8"));
-		} catch(ObjectNotFoundException e) {
-			showErrorMessage("Error while getting selected items.\n" + e.getMessage());
-		} catch(IOException e) {
-			showErrorMessage("Could not write selected reports:\n" + e.getMessage());
+		} catch (ObjectNotFoundException e) {
+			showErrorMessage("Error while getting selected items.\n"
+					+ e.getMessage());
+		} catch (IOException e) {
+			showErrorMessage("Could not write selected reports:\n"
+					+ e.getMessage());
 		}
 	}
 
 	private void showErrorMessage(String title, String message) {
-		Logger.getLogger(SimWindow.class.getName())
-			.info("Showing message: " + title + "\n" + message);
-		JOptionPane.showMessageDialog(null, message, title, JOptionPane.ERROR_MESSAGE);
+		Logger.getLogger(SimWindow.class.getName()).info(
+				"Showing message: " + title + "\n" + message);
+		JOptionPane.showMessageDialog(null, message, title,
+				JOptionPane.ERROR_MESSAGE);
 	}
 
 	private void showErrorMessage(String message) {
