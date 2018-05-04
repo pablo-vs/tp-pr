@@ -70,7 +70,7 @@ public class Main {
 		} catch (ParseException e) {
 			// new Piece(...) might throw GameError exception
 			System.err.println(e.getLocalizedMessage());
-			System.exit(1);
+			//System.exit(1);
 		}
 
 	}
@@ -232,8 +232,19 @@ public class Main {
 
 	private static void start(String[] args) throws IOException,
 			SimulatorException {
+		
 		parseArgs(args);
-		startBatchMode();
+		if(_batch){
+			startBatchMode();
+		}else{
+			try{
+				Controller control = new Controller();
+				SimWindow view = new SimWindow(control);
+			}catch(Exception e){
+				System.out.println(e);
+			}
+			System.out.println("TEST");
+		}
 	}
 
 	public static void setupLogging(Level level) {
@@ -270,7 +281,8 @@ public class Main {
 		// test("resources/examples/basic/");
 
 		// Call setupLogging with the desired log level
-		setupLogging(Level.INFO);
+		// setupLogging(Level.INFO);
+		setupLogging(_logLevel);
 
 		// Call start to start the simulator from command line, etc.
 		// Controller control = new Controller(new
@@ -280,7 +292,7 @@ public class Main {
 			start(args);
 		} catch (SimulatorException | IOException | IllegalArgumentException e) {
 			System.out.println("An error occurred:\n" + e.getMessage());
-			throw new SimulatorException("");
+			throw new SimulatorException("Fatal error on execution");
 		}
 		/*Controller control = new Controller(new ByteArrayInputStream(
 				"".getBytes()), new ByteArrayOutputStream());

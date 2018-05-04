@@ -24,20 +24,12 @@ import java.io.IOException;
  */
 public class Simulator {
 
-	private MultiTreeMap<Integer, Event> eventList; //Ordered by time and arrival time.
-	private RoadMap roadMap;
-	private int timeLimit, timer;
-	private List<Listener> listeners;
-	
-	/**
-	 * Default constructor for the <code>Simulator</code>.
-	 */
-	public Simulator() {
-		eventList = new MultiTreeMap<Integer, Event>();
-		roadMap = new RoadMap();
-		timer = 0;
-		listeners = new ArrayList<>();
-	}
+	private MultiTreeMap<Integer, Event> eventList = 
+			new MultiTreeMap<Integer, Event>(); //Ordered by time and arrival time.
+	private List<Listener> listeners = new ArrayList<Listener>();
+	private RoadMap roadMap = new RoadMap();
+	private int timeLimit;
+	private int timer = 0;
 	
 	/**
 	 * Adds a mew <code>Event</code> to the list, ordered by time.

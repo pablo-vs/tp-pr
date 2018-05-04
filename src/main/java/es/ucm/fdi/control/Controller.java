@@ -30,7 +30,7 @@ import java.lang.IllegalArgumentException;
 /**
  * Controller for the simulator, acts as an interface.
  *
- * @version 10.03.2018
+ * @version 04.05.2018
  */
 public class Controller {
 
@@ -45,6 +45,15 @@ public class Controller {
 	private Simulator sim;
 	private OutputStream output;
 
+	
+	/**
+	 * Default constructor.
+	 */
+	public Controller(){
+		sim = new Simulator();	
+		output = null;
+	}
+	
 	/**
 	 * Constructor with streams, allows IO to/from resources other than files.
 	 *
