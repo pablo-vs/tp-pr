@@ -30,6 +30,11 @@ import es.ucm.fdi.exceptions.SimulatorException;
 import es.ucm.fdi.exceptions.ObjectNotFoundException;
 import es.ucm.fdi.exceptions.UnreachableJunctionException;
 
+/**
+ * Main window for the simulator.
+ * 
+ * @version 04.05.2018
+ */
 public class SimWindow extends JPanel implements Simulator.Listener {
 	/**
 	 * Generated serialVersionUID
@@ -85,6 +90,9 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 		controller.addListener(this);
 	}
 
+	/**
+	 * Adds to the action maps all possible actions in this window.
+	 */
 	private void addActions() {
 		// LOADS EVENTS
 		new SimulatorAction(Actions.LOAD_EVENT, "open.png",
@@ -216,8 +224,20 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 					contextualBar
 							.setText("Output redirection preferences updated");
 				}).register(this);
+		
+		//WRITES SELECTED
+		new SimulatorAction(Actions.REPORT_SELECTED, "report.png", 
+				"Generates reports for selected items", KeyEvent.VK_I, "control shift I",
+				()->{
+					writeSelectedReports();
+				}).register(this);
 	}
 
+	/**
+	 * Creates the upper toolbar.
+	 * 
+	 * @param jf	Current frame.
+	 */
 	private void addToolBar(JFrame jf) {
 		JMenuBar menu = new JMenuBar();
 		JMenu file = new JMenu("File");
@@ -251,6 +271,9 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 
 	}
 
+	/**
+	 * Creates the upper button menu.
+	 */
 	private void addButtonBar() {
 		JLabel stepsLabel = new JLabel(" Steps: ");
 		JLabel timeLabel = new JLabel(" Time: ");
@@ -293,6 +316,11 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 		add(bar, BorderLayout.NORTH);
 	}
 
+	/**
+	 * Creates the central panel.
+	 * 
+	 * @param jf Current frame.
+	 */
 	private void addCenterPanel(JFrame jf) {
 		JSplitPane eastWestSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
 				createSouthWestPanel(), createSouthEastPanel());
@@ -312,6 +340,11 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 		});
 	}
 
+	/**
+	 * Creates the north panel for the central panel division.
+	 * 
+	 * @return	Built north panel.
+	 */
 	private JPanel createNorthPanel() {
 		JPanel northPanel = new JPanel();
 
@@ -367,13 +400,21 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 		eventsTableScroll.setBorder(BorderFactory
 				.createTitledBorder("Event List"));
 
-		// DO WE NEED ANOTHER JPOPUPMENU?
+		JPopupMenu reportsJPMenu = new JPopupMenu();
+		reportsJPMenu.add(m.get("" + Actions.REPORT_SELECTED));
+		reportsArea.setPopupMenu(reportsJPMenu);
+		
 		northPanel.add(reportsArea);
 		reportsArea.setBorder(BorderFactory.createTitledBorder("Reports Area"));
 
 		return northPanel;
 	}
 
+	/**
+	 * Creates the SouthWest panel for the Central Panel division.
+	 * 
+	 * @return SouthWest panel.
+	 */
 	private JPanel createSouthWestPanel() {
 		JPanel southWestPanel = new JPanel();
 
@@ -459,6 +500,9 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 		}
 	}
 
+	/**
+	 * Writes reports for selected table items if applicable.
+	 */
 	@SuppressWarnings("unchecked")
 	private void writeSelectedReports() {
 		CustomTableModel vehiclesModel = (CustomTableModel) vehiclesTable
@@ -493,6 +537,12 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 		}
 	}
 
+	/**
+	 * Utility  method for the one below.
+	 * 
+	 * @param title		Error title
+	 * @param message	Error message
+	 */
 	private void showErrorMessage(String title, String message) {
 		Logger.getLogger(SimWindow.class.getName()).info(
 				"Showing message: " + title + "\n" + message);
@@ -500,6 +550,11 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 				JOptionPane.ERROR_MESSAGE);
 	}
 
+	/**
+	 * Shows a popup message error dialogue
+	 * 
+	 * @param message	Error message
+	 */
 	private void showErrorMessage(String message) {
 		showErrorMessage("An error occurred", message);
 	}

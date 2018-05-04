@@ -12,7 +12,8 @@ public enum Actions{
 	LOAD_REPORT("Load Report"),
 	SAVE_REPORT("Save Report"), 
 	DELETE_REPORT("Delete Report"),
-	REDIRECT_OUTPUT("Redirect Output");
+	REDIRECT_OUTPUT("Redirect Output"),
+	REPORT_SELECTED("Report Selected");
 	
 	String s;	
 	private Actions(String s){
