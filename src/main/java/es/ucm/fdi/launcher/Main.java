@@ -35,7 +35,7 @@ public class Main {
 	private static Integer _timeLimit = null;
 	private static String _inFile = null;
 	private static String _outFile = null;
-	private static boolean _batch = false;
+	private static boolean _batch = true;
 	private static Level _logLevel = Level.WARNING;
 
 	private static void parseArgs(String[] args) {
@@ -68,9 +68,8 @@ public class Main {
 			}
 
 		} catch (ParseException e) {
-			// new Piece(...) might throw GameError exception
 			System.err.println(e.getLocalizedMessage());
-			//System.exit(1);
+			System.exit(1);
 		}
 
 	}
@@ -81,8 +80,9 @@ public class Main {
 		cmdLineOptions.addOption(Option.builder("h").longOpt("help")
 				.desc("Print this message").build());
 
-		cmdLineOptions.addOption(Option.builder("b").longOpt("batch")
-				.desc("Start the simulator in batch mode").build());
+		cmdLineOptions.addOption(Option.builder("m").longOpt("mode").hasArg()
+				.desc("'batch' for batch mode and 'gui' for GUI mode\n"
+				      + "(default value is 'batch')").build());
 		cmdLineOptions.addOption(Option.builder("i").longOpt("input").hasArg()
 				.desc("Events input file").build());
 		cmdLineOptions.addOption(Option.builder("l").longOpt("log").hasArg()
@@ -109,18 +109,20 @@ public class Main {
 		}
 	}
 	
-	private static void parseBatchOption(CommandLine line) {
-		if (line.hasOption("b")) {
-			_batch = true;
+	private static void parseBatchOption(CommandLine line)
+		throws ParseException {
+		
+	        String modeStr = line.getOptionValue("m");
+		if("gui".equals(modeStr)) {
+			_batch = false;
+		} else if(modeStr != null && !"batch".equals(modeStr)) {
+			throw new ParseException("Invalid mode: " + modeStr);
 		}
 	}
 
 	private static void parseInFileOption(CommandLine line)
 			throws ParseException {
 		_inFile = line.getOptionValue("i");
-		if (_inFile == null) {
-			throw new ParseException("An events file is missing");
-		}
 	}
 	
 	private static void parseLogLevelOption(CommandLine line)
@@ -221,8 +223,10 @@ public class Main {
 	 * @throws IOException
 	 */
 	private static void startBatchMode() throws IOException, SimulatorException {
-		Controller control = new Controller(new FileInputStream(_inFile),
-				_outFile == null ? System.out : new FileOutputStream(_outFile));
+		Controller control = new Controller
+			(_inFile == null ? new ByteArrayInputStream(new byte[0])
+			 : new FileInputStream(_inFile),
+			 _outFile == null ? System.out : new FileOutputStream(_outFile));
 
 		if (_timeLimit == null) {
 			_timeLimit = _timeLimitDefaultValue;
@@ -242,6 +246,7 @@ public class Main {
 			SimulatorException {
 		
 		parseArgs(args);
+		setupLogging(_logLevel);
 		if(_batch){
 			startBatchMode();
 		}else{
@@ -251,7 +256,12 @@ public class Main {
 		}
 	}
 
-	public static void setupLogging(Level level) {
+	private static void setupLogging(Level level) {
+
+		// Call setupLogging with the desired log level
+		// -l <level>
+		// setupLogging(Level.INFO);
+		
 		Logger log = Logger.getLogger("");
 		for (Handler h : log.getHandlers())
 			log.removeHandler(h);
@@ -284,24 +294,13 @@ public class Main {
 		//
 		// test("resources/examples/basic/");
 
-		// Call setupLogging with the desired log level
-		// setupLogging(Level.INFO);
-		setupLogging(_logLevel);
-
 		// Call start to start the simulator from command line, etc.
-		// Controller control = new Controller(new
-		// ByteArrayInputStream("".getBytes()), new ByteArrayOutputStream());
-		// SimWindow view = new SimWindow(control);
 		try {
 			start(args);
 		} catch (SimulatorException | IOException | IllegalArgumentException e) {
 			System.out.println("An error occurred:\n" + e.getMessage());
 			throw new SimulatorException("Fatal error on execution");
 		}
-		/*Controller control = new Controller(new ByteArrayInputStream(
-				"".getBytes()), new ByteArrayOutputStream());
-		SimWindow view = new SimWindow(control);
-*/
 	}
 
 }
