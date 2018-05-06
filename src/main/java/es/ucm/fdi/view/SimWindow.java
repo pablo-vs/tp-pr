@@ -23,6 +23,7 @@ import es.ucm.fdi.ini.Ini;
 import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.view.util.Tables;
 import es.ucm.fdi.view.util.Actions;
+import es.ucm.fdi.view.customcomponents.CustomTable;
 import es.ucm.fdi.view.customcomponents.CustomTableModel;
 import es.ucm.fdi.view.customcomponents.CustomGraphLayout;
 import es.ucm.fdi.view.customcomponents.CustomTextComponent;
@@ -51,28 +52,33 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 	private CustomTextComponent eventsEditor = new CustomTextComponent(true);
 	private CustomTextComponent reportsArea = new CustomTextComponent(false);
 
-	private JTable eventsQueueTable = new JTable(new CustomTableModel(
+	private CustomTable eventsQueueTable = new CustomTable(new CustomTableModel(
 			Tables.EVENT_LIST.getTags()));
-	private JTable vehiclesTable = new JTable(new CustomTableModel(
+	private CustomTable vehiclesTable = new CustomTable(new CustomTableModel(
 			Tables.VEHICLES.getTags()));
-	private JTable roadsTable = new JTable(new CustomTableModel(
+	private CustomTable roadsTable = new CustomTable(new CustomTableModel(
 			Tables.ROADS.getTags()));
-	private JTable junctionsTable = new JTable(new CustomTableModel(
+	private CustomTable junctionsTable = new CustomTable(new CustomTableModel(
 			Tables.JUNCTIONS.getTags()));
 
 	/*
 	 * It needs to be possible to choose simulation objects.
 	 */
 	private JTextField contextualBar = new JTextField();
-	private CustomGraphLayout graph;
+	private CustomGraphLayout graph = new CustomGraphLayout();
 	private JSpinner steps;
 	private JTextField time;
 
 	public SimWindow(Controller cont) {
 		JFrame jf = new JFrame("Traffic Simulator");
-		graph = new CustomGraphLayout();
 		controller = cont;
 
+		//We center the tables
+		eventsQueueTable.center();
+		vehiclesTable.center();
+		roadsTable.center();
+		junctionsTable.center();
+		
 		contextualBar.setEditable(false);
 		contextualBar.setHorizontalAlignment(JTextField.CENTER);
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
