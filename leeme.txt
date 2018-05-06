@@ -33,3 +33,7 @@ Collections.unmodifiableList
 simulador.
 
 - Cambios en Controller para mejorar la gestión de excepciones.
+
+- Acortado comentarios demasiado extensos
+
+- Se ha revisado el formato de forma que las líneas no superen 80 columnas
