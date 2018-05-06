@@ -192,7 +192,6 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 		// SHOWS REPORTS IN TEXT AREA
 		new SimulatorAction(Actions.REPORT, "report.png", "Show reports",
 				KeyEvent.VK_T, " control shift T", () -> {
-					reportsArea.clear();
 					try {
 						controller.dumpOutput(reportsArea.getStreamToText());
 						contextualBar.setText("Reports added to Report Area");
@@ -274,6 +273,7 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 
 		reports.add(new JMenuItem(m.get("" + Actions.REPORT)));
 		reports.add(new JMenuItem(m.get("" + Actions.DELETE_REPORT)));
+		reports.add(new JMenuItem(m.get("" + Actions.REPORT_SELECTED)));
 
 		menu.add(file);
 		menu.add(simulator);
@@ -539,7 +539,7 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 				obj.report(controller.getSimulator().getTimer()).store(reports);
 				reports.write('\n');
 			}
-			reportsArea.setText(reports.toString("UTF-8"));
+			reportsArea.append(reports.toString("UTF-8"));
 		} catch (ObjectNotFoundException e) {
 			showErrorMessage("Error while getting selected items.\n"
 					+ e.getMessage());
