@@ -30,29 +30,36 @@ import java.lang.IllegalArgumentException;
 /**
  * Controller for the simulator, acts as an interface.
  *
- * @version 04.05.2018
+ * @version 06.05.2018
  */
 public class Controller {
-
+	
+	private static final String INVALID_INI_MSG = 
+			"Error while reading events: Invalid Ini file.\n";
+	private static final String GENERIC_INI_ERROR_MSG = 
+			"Error while reading events";
+	private static final String SIMULATOR_ERROR_MSG = 
+			"Error while running simulation at time ";
+	
 	private static final Event.EventBuilder[] AVAILABLE_EVENTS = {
-			new NewHighwayEvent.Builder(), new NewDirtRoadEvent.Builder(),
-			new NewCarEvent.Builder(), new NewBicycleEvent.Builder(),
-			new NewRoundRobinEvent.Builder(), new NewMostCrowedEvent.Builder(),
-			new NewVehicleEvent.Builder(), new NewRoadEvent.Builder(),
+			new NewCarEvent.Builder(), 
+			new NewRoadEvent.Builder(),
+			new NewHighwayEvent.Builder(),
+			new NewBicycleEvent.Builder(),
+			new NewVehicleEvent.Builder(),
+			new NewDirtRoadEvent.Builder(),
 			new NewJunctionEvent.Builder(),
+			new NewRoundRobinEvent.Builder(), 
+			new NewMostCrowedEvent.Builder(),
 			new MakeVehicleFaultyEvent.Builder() };
 
-	private Simulator sim;
-	private OutputStream output;
+	private Simulator sim = new Simulator();
+	private OutputStream output = null;
 
-	
 	/**
-	 * Default constructor.
+	 * Default constructor
 	 */
-	public Controller(){
-		sim = new Simulator();	
-		output = null;
-	}
+	public Controller(){}
 	
 	/**
 	 * Constructor with streams, allows IO to/from resources other than files.
@@ -93,13 +100,12 @@ public class Controller {
 			}
 		} catch (IniError e) {
 			Logger.getLogger(Controller.class.getName()).log(Level.WARNING,
-					"Error while reading events: Invalid Ini file", e);
+					INVALID_INI_MSG, e);
 			throw new IllegalArgumentException(
-					"Error while reading events: Invalid Ini file.\n"
-							+ e.getMessage(), e);
+					INVALID_INI_MSG + e.getMessage(), e);
 		} catch (IllegalArgumentException | IOException e) {
 			Logger.getLogger(Controller.class.getName()).log(Level.WARNING,
-					"Error while reading events", e);
+					GENERIC_INI_ERROR_MSG, e);
 			throw e;
 		}
 	}
@@ -139,11 +145,11 @@ public class Controller {
 				| ObjectNotFoundException | UnreachableJunctionException e) {
 
 			Logger.getLogger(Controller.class.getName()).log(Level.WARNING,
-					"Simulation error at time " + sim.getTimer(), e);
+					SIMULATOR_ERROR_MSG + sim.getTimer(), e);
 
 			throw new SimulatorException(
-					"Error while running simulation at time " + sim.getTimer()
-							+ ".\n" + e.getMessage(), e);
+					SIMULATOR_ERROR_MSG + sim.getTimer() + ".\n" 
+					+ e.getMessage(), e);
 		}
 	}
 

@@ -15,7 +15,7 @@ import es.ucm.fdi.exceptions.UnreachableJunctionException;
  * Class that models the general behavior for <code>Junctions</code> in the
  * simulation.
  *
- * @version 16.03.2018
+ * @version 06.05.2018
  */
 public class Junction extends SimObject {
 
@@ -24,8 +24,10 @@ public class Junction extends SimObject {
 	private static String junction_header = "junction_report";
 	private int currentOpenQueue = -1;
 	private List<Road> outgoingRoads;
-	private HashMap<Road, IncomingRoad> roadToQueueMap;
-	private HashMap<Junction, Road> junctionToRoadMap;
+	private HashMap<Road, IncomingRoad> roadToQueueMap = 
+			new HashMap<Road, IncomingRoad>();
+	private HashMap<Junction, Road> junctionToRoadMap = 
+			new HashMap<Junction, Road>();
 
 	/**
 	 * Class representing a <code>Road</code> with its respective queue of
@@ -139,8 +141,6 @@ public class Junction extends SimObject {
 	 */
 	public Junction(String id, List<Road> incoming, List<Road> outgoing) {
 		super(id, junction_header);
-		roadToQueueMap = new HashMap<Road, IncomingRoad>();
-		junctionToRoadMap = new HashMap<Junction, Road>();
 		incomingRoads = new ArrayList<IncomingRoad>(incoming.size());
 		currentOpenQueue = -1;
 		for (int i = 0; i < incoming.size(); ++i) {

@@ -10,6 +10,8 @@ import es.ucm.fdi.sim.objects.Vehicle;
 /**
  * Class that models the behavior of <code>MostCrowed</code>
  * <code>Junctions</code> in the simulation.
+ * 
+ * @version 06.05.2018
  */
 public class MostCrowed extends Junction {
 	private int timeInterval = 0;

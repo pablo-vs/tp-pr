@@ -22,12 +22,11 @@ public class CustomTextComponent extends JPanel {
 	private JFileChooser fileChooser = new JFileChooser();
 	private JTextArea textArea = new JTextArea();
 	private JPopupMenu popupMenu = new JPopupMenu();
-	private TextOutputStream asOutputStream;
+	private TextOutputStream asOutputStream = new TextOutputStream();
 
 	public CustomTextComponent(boolean isEditable) {
 		setLayout(new GridLayout());
 
-		asOutputStream = new TextOutputStream();
 		textArea.setEditable(isEditable);
 		textArea.setLineWrap(true);
 		textArea.setWrapStyleWord(true);
@@ -38,7 +37,7 @@ public class CustomTextComponent extends JPanel {
 		add(area, BorderLayout.CENTER);
 
 		textArea.addMouseListener(new MouseListener() {
-
+			
 			@Override
 			public void mousePressed(MouseEvent e) {
 				showPopup(e);
@@ -94,7 +93,7 @@ public class CustomTextComponent extends JPanel {
 			File file = fileChooser.getSelectedFile();
 			textArea.setText(new String(Files.readAllBytes(file.toPath()),
 					"UTF-8"));
-
+			
 			return true;
 		} else {
 			return false;
@@ -150,13 +149,15 @@ public class CustomTextComponent extends JPanel {
 		return asOutputStream;
 	}
 
+	/**
+	 * <code>OutputStream</code> with the textArea as an output channel.
+	 */
 	private class TextOutputStream extends OutputStream {
-		private JTextArea area;
+		private JTextArea area = textArea;
 
-		public TextOutputStream() {
-			area = textArea;
-		}
-
+		/**
+		 * Write to the textArea.
+		 */
 		@Override
 		public void write(int b) throws IOException {
 			textArea.append(String.valueOf((char) b));

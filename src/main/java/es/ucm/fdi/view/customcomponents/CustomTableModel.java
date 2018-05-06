@@ -26,32 +26,49 @@ public class CustomTableModel extends AbstractTableModel {
 	private List<? extends Describable> origin;
 	private String[] columnTags;
 
+	/**
+	 * Class constructor.
+	 * 
+	 * @param columnTags	Tags for the columns.
+	 */
 	public CustomTableModel(String[] columnTags) {
 		this.columnTags = columnTags;
 	}
 
+	/**
+	 * Returns amount of rows.
+	 */
 	@Override
 	public int getRowCount() {
 		return data.size();
 	}
 
+	/**
+	 * Returns amount of columns.
+	 */
 	@Override
 	public int getColumnCount() {
 		return columnTags.length;
 	}
-
+	
+	/**
+	 * Returns value at indicated position.
+	 */
 	@Override
 	public Object getValueAt(int row, int column) {
 		return data.get(row).get(columnTags[column]);
 	}
 
+	/**
+	 * Returns name of i-th column.
+	 */
 	@Override
 	public String getColumnName(int i) {
 		return columnTags[i];
 	}
 
 	/**
-	 * Clear the data in the model.
+	 * Clears the data in this model.
 	 */
 	public void clear() {
 		data.clear();
@@ -60,7 +77,7 @@ public class CustomTableModel extends AbstractTableModel {
 	}
 
 	/**
-	 * Return selected objects from the origin of the data
+	 * Returns selected objects from the origin of the data
 	 *
 	 * @param rows
 	 *            An array of selected row indexes.
@@ -80,7 +97,7 @@ public class CustomTableModel extends AbstractTableModel {
 	}
 
 	/**
-	 * Changes the model data.
+	 * Changes the model's data.
 	 *
 	 * @param newData
 	 *            A <code>List</code> of <code>Describable</code> objects which
@@ -91,7 +108,7 @@ public class CustomTableModel extends AbstractTableModel {
 	}
 
 	/**
-	 * Changes the model data, reserving a column for row index.
+	 * Changes the model's data, reserving a column for row index.
 	 *
 	 * @param newData
 	 *            A <code>List</code> of <code>Describable</code> objects which
@@ -113,6 +130,9 @@ public class CustomTableModel extends AbstractTableModel {
 		change();
 	}
 
+	/**
+	 * Notifies listeners of changes in table model.
+	 */
 	private void change() {
 		for (TableModelListener l : listenerList
 				.getListeners(TableModelListener.class)) {

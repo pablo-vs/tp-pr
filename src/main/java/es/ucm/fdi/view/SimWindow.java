@@ -4,37 +4,45 @@ import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+
+import java.lang.IllegalArgumentException;
+
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.lang.IllegalArgumentException;
+
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
-import es.ucm.fdi.sim.Simulator;
-import es.ucm.fdi.sim.objects.SimObject;
 import es.ucm.fdi.control.Controller;
 import es.ucm.fdi.control.SimulatorAction;
+
+import es.ucm.fdi.exceptions.SimulatorException;
+import es.ucm.fdi.exceptions.ObjectNotFoundException;
+import es.ucm.fdi.exceptions.UnreachableJunctionException;
+
 import es.ucm.fdi.ini.Ini;
 import es.ucm.fdi.ini.IniSection;
+
+import es.ucm.fdi.sim.Simulator;
+import es.ucm.fdi.sim.objects.SimObject;
+
 import es.ucm.fdi.view.util.Tables;
 import es.ucm.fdi.view.util.Actions;
 import es.ucm.fdi.view.customcomponents.CustomTable;
 import es.ucm.fdi.view.customcomponents.CustomTableModel;
 import es.ucm.fdi.view.customcomponents.CustomGraphLayout;
 import es.ucm.fdi.view.customcomponents.CustomTextComponent;
-import es.ucm.fdi.exceptions.SimulatorException;
-import es.ucm.fdi.exceptions.ObjectNotFoundException;
-import es.ucm.fdi.exceptions.UnreachableJunctionException;
 
 /**
  * Main window for the simulator.
  * 
- * @version 04.05.2018
+ * @version 06.05.2018
  */
 public class SimWindow extends JPanel implements Simulator.Listener {
 	/**
@@ -271,9 +279,6 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 		menu.add(simulator);
 		menu.add(reports);
 		jf.add(menu, BorderLayout.NORTH);
-		/*
-		 * Requires finishing implementation
-		 */
 
 	}
 
@@ -296,7 +301,7 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 
 		JToolBar bar = new JToolBar();
 		bar.setFloatable(false);
-		// MAIN BUTTONS
+		// Main buttons
 		bar.add(m.get("" + Actions.LOAD_EVENT));
 		bar.add(m.get("" + Actions.SAVE_EVENT));
 		bar.add(m.get("" + Actions.CLEAR_EDITOR));
@@ -313,7 +318,7 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 		time.setMaximumSize(new Dimension(100, 50));
 		bar.add(timeLabel);
 		bar.add(time);
-		// LAST BUTTONS
+		// Last buttons
 		bar.addSeparator();
 		bar.add(m.get("" + Actions.REPORT));
 		bar.add(m.get("" + Actions.SAVE_REPORT));
@@ -338,6 +343,7 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 		jf.setSize(1000, 1000);
 		jf.setVisible(true);
 
+		//InvokeLater used to ensure correct division placement
 		SwingUtilities.invokeLater(() -> {
 			northSouthSplit.setDividerLocation(NS_SPLIT_DIVISION);
 			northSouthSplit.setResizeWeight(NS_SPLIT_DIVISION);
@@ -352,14 +358,13 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 	 * @return	Built north panel.
 	 */
 	private JPanel createNorthPanel() {
-		JPanel northPanel = new JPanel();
-
-		JScrollPane eventsTableScroll = new JScrollPane(eventsQueueTable);
-		northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.X_AXIS));
 		ActionMap m = getActionMap();
-
+		JPanel northPanel = new JPanel();
 		JPopupMenu eventJPM = new JPopupMenu();
 		JMenu templateMenu = new JMenu("Add template");
+		JScrollPane eventsTableScroll = new JScrollPane(eventsQueueTable);
+		northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.X_AXIS));
+
 		try {
 			StringBuilder sb = new StringBuilder(TEMPLATE_PATH);
 			sb.append(TEMPLATE_INDEX_FILE);
@@ -447,9 +452,11 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 
 	private JPanel createSouthEastPanel() {
 		JPanel panel = new JPanel(new BorderLayout());
+		
 		panel.setPreferredSize(new Dimension(400, 600));
 		panel.setBorder(BorderFactory.createTitledBorder("Road Map"));
 		panel.add(graph, BorderLayout.CENTER);
+		
 		return panel;
 	}
 
@@ -468,41 +475,42 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 				.getModel();
 		CustomTableModel junctionsModel = (CustomTableModel) junctionsTable
 				.getModel();
-		CustomTableModel roadsModel = (CustomTableModel) roadsTable.getModel();
+		CustomTableModel roadsModel = (CustomTableModel) roadsTable
+				.getModel();
 		CustomTableModel eventsModel = (CustomTableModel) eventsQueueTable
 				.getModel();
 
 		switch (ue.getType()) {
-		case RESET:
-			time.setText("0");
-			graph.updateGraph(controller.getSimulator().getRoadMap());
-
-			vehiclesModel.clear();
-			roadsModel.clear();
-			junctionsModel.clear();
-			eventsModel.clear();
-			break;
-
-		case ERROR:
-			break;
-
-		case REGISTERED:
-			break;
-
-		case ADVANCED:
-			time.setText(Integer.toString(controller.getSimulator().getTimer()));
-			graph.updateGraph(controller.getSimulator().getRoadMap());
-
-			writeSelectedReports();
-
-			vehiclesModel.setElements(ue.getVehicles());
-			roadsModel.setElements(ue.getRoads());
-			junctionsModel.setElements(ue.getJunctions());
-			break;
-
-		case NEW_EVENT:
-			eventsModel.setElements(ue.getEventQueue(), "#");
-			break;
+			case RESET:
+				time.setText("0");
+				graph.updateGraph(controller.getSimulator().getRoadMap());
+	
+				vehiclesModel.clear();
+				roadsModel.clear();
+				junctionsModel.clear();
+				eventsModel.clear();
+				break;
+	
+			case ERROR:
+				break;
+	
+			case REGISTERED:
+				break;
+	
+			case ADVANCED:
+				time.setText(Integer.toString(controller.getSimulator().getTimer()));
+				graph.updateGraph(controller.getSimulator().getRoadMap());
+	
+				writeSelectedReports();
+	
+				vehiclesModel.setElements(ue.getVehicles());
+				roadsModel.setElements(ue.getRoads());
+				junctionsModel.setElements(ue.getJunctions());
+				break;
+	
+			case NEW_EVENT:
+				eventsModel.setElements(ue.getEventQueue(), "#");
+				break;
 		}
 	}
 
@@ -522,10 +530,8 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 		try {
 			List<SimObject> selectedObjects = (List<SimObject>) junctionsModel
 					.getSelected(junctionsTable.getSelectedRows());
-
 			selectedObjects.addAll((List<SimObject>) roadsModel
 					.getSelected(roadsTable.getSelectedRows()));
-
 			selectedObjects.addAll((List<SimObject>) vehiclesModel
 					.getSelected(vehiclesTable.getSelectedRows()));
 

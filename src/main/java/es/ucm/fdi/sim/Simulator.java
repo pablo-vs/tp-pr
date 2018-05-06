@@ -82,10 +82,8 @@ public class Simulator {
 	}
 	
 	/**
-	 * Prepares a report of all the objects in the simulation, first the <code>Roads</code>,
-	 * then the <code>Junctions</code> and finally the <code>vehicles</code>, by order of
-	 * insertion.
-	 *
+	 * Prepares a report of all the objects in the simulation.
+	 * 
 	 * @return An <code>Ini</code> object storing the report
 	 */
 	public Ini prepareReport() {
@@ -192,13 +190,13 @@ public class Simulator {
 	}
 
 	/**
-	 * Interface which allows implementers to get information from the <code>Simulator</code>
+	 * Interface that allows implementers to get information from this <code>Simulator</code>
 	 * when certain events occur.
 	 */
   	public interface Listener {
 		/**
-		 * This method will be called whenever an event occurs in a <code>Simulator</code>
-		 * in which this instance is registered as a Listener.
+		 * Called whenever an event occurs in a <code>Simulator</code>
+		 * with this instance registered as a <code>Listener</coede>.
 		 *
 		 * @param ue <code>UpdateEvent</code> containing the details of the event.
 		 * @param error An error message.
@@ -229,15 +227,16 @@ public class Simulator {
 
 	/**
 	 * Contains the information of an event, including type and
-	 * complete state of the <code>Simulator</code> at the current moment.
+	 * state of the <code>Simulator</code> at the current time.
 	 */
 	public class UpdateEvent {
-		private EventType type;
-		private List<Vehicle> vehicles = roadMap.getVehicles();
-		private List<Road> roads = roadMap.getRoads();
-		private List<Junction> junctions = roadMap.getJunctions();
-		private List<Event> eventQueue = eventList.valuesList();
 		private int time = timer;
+		private EventType type;
+		
+		private List<Road> roads = roadMap.getRoads();
+		private List<Vehicle> vehicles = roadMap.getVehicles();
+		private List<Event> eventQueue = eventList.valuesList();
+		private List<Junction> junctions = roadMap.getJunctions();
 
 		public UpdateEvent(EventType type) {
 			this.type = type;

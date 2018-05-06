@@ -9,6 +9,8 @@ import es.ucm.fdi.sim.objects.Vehicle;
 
 /**
  * Class that models the behavior of <code>Cars</code> in the simulation.
+ * 
+ * @version 06.05.2018
  */
 public class Car extends Vehicle {
 	private double faultyProbability;
@@ -45,21 +47,6 @@ public class Car extends Vehicle {
 		faultyProbability = prob;
 		this.seed = seed;
 		prng = new Random(this.seed);
-	}
-
-	/**
-	 * 
-	 * @param id
-	 * @param maxVel
-	 * @param itinerary
-	 * @param resistance
-	 * @param faultyDuration
-	 * @param prob
-	 */
-	public Car(String id, int maxVel, List<Junction> itinerary, int resistance,
-			int faultyDuration, double prob) {
-		this(id, maxVel, itinerary, resistance, faultyDuration, prob, System
-				.currentTimeMillis());
 	}
 
 	/**

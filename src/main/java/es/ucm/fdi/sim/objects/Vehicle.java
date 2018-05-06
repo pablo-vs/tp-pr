@@ -63,7 +63,7 @@ public class Vehicle extends SimObject {
 	 */
 	public Vehicle(String id, int maxVel, Junction ini, Junction end) {
 		super(id, vehicle_header);
-		ArrayList<Junction> it = new ArrayList<>();
+		ArrayList<Junction> it = new ArrayList<Junction>();
 		it.add(ini);
 		it.add(end);
 		this.itinerary = it;

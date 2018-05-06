@@ -27,18 +27,22 @@ public class CustomGraphLayout extends JPanel {
 	 * Generated UID.
 	 */
 	private static final long serialVersionUID = -735338964701982371L;
-	private GraphComponent _graphComp;
+	private GraphComponent _graphComp = new GraphComponent();
 
 	/**
 	 * Empty constructor.
 	 */
 	public CustomGraphLayout() {
 		super(new BorderLayout());
-		_graphComp = new GraphComponent();
 		add(_graphComp, BorderLayout.CENTER);
 		setVisible(true);
 	}
 
+	/**
+	 * Updates the graph with the data from the given RoadMap.
+	 * 
+	 * @param rm	<code>RoadMap</code> to obtain changes from.
+	 */
 	public void updateGraph(RoadMap rm) {
 		Graph g = new Graph();
 		Map<Junction, Node> junctionToNode = new HashMap<Junction, Node>();

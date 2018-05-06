@@ -11,6 +11,8 @@ import es.ucm.fdi.sim.objects.Vehicle;
 
 /**
  * Class that models <code>RoundRobins</code> in the simulation.
+ * 
+ * @version 06.05.2018
  */
 public class RoundRobin extends Junction {
 	private int minTimeSlice;
@@ -19,7 +21,7 @@ public class RoundRobin extends Junction {
 	private int currentIntervalTime = 0;
 	private boolean fullyUsed = false;
 	private boolean notUsed = false;
-	private List<Integer> intervals;
+	private List<Integer> intervals = new ArrayList<Integer>();
 
 	/**
 	 * Constructor for the <code>RoundRobin</code> class.
@@ -57,7 +59,6 @@ public class RoundRobin extends Junction {
 		super(id, incoming, outgoing);
 		minTimeSlice = min;
 		maxTimeSlice = max;
-		intervals = new ArrayList<>();
 	}
 
 	/**
