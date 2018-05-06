@@ -53,10 +53,17 @@ public class NewJunctionEvent extends Event {
 		log.info("Event executed");
 	}
 
+	/**
+	 * Creates a <code>Junction</code> given its id.
+	 * @return	The newly created <code>Junction</code>.
+	 */
 	public Junction createJunction() {
 		return new Junction(junctionID);
 	}
 
+	/**
+	 * Equals method for this type of <code>Event</code>.
+	 */
 	@Override
 	public boolean equals(Object o){
 		return (o instanceof NewJunctionEvent 

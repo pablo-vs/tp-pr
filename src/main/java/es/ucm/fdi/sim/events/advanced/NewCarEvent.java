@@ -12,6 +12,8 @@ import es.ucm.fdi.sim.events.NewVehicleEvent;
 
 /**
  * Represents the New Car event.
+ * 
+ * @version 06.05.2018
  */
 public class NewCarEvent extends NewVehicleEvent {
 	private long seed;
@@ -164,7 +166,7 @@ public class NewCarEvent extends NewVehicleEvent {
 					log.info("Event parsed");
 				} catch (Exception e) {
 					throw new IllegalArgumentException(
-							"Error while parsing event:\n" + e.getMessage(), e);
+							EVENT_PARSE_ERROR_MSG + e.getMessage(), e);
 				}
 			}
 

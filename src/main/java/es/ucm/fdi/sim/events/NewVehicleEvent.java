@@ -15,6 +15,8 @@ import es.ucm.fdi.exceptions.UnreachableJunctionException;
 
 /**
  * Represents the New Vehicle event.
+ * 
+ * @version 06.05.2018
  */
 public class NewVehicleEvent extends Event {
 	protected int maxSpeed;
@@ -66,7 +68,7 @@ public class NewVehicleEvent extends Event {
 	/**
 	 * Return a  description of the event.
 	 *
-	 * @param out A <code>Map<String, String></code> which will contain theç
+	 * @param out A <code>Map<String, String></code> which will contain the
 	 * representation of the event.
 	 */
 	@Override
@@ -95,6 +97,12 @@ public class NewVehicleEvent extends Event {
 		return result;
 	}
 
+	/**
+	 * Creates an itinerary if it is possible.
+	 * 
+	 * @param r	Roadmap from which to check data.
+	 * @return	The newly built itinerary.
+	 */
 	protected List<Junction> createItinerary(RoadMap r) {
 		List<Junction> it = new ArrayList<Junction>();
 		Junction j1 = verifyJunction(r, itinerary.get(0));
@@ -112,6 +120,9 @@ public class NewVehicleEvent extends Event {
 		return it;
 	}
     
+	/**
+	 * Equals method for this type of <code>Event</code>.
+	 */
 	@Override
 	public boolean equals(Object o){
 		boolean isEqual = false;

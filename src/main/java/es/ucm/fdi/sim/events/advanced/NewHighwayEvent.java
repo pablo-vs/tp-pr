@@ -13,7 +13,7 @@ import es.ucm.fdi.sim.events.NewRoadEvent;
 /**
  * Represents the New Highway Event.
  *
- * @version 17.03.2018
+ * @version 06.05.2018
  */
 public class NewHighwayEvent extends NewRoadEvent {
 	private int lanes;
@@ -133,7 +133,7 @@ public class NewHighwayEvent extends NewRoadEvent {
 					log.info("Event parsed");
 				} catch (Exception e) {
 					throw new IllegalArgumentException(
-							"Error while parsing event:\n" + e.getMessage(), e);
+							EVENT_PARSE_ERROR_MSG + e.getMessage(), e);
 				}
 			}
 

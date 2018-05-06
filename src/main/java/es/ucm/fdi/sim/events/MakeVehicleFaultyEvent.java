@@ -58,6 +58,9 @@ public class MakeVehicleFaultyEvent extends Event {
 		log.info("Event executed");
 	}
 
+	/**
+	 * Equals method for this type of <code>Event</code>.
+	 */
 	@Override
 	public boolean equals(Object o) {
 		boolean isEqual = false;

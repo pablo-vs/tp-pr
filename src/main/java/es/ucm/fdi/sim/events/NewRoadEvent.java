@@ -84,7 +84,9 @@ public class NewRoadEvent extends Event {
 		return newRoad;
 	}
 
-    
+	/**
+	 * Equals method for this type of <code>Event</code>.
+	 */
 	@Override
 	public boolean equals(Object o){
 		boolean isEqual = false;

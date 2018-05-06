@@ -13,7 +13,7 @@ import es.ucm.fdi.sim.events.NewJunctionEvent;
  * Represents the <code>Event</code> used to instantiate a new
  * <code>Junction</code>.
  *
- * @version 10.03.2018
+ * @version 06.05.2018
  */
 public class NewRoundRobinEvent extends NewJunctionEvent {
 	int min;
@@ -112,7 +112,7 @@ public class NewRoundRobinEvent extends NewJunctionEvent {
 					log.info("Event parsed");
 				} catch (Exception e) {
 					throw new IllegalArgumentException(
-							"Error while parsing event:\n" + e.getMessage(), e);
+							EVENT_PARSE_ERROR_MSG + e.getMessage(), e);
 				}
 			}
 

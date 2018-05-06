@@ -13,7 +13,7 @@ import es.ucm.fdi.sim.events.NewRoadEvent;
 /**
  * Represents the New Dirt Road Event.
  *
- * @version 17.03.2018
+ * @version 06.05.2018
  */
 public class NewDirtRoadEvent extends NewRoadEvent {
 
@@ -125,7 +125,7 @@ public class NewDirtRoadEvent extends NewRoadEvent {
 					log.info("Event parsed");
 				} catch (Exception e) {
 					throw new IllegalArgumentException(
-							"Error while parsing event:\n" + e.getMessage(), e);
+							EVENT_PARSE_ERROR_MSG + e.getMessage(), e);
 				}
 			}
 
