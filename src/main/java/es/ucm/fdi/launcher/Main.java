@@ -33,7 +33,7 @@ public class Main {
 	private static Integer _timeLimit = null;
 	private static String _inFile = null;
 	private static String _outFile = null;
-	private static boolean _batch = false;
+	private static boolean _batch = true;
 	private static Level _logLevel = Level.WARNING;
 
 	private static void parseArgs(String[] args) {
