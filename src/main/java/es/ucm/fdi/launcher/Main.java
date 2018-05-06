@@ -210,7 +210,7 @@ public class Main {
 		System.err.println("Result for: '"
 				+ _inFile
 				+ "' : "
-				+ (equalOutput ? "OK!" : ("not equal to expected output +'"
+				+ (equalOutput ? "OK!" : ("not equal to expected output '"
 						+ expectedOutFile + "'")));
 		return equalOutput;
 	}

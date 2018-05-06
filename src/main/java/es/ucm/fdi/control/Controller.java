@@ -42,16 +42,20 @@ public class Controller {
 			"Error while running simulation at time ";
 	
 	private static final Event.EventBuilder[] AVAILABLE_EVENTS = {
+			//First advanced
 			new NewCarEvent.Builder(), 
-			new NewRoadEvent.Builder(),
-			new NewHighwayEvent.Builder(),
 			new NewBicycleEvent.Builder(),
-			new NewVehicleEvent.Builder(),
+			
+			new NewHighwayEvent.Builder(),
 			new NewDirtRoadEvent.Builder(),
-			new NewJunctionEvent.Builder(),
+			
 			new NewRoundRobinEvent.Builder(), 
 			new NewMostCrowedEvent.Builder(),
-			new MakeVehicleFaultyEvent.Builder() };
+			//Then the rest
+			new NewRoadEvent.Builder(),
+			new NewVehicleEvent.Builder(),
+			new NewJunctionEvent.Builder(),
+			new MakeVehicleFaultyEvent.Builder()};
 
 	private Simulator sim = new Simulator();
 	private OutputStream output = null;
