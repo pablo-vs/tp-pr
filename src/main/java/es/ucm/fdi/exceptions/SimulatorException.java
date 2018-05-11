@@ -6,7 +6,7 @@ import java.lang.Throwable;
  * Exception for wrapping and propagation purposes in the simulator. Indicates
  * an error during simulation.
  */
-public class SimulatorException extends Exception {
+public class SimulatorException extends RuntimeException {
 
 	/**
 	 * Generated UID.
