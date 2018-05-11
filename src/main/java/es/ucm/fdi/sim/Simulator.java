@@ -196,7 +196,7 @@ public class Simulator {
   	public interface Listener {
 		/**
 		 * Called whenever an event occurs in a <code>Simulator</code>
-		 * with this instance registered as a <code>Listener</coede>.
+		 * with this instance registered as a <code>Listener</code>.
 		 *
 		 * @param ue <code>UpdateEvent</code> containing the details of the event.
 		 * @param error An error message.
