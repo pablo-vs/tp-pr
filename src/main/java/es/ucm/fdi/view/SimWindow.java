@@ -4,34 +4,27 @@ import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-
 import java.lang.IllegalArgumentException;
-
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
 import es.ucm.fdi.control.Controller;
 import es.ucm.fdi.control.SimulatorAction;
-
 import es.ucm.fdi.exceptions.SimulatorException;
 import es.ucm.fdi.exceptions.ObjectNotFoundException;
 import es.ucm.fdi.exceptions.UnreachableJunctionException;
-
 import es.ucm.fdi.ini.Ini;
 import es.ucm.fdi.ini.IniSection;
-
 import es.ucm.fdi.sim.Simulator;
 import es.ucm.fdi.sim.objects.SimObject;
-
+import es.ucm.fdi.view.util.ConcurrentSimulation;
 import es.ucm.fdi.view.util.Tables;
 import es.ucm.fdi.view.util.Actions;
 import es.ucm.fdi.view.customcomponents.CustomTable;
@@ -75,6 +68,8 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 	private JSpinner steps;
 	private JSpinner delay;
 	private JTextField time;
+	private Thread simulationThread = null;
+	private int stepCount = 0;
 
 	public SimWindow(Controller cont) {
 		JFrame jf = new JFrame("Traffic Simulator");
@@ -170,9 +165,17 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 				"Executes the indicated steps", KeyEvent.VK_X,
 				"control shift X", () -> {
 					try {
-						controller.run((Integer) steps.getValue());
-						contextualBar.setText("Simulation ran for "
-								+ steps.getValue() + " steps");
+						
+						stepCount = 0;
+						
+						ConcurrentSimulation csim = new ConcurrentSimulation(controller,
+								(int)delay.getValue(), (int)steps.getValue());
+						
+						if(!(simulationThread != null && simulationThread.isAlive())) {
+							simulationThread = new Thread(csim);
+							simulationThread.start();
+						}
+						
 					} catch (SimulatorException e) {
 						showErrorMessage(e.getMessage());
 					}
@@ -180,7 +183,9 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 		// STOPS SIMULATION
 		new SimulatorAction(Actions.STOP, "stop.png", "Stops the simulation",
 				KeyEvent.VK_T, "control shift T", ()->{
-					
+					if(!(simulationThread == null) && simulationThread.isAlive()) {
+						simulationThread.interrupt();
+					}
 				}).register(this);
 		// RESETS SIMULATOR
 		new SimulatorAction(Actions.RESET, "reset.png",
@@ -516,6 +521,9 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 				time.setText(Integer.toString(controller.getSimulator().getTimer()));
 				graph.updateGraph(controller.getSimulator().getRoadMap());
 	
+				contextualBar.setText("Simulation ran for " +
+						++stepCount + " steps");
+				
 				writeSelectedReports();
 	
 				vehiclesModel.setElements(ue.getVehicles());
