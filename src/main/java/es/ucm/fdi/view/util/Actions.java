@@ -6,6 +6,7 @@ public enum Actions{
 	CLEAR_EDITOR("Clear"), 
 	INSERT_EVENT_DATA("Insert"), 
 	PLAY("Play"), 
+	STOP("Stop"),
 	RESET("Reset"), 
 	EXIT("Exit"),
 	REPORT("Report"), 

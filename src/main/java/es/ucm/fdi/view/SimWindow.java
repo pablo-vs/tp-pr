@@ -50,6 +50,7 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 	 */
 	private static final long serialVersionUID = -2574375309247665340L;
 
+	private static final int DEFAULT_DELAY = 100;
 	private static final String TEMPLATE_PATH = "./src/main/resources/templates/";
 	private static final String TEMPLATE_INDEX_FILE = "Index.ini";
 
@@ -69,12 +70,10 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 	private CustomTable junctionsTable = new CustomTable(new CustomTableModel(
 			Tables.JUNCTIONS.getTags()));
 
-	/*
-	 * It needs to be possible to choose simulation objects.
-	 */
 	private JTextField contextualBar = new JTextField();
 	private CustomGraphLayout graph = new CustomGraphLayout();
 	private JSpinner steps;
+	private JSpinner delay;
 	private JTextField time;
 
 	public SimWindow(Controller cont) {
@@ -178,6 +177,11 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 						showErrorMessage(e.getMessage());
 					}
 				}).register(this);
+		// STOPS SIMULATION
+		new SimulatorAction(Actions.STOP, "stop.png", "Stops the simulation",
+				KeyEvent.VK_T, "control shift T", ()->{
+					
+				}).register(this);
 		// RESETS SIMULATOR
 		new SimulatorAction(Actions.RESET, "reset.png",
 				"Resets the simulation to its initial point", KeyEvent.VK_R,
@@ -266,6 +270,7 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 		file.add(new JMenuItem(m.get("" + Actions.EXIT)));
 
 		simulator.add(new JMenuItem(m.get("" + Actions.PLAY)));
+		simulator.add(new JMenuItem(m.get("" + Actions.STOP)));
 		simulator.add(new JMenuItem(m.get("" + Actions.RESET)));
 		JCheckBox redirectOutput = new JCheckBox("Redirect Output");
 		redirectOutput.setAction(m.get("" + Actions.REDIRECT_OUTPUT));
@@ -288,10 +293,15 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 	private void addButtonBar() {
 		JLabel stepsLabel = new JLabel(" Steps: ");
 		JLabel timeLabel = new JLabel(" Time: ");
+		JLabel delayLabel = new JLabel(" Delay: ");
 		ActionMap m = getActionMap();
 
 		steps = new JSpinner();
+		delay = new JSpinner();
 		((SpinnerNumberModel) steps.getModel()).setMinimum(0);
+		((SpinnerNumberModel) delay.getModel()).setMinimum(0);
+		((SpinnerNumberModel) delay.getModel()).setStepSize(10);
+		((SpinnerNumberModel) delay.getModel()).setValue(DEFAULT_DELAY);
 		steps.setPreferredSize(new Dimension(100, 10));
 
 		time = new JTextField();
@@ -307,9 +317,14 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 		bar.add(m.get("" + Actions.CLEAR_EDITOR));
 		bar.add(m.get("" + Actions.INSERT_EVENT_DATA));
 		bar.add(m.get("" + Actions.PLAY));
+		bar.add(m.get("" + Actions.STOP));
 		bar.add(m.get("" + Actions.RESET));
 		bar.addSeparator();
-		// Here goes the spinner
+		// Here goes the delay JSpinner
+		delay.setMaximumSize(new Dimension(100, 50));
+		bar.add(delayLabel);
+		bar.add(delay);
+		// Here goes the steps JSpinner
 		steps.setMaximumSize(new Dimension(100, 50));
 		bar.add(stepsLabel);
 		bar.add(steps);
