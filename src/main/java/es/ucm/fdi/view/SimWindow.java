@@ -63,6 +63,17 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 	private CustomTable junctionsTable = new CustomTable(new CustomTableModel(
 			Tables.JUNCTIONS.getTags()));
 
+	private Actions[] actionsToUnlock = {Actions.CLEAR_EDITOR, 
+										Actions.DELETE_REPORT, 
+										Actions.INSERT_EVENT_DATA,
+										Actions.LOAD_EVENT,
+										Actions.PLAY,
+										Actions.REDIRECT_OUTPUT,
+										Actions.REPORT,
+										Actions.REPORT_SELECTED,
+										Actions.RESET,
+										Actions.SAVE_EVENT,
+										Actions.SAVE_REPORT};
 	private JTextField contextualBar = new JTextField();
 	private CustomGraphLayout graph = new CustomGraphLayout();
 	private JSpinner steps;
@@ -169,7 +180,7 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 						stepCount = 0;
 						
 						ConcurrentSimulation csim = new ConcurrentSimulation(controller,
-								(int)delay.getValue(), (int)steps.getValue());
+								(int)delay.getValue(), (int)steps.getValue(), this);
 						
 						if(!(simulationThread != null && simulationThread.isAlive())) {
 							simulationThread = new Thread(csim);
@@ -185,6 +196,7 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 				KeyEvent.VK_T, "control shift T", ()->{
 					if(!(simulationThread == null) && simulationThread.isAlive()) {
 						simulationThread.interrupt();
+						unlockActions(actionsToUnlock);
 					}
 				}).register(this);
 		// RESETS SIMULATOR
@@ -594,4 +606,18 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 		showErrorMessage("An error occurred", message);
 	}
 
+	
+	public void lockActions(Actions[] actions){
+		ActionMap m = getActionMap();
+		for(Actions a : actions){
+			m.get(""+a).setEnabled(false);
+		}
+	}
+	
+	public void unlockActions(Actions[] actions){
+		ActionMap m = getActionMap();
+		for(Actions a : actions){
+			m.get(""+a).setEnabled(true);
+		}
+	}
 }

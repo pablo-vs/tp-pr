@@ -10,7 +10,6 @@ public enum Actions{
 	RESET("Reset"), 
 	EXIT("Exit"),
 	REPORT("Report"), 
-	LOAD_REPORT("Load Report"),
 	SAVE_REPORT("Save Report"), 
 	DELETE_REPORT("Delete Report"),
 	REDIRECT_OUTPUT("Redirect Output"),

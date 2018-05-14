@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
-import javax.swing.SwingUtilities;
-
 import es.ucm.fdi.sim.events.Event;
 import es.ucm.fdi.sim.objects.Road;
 import es.ucm.fdi.util.MultiTreeMap;
@@ -153,7 +151,7 @@ public class Simulator {
 		UpdateEvent event = new UpdateEvent(EventType.REGISTERED);
 		Logger.getLogger(Simulator.class.getName())
 			.fine("Sending UpdateEvent of type REGISTERED");
-		SwingUtilities.invokeLater(()->l.update(event, ""));
+		l.update(event, ""); //Removed SwingUtilities.invokeLater()
 	}
 
 	/**
@@ -174,7 +172,7 @@ public class Simulator {
 	private void fireUpdateEvent(EventType type, String error) {
 		UpdateEvent event = new UpdateEvent(type);
 		for(Listener l : listeners) {
-			SwingUtilities.invokeLater(()->l.update(event, error));
+			l.update(event, error);
 		}
 	}
 
