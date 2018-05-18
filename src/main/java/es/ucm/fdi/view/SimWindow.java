@@ -7,6 +7,7 @@ import java.awt.event.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.IllegalArgumentException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -123,7 +124,7 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 	private Thread simulationThread = null;
 	private int stepCount = 0;
 
-	public SimWindow(Controller cont) {
+	public SimWindow(Controller cont, Integer t) {
 		JFrame jf = new JFrame("Traffic Simulator");
 		controller = cont;
 
@@ -150,6 +151,13 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 		jf.add(contextualBar, BorderLayout.SOUTH);
 		contextualBar.setText("Welcome to UCM's Custom Traffic Simulator");
 		controller.addListener(this);
+		
+		if(t != null) {
+			play(t);
+		}
+	}
+	public SimWindow(Controller cont) {
+		this(cont, 0);
 	}
 
 	/**
@@ -224,20 +232,7 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 		new SimulatorAction(Actions.PLAY, "play.png",
 				"Executes the indicated steps", KeyEvent.VK_X,
 				"control shift X", () -> {
-					try {
-						
-						stepCount = 0;
-						
-						ConcurrentSimulation csim = new ConcurrentSimulation(controller,
-								(int)delay.getValue(), (int)steps.getValue(), this, actionsToLock);
-						
-						if(!(simulationThread != null && simulationThread.isAlive())) {
-							simulationThread = new Thread(csim);
-							simulationThread.start();
-						}
-					} catch (SimulatorException e) {
-						showErrorMessage(e.getMessage());
-					}
+					play(null);
 				}).register(this);
 		// STOPS SIMULATION
 		new SimulatorAction(Actions.STOP, "stop.png", "Stops the simulation",
@@ -576,6 +571,7 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 				break;
 	
 			case REGISTERED:
+				eventsModel.setElements(ue.getEventQueue(), "#");
 				break;
 	
 			case ADVANCED:
@@ -667,6 +663,23 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 		ActionMap m = getActionMap();
 		for(String a : actions){
 			m.get(a).setEnabled(true);
+		}
+	}
+	
+	private void play(Integer t) {
+		try {
+			
+			stepCount = 0;
+			
+			ConcurrentSimulation csim = new ConcurrentSimulation(controller,
+					(int)delay.getValue(), t == null ? (int)steps.getValue() : t, this, actionsToLock);
+			
+			if(!(simulationThread != null && simulationThread.isAlive())) {
+				simulationThread = new Thread(csim);
+				simulationThread.start();
+			}
+		} catch (SimulatorException e) {
+			showErrorMessage(e.getMessage());
 		}
 	}
 }

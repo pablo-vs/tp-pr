@@ -1,6 +1,6 @@
 package es.ucm.fdi.launcher;
 
-import java.io.File;	
+import java.io.File;
 import java.io.IOException;
 import java.io.FilenameFilter;
 import java.io.FileInputStream;
@@ -26,7 +26,6 @@ import es.ucm.fdi.ini.Ini;
 import es.ucm.fdi.view.SimWindow;
 import es.ucm.fdi.control.Controller;
 import es.ucm.fdi.exceptions.SimulatorException;
-
 
 public class Main {
 
@@ -79,22 +78,26 @@ public class Main {
 		cmdLineOptions.addOption(Option.builder("h").longOpt("help")
 				.desc("Print this message").build());
 
-		cmdLineOptions.addOption(Option.builder("m").longOpt("mode").hasArg()
+		cmdLineOptions.addOption(Option
+				.builder("m")
+				.longOpt("mode")
+				.hasArg()
 				.desc("'batch' for batch mode and 'gui' for GUI mode\n"
-				      + "(default value is 'batch')").build());
+						+ "(default value is 'batch')").build());
 		cmdLineOptions.addOption(Option.builder("i").longOpt("input").hasArg()
 				.desc("Events input file").build());
 		cmdLineOptions.addOption(Option.builder("l").longOpt("log").hasArg()
-				.desc("Log level (severe, warning, info, fine, finer, off)").build());
+				.desc("Log level (severe, warning, info, fine, finer, off)")
+				.build());
 		cmdLineOptions.addOption(Option.builder("o").longOpt("output").hasArg()
 				.desc("Output file, where reports are written.").build());
-		cmdLineOptions.addOption(Option
+		cmdLineOptions
+				.addOption(Option
 						.builder("t")
 						.longOpt("ticks")
 						.hasArg()
 						.desc("Ticks to execute the simulator's main loop (default value is "
 								+ _timeLimitDefaultValue + ").").build());
-
 
 		return cmdLineOptions;
 	}
@@ -107,14 +110,14 @@ public class Main {
 			System.exit(0);
 		}
 	}
-	
+
 	private static void parseBatchOption(CommandLine line)
-		throws ParseException {
-		
-	        String modeStr = line.getOptionValue("m");
-		if("gui".equals(modeStr)) {
+			throws ParseException {
+
+		String modeStr = line.getOptionValue("m");
+		if ("gui".equals(modeStr)) {
 			_batch = false;
-		} else if(modeStr != null && !"batch".equals(modeStr)) {
+		} else if (modeStr != null && !"batch".equals(modeStr)) {
 			throw new ParseException("Invalid mode: " + modeStr);
 		}
 	}
@@ -123,25 +126,26 @@ public class Main {
 			throws ParseException {
 		_inFile = line.getOptionValue("i");
 	}
-	
+
 	private static void parseLogLevelOption(CommandLine line)
 			throws ParseException {
 		String levelStr = line.getOptionValue("l");
-		if(levelStr != null) {
-			if(levelStr.equals("severe")) {
+		if (levelStr != null) {
+			if (levelStr.equals("severe")) {
 				_logLevel = Level.SEVERE;
-			} else if(levelStr.equals("warning")) {
+			} else if (levelStr.equals("warning")) {
 				_logLevel = Level.WARNING;
-			} else if(levelStr.equals("info")) {
+			} else if (levelStr.equals("info")) {
 				_logLevel = Level.INFO;
-			} else if(levelStr.equals("fine")) {
+			} else if (levelStr.equals("fine")) {
 				_logLevel = Level.FINE;
-			} else if(levelStr.equals("finer")) {
+			} else if (levelStr.equals("finer")) {
 				_logLevel = Level.FINER;
-			} else if(levelStr.equals("off")) {
+			} else if (levelStr.equals("off")) {
 				_logLevel = Level.OFF;
 			} else {
-				throw new ParseException("Invalid value for log level: " + levelStr);
+				throw new ParseException("Invalid value for log level: "
+						+ levelStr);
 			}
 		}
 	}
@@ -222,36 +226,41 @@ public class Main {
 	 * @throws IOException
 	 */
 	private static void startBatchMode() throws IOException, SimulatorException {
-		Controller control = new Controller
-			(_inFile == null ? new ByteArrayInputStream(new byte[0])
-			 : new FileInputStream(_inFile),
-			 _outFile == null ? System.out : new FileOutputStream(_outFile));
+		Controller control = new Controller(
+				_inFile == null ? new ByteArrayInputStream(new byte[0])
+						: new FileInputStream(_inFile),
+				_outFile == null ? System.out : new FileOutputStream(_outFile));
 
 		if (_timeLimit == null) {
 			_timeLimit = _timeLimitDefaultValue;
 		}
 		control.run(_timeLimit);
 	}
-	
+
 	/**
 	 * Initializes batch or GUI mode, as indicated by args.
 	 * 
-	 * @param args					Command line parameters.
+	 * @param args
+	 *            Command line parameters.
 	 * @throws IOException
 	 * @throws SimulatorException
 	 */
 	@SuppressWarnings("unused")
 	private static void start(String[] args) throws IOException,
 			SimulatorException {
-		
+
 		parseArgs(args);
 		setupLogging(_logLevel);
-		if(_batch){
+		if (_batch) {
 			startBatchMode();
-		}else{
-			Controller control = new Controller();
-			SimWindow view = new SimWindow(control);
-			//Instance is created to avoid 'Exception while removing reference'
+		} else {
+			Controller control = new Controller(
+					_inFile == null ? new ByteArrayInputStream(new byte[0])
+							: new FileInputStream(_inFile),
+					_outFile == null ? System.out : new FileOutputStream(
+							_outFile));
+			SimWindow view = new SimWindow(control, _timeLimit);
+			// Instance is created to avoid 'Exception while removing reference'
 		}
 	}
 
@@ -260,7 +269,7 @@ public class Main {
 		// Call setupLogging with the desired log level
 		// -l <level>
 		// setupLogging(Level.INFO);
-		
+
 		Logger log = Logger.getLogger("");
 		for (Handler h : log.getHandlers())
 			log.removeHandler(h);
@@ -292,7 +301,7 @@ public class Main {
 		// directory.
 		//
 		// test("resources/examples/basic/");
-		
+
 		// Call start to start the simulator from command line, etc.
 		try {
 			start(args);
