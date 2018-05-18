@@ -29,7 +29,8 @@ public class CustomTableModel extends AbstractTableModel {
 	/**
 	 * Class constructor.
 	 * 
-	 * @param columnTags	Tags for the columns.
+	 * @param columnTags
+	 *            Tags for the columns.
 	 */
 	public CustomTableModel(String[] columnTags) {
 		this.columnTags = columnTags;
@@ -50,7 +51,7 @@ public class CustomTableModel extends AbstractTableModel {
 	public int getColumnCount() {
 		return columnTags.length;
 	}
-	
+
 	/**
 	 * Returns value at indicated position.
 	 */

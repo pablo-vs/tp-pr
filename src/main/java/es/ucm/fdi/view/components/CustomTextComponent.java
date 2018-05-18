@@ -37,7 +37,7 @@ public class CustomTextComponent extends JPanel {
 		add(area, BorderLayout.CENTER);
 
 		textArea.addMouseListener(new MouseListener() {
-			
+
 			@Override
 			public void mousePressed(MouseEvent e) {
 				showPopup(e);
@@ -93,7 +93,7 @@ public class CustomTextComponent extends JPanel {
 			File file = fileChooser.getSelectedFile();
 			textArea.setText(new String(Files.readAllBytes(file.toPath()),
 					"UTF-8"));
-			
+
 			return true;
 		} else {
 			return false;

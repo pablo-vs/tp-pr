@@ -14,28 +14,30 @@ public class ConcurrentSimulation implements Runnable {
 	SimWindow simWindow;
 	int delay;
 	int steps;
-	
-	public ConcurrentSimulation(Controller control, int delay, int steps, SimWindow simWindow, String[] actions) {
+
+	public ConcurrentSimulation(Controller control, int delay, int steps,
+			SimWindow simWindow, String[] actions) {
 		this.control = control;
 		this.delay = delay;
 		this.steps = steps;
 		this.simWindow = simWindow;
 		this.actions = actions;
 	}
-	
+
 	@Override
-	public void run() {		
+	public void run() {
 		simWindow.lockActions(actions);
-		for(int i = 0; i < steps; ++i) {
+		for (int i = 0; i < steps; ++i) {
 			try {
-				SwingUtilities.invokeLater(()->control.run(1));
+				SwingUtilities.invokeLater(() -> control.run(1));
 				Thread.sleep(delay);
 			} catch (InterruptedException e) {
 				return;
 			}
 		}
 		simWindow.unlockActions(actions);
-		Logger.getLogger(ConcurrentSimulation.class.getName()).info("Starting simulation thread");
+		Logger.getLogger(ConcurrentSimulation.class.getName()).info(
+				"Starting simulation thread");
 
 	}
 

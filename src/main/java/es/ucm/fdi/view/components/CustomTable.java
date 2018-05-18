@@ -32,9 +32,10 @@ public class CustomTable extends JTable{
 	public void center(){
 		DefaultTableCellRenderer centeredRenderer = new DefaultTableCellRenderer();
 		centeredRenderer.setHorizontalAlignment(SwingConstants.CENTER);
-		
-		for(int i = 0; i < getColumnCount(); ++i){
-			this.getColumnModel().getColumn(i).setCellRenderer(centeredRenderer);
+
+		for (int i = 0; i < getColumnCount(); ++i) {
+			this.getColumnModel().getColumn(i)
+					.setCellRenderer(centeredRenderer);
 		}
 	}
 }
