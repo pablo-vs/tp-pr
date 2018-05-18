@@ -1,4 +1,4 @@
-package es.ucm.fdi.view.customcomponents;
+package es.ucm.fdi.view.components;
 
 import java.io.File;
 import java.io.IOException;
