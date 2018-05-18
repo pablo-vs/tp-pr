@@ -1,4 +1,4 @@
-package es.ucm.fdi.view.customcomponents;
+package es.ucm.fdi.view.components;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

@@ -29,11 +29,10 @@ import es.ucm.fdi.sim.objects.Vehicle;
 import es.ucm.fdi.sim.objects.Junction;
 import es.ucm.fdi.sim.objects.SimObject;
 import es.ucm.fdi.view.util.ConcurrentSimulation;
-import es.ucm.fdi.view.util.Actions;
-import es.ucm.fdi.view.customcomponents.CustomTable;
-import es.ucm.fdi.view.customcomponents.CustomTableModel;
-import es.ucm.fdi.view.customcomponents.CustomGraphLayout;
-import es.ucm.fdi.view.customcomponents.CustomTextComponent;
+import es.ucm.fdi.view.components.CustomGraphLayout;
+import es.ucm.fdi.view.components.CustomTable;
+import es.ucm.fdi.view.components.CustomTableModel;
+import es.ucm.fdi.view.components.CustomTextComponent;
 
 /**
  * Main window for the simulator.
@@ -41,6 +40,32 @@ import es.ucm.fdi.view.customcomponents.CustomTextComponent;
  * @version 06.05.2018
  */
 public class SimWindow extends JPanel implements Simulator.Listener {
+	
+	private enum Actions{
+		LOAD_EVENT("Load"), 
+		SAVE_EVENT("Save"), 
+		CLEAR_EDITOR("Clear"), 
+		INSERT_EVENT_DATA("Insert"), 
+		PLAY("Play"), 
+		STOP("Stop"),
+		RESET("Reset"), 
+		EXIT("Exit"),
+		REPORT("Report"), 
+		SAVE_REPORT("Save Report"), 
+		DELETE_REPORT("Delete Report"),
+		REDIRECT_OUTPUT("Redirect Output"),
+		REPORT_SELECTED("Report Selected");
+		
+		String s;	
+		private Actions(String s){
+			this.s = s;
+		}
+		
+		public String toString(){
+			return s;
+		}
+	}
+	
 	/**
 	 * Generated serialVersionUID
 	 */
@@ -66,17 +91,30 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 	private CustomTable junctionsTable = new CustomTable(new CustomTableModel(
 			Junction.getColumns()));
 
-	private Actions[] actionsToUnlock = {Actions.CLEAR_EDITOR, 
-										Actions.DELETE_REPORT, 
-										Actions.INSERT_EVENT_DATA,
-										Actions.LOAD_EVENT,
-										Actions.PLAY,
-										Actions.REDIRECT_OUTPUT,
-										Actions.REPORT,
-										Actions.REPORT_SELECTED,
-										Actions.RESET,
-										Actions.SAVE_EVENT,
-										Actions.SAVE_REPORT};
+	private String[] actionsToUnlock = {Actions.CLEAR_EDITOR.toString(), 
+										Actions.DELETE_REPORT.toString(), 
+										Actions.INSERT_EVENT_DATA.toString(),
+										Actions.LOAD_EVENT.toString(),
+										Actions.PLAY.toString(),
+										Actions.REDIRECT_OUTPUT.toString(),
+										Actions.REPORT.toString(),
+										Actions.REPORT_SELECTED.toString(),
+										Actions.RESET.toString(),
+										Actions.SAVE_EVENT.toString(),
+										Actions.SAVE_REPORT.toString()};
+	
+	private String[] actionsToLock = {Actions.CLEAR_EDITOR.toString(),  
+										Actions.DELETE_REPORT.toString(), 
+										Actions.INSERT_EVENT_DATA.toString(), 
+										Actions.LOAD_EVENT.toString(), 
+										Actions.PLAY.toString(), 
+										Actions.REDIRECT_OUTPUT.toString(), 
+										Actions.REPORT.toString(), 
+										Actions.REPORT_SELECTED.toString(),
+										Actions.RESET.toString(), 
+										Actions.SAVE_EVENT.toString(), 
+										Actions.SAVE_REPORT.toString()}; 
+	
 	private JTextField contextualBar = new JTextField();
 	private CustomGraphLayout graph = new CustomGraphLayout();
 	private JSpinner steps;
@@ -105,6 +143,8 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 		addButtonBar();
 		addToolBar(jf);
 		addCenterPanel(jf);
+		lockActions(new String[]{Actions.PLAY.toString()});
+		//Before loading
 
 		jf.add(this, BorderLayout.CENTER);
 		jf.add(contextualBar, BorderLayout.SOUTH);
@@ -124,6 +164,7 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 						if (eventsEditor.load()) {
 							contextualBar.setText("Events loaded from file");
 						}
+						
 					} catch (IOException e) {
 						Logger.getLogger(SimulatorAction.class.getName()).log(
 								Level.WARNING,
@@ -163,6 +204,11 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 								eventsEditor.getText().getBytes(
 										StandardCharsets.UTF_8)));
 						contextualBar.setText("Events added to event queue");
+						
+						if(eventsQueueTable.getModel().getRowCount() > 0){
+							unlockActions(new String[]{Actions.PLAY.toString()});
+						}
+						
 					} catch (IOException e) {
 						Logger.getLogger(SimulatorAction.class.getName())
 							.log(Level.WARNING, "IO error while reading event"
@@ -183,13 +229,12 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 						stepCount = 0;
 						
 						ConcurrentSimulation csim = new ConcurrentSimulation(controller,
-								(int)delay.getValue(), (int)steps.getValue(), this);
+								(int)delay.getValue(), (int)steps.getValue(), this, actionsToLock);
 						
 						if(!(simulationThread != null && simulationThread.isAlive())) {
 							simulationThread = new Thread(csim);
 							simulationThread.start();
 						}
-						
 					} catch (SimulatorException e) {
 						showErrorMessage(e.getMessage());
 					}
@@ -208,6 +253,7 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 				"control shift R", () -> {
 					controller.reset();
 					contextualBar.setText("Simulator settings reset");
+					lockActions(new String[]{Actions.PLAY.toString()});
 				}).register(this);
 		// EXITS THE PROGRAM
 		new SimulatorAction(Actions.EXIT, "exit.png", "Exit the program",
@@ -610,17 +656,17 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 	}
 
 	
-	public void lockActions(Actions[] actions){
+	public void lockActions(String[] actions){
 		ActionMap m = getActionMap();
-		for(Actions a : actions){
-			m.get(""+a).setEnabled(false);
+		for(String a : actions){
+			m.get(a).setEnabled(false);
 		}
 	}
 	
-	public void unlockActions(Actions[] actions){
+	public void unlockActions(String[] actions){
 		ActionMap m = getActionMap();
-		for(Actions a : actions){
-			m.get(""+a).setEnabled(true);
+		for(String a : actions){
+			m.get(a).setEnabled(true);
 		}
 	}
 }
