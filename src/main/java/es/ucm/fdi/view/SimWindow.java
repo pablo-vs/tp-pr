@@ -92,29 +92,31 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 	private CustomTable junctionsTable = new CustomTable(new CustomTableModel(
 			Junction.getColumns()));
 
-	private String[] actionsToUnlock = {Actions.CLEAR_EDITOR.toString(), 
-										Actions.DELETE_REPORT.toString(), 
-										Actions.INSERT_EVENT_DATA.toString(),
-										Actions.LOAD_EVENT.toString(),
-										Actions.PLAY.toString(),
-										Actions.REDIRECT_OUTPUT.toString(),
-										Actions.REPORT.toString(),
-										Actions.REPORT_SELECTED.toString(),
-										Actions.RESET.toString(),
-										Actions.SAVE_EVENT.toString(),
-										Actions.SAVE_REPORT.toString()};
+	private String[] actionsToUnlock = {
+			Actions.CLEAR_EDITOR.toString(), 
+			Actions.DELETE_REPORT.toString(), 
+			Actions.INSERT_EVENT_DATA.toString(),
+			Actions.LOAD_EVENT.toString(),
+			Actions.PLAY.toString(),
+			Actions.REDIRECT_OUTPUT.toString(),
+			Actions.REPORT.toString(),
+			Actions.REPORT_SELECTED.toString(),
+			Actions.RESET.toString(),
+			Actions.SAVE_EVENT.toString(),
+			Actions.SAVE_REPORT.toString()};
 	
-	private String[] actionsToLock = {Actions.CLEAR_EDITOR.toString(),  
-										Actions.DELETE_REPORT.toString(), 
-										Actions.INSERT_EVENT_DATA.toString(), 
-										Actions.LOAD_EVENT.toString(), 
-										Actions.PLAY.toString(), 
-										Actions.REDIRECT_OUTPUT.toString(), 
-										Actions.REPORT.toString(), 
-										Actions.REPORT_SELECTED.toString(),
-										Actions.RESET.toString(), 
-										Actions.SAVE_EVENT.toString(), 
-										Actions.SAVE_REPORT.toString()}; 
+	private String[] actionsToLock = {	
+			Actions.CLEAR_EDITOR.toString(),  
+			Actions.DELETE_REPORT.toString(), 
+			Actions.INSERT_EVENT_DATA.toString(), 
+			Actions.LOAD_EVENT.toString(), 
+			Actions.PLAY.toString(), 
+			Actions.REDIRECT_OUTPUT.toString(), 
+			Actions.REPORT.toString(), 
+			Actions.REPORT_SELECTED.toString(),
+			Actions.RESET.toString(), 
+			Actions.SAVE_EVENT.toString(), 
+			Actions.SAVE_REPORT.toString()}; 
 	
 	private JTextField contextualBar = new JTextField();
 	private CustomGraphLayout graph = new CustomGraphLayout();
@@ -172,7 +174,7 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 						if (eventsEditor.load()) {
 							contextualBar.setText("Events loaded from file");
 						}
-						
+
 					} catch (IOException e) {
 						Logger.getLogger(SimulatorAction.class.getName()).log(
 								Level.WARNING,
@@ -206,21 +208,23 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 		// ADDS EVENT DATA TO TABLE
 		new SimulatorAction(Actions.INSERT_EVENT_DATA, "events.png",
 				"Adds the event data to the event queue", KeyEvent.VK_I,
-				"control shift I", () -> {
+				"control shift I",
+				() -> {
 					try {
 						controller.readEvents(new ByteArrayInputStream(
 								eventsEditor.getText().getBytes(
 										StandardCharsets.UTF_8)));
 						contextualBar.setText("Events added to event queue");
-						
-						if(eventsQueueTable.getModel().getRowCount() > 0){
-							unlockActions(new String[]{Actions.PLAY.toString()});
+
+						if (eventsQueueTable.getModel().getRowCount() > 0) {
+							unlockActions(new String[] { Actions.PLAY
+									.toString() });
 						}
-						
+
 					} catch (IOException e) {
-						Logger.getLogger(SimulatorAction.class.getName())
-							.log(Level.WARNING, "IO error while reading event"
-								,e);
+						Logger.getLogger(SimulatorAction.class.getName()).log(
+								Level.WARNING, "IO error while reading event",
+								e);
 						showErrorMessage("IO error while reading event.");
 					} catch (IllegalArgumentException | ObjectNotFoundException
 							| UnreachableJunctionException e) {
@@ -236,8 +240,9 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 				}).register(this);
 		// STOPS SIMULATION
 		new SimulatorAction(Actions.STOP, "stop.png", "Stops the simulation",
-				KeyEvent.VK_T, "control shift T", ()->{
-					if(!(simulationThread == null) && simulationThread.isAlive()) {
+				KeyEvent.VK_T, "control shift T", () -> {
+					if (!(simulationThread == null)
+							&& simulationThread.isAlive()) {
 						simulationThread.interrupt();
 						unlockActions(actionsToUnlock);
 					}
@@ -248,7 +253,7 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 				"control shift R", () -> {
 					controller.reset();
 					contextualBar.setText("Simulator settings reset");
-					lockActions(new String[]{Actions.PLAY.toString()});
+					lockActions(new String[] { Actions.PLAY.toString() });
 				}).register(this);
 		// EXITS THE PROGRAM
 		new SimulatorAction(Actions.EXIT, "exit.png", "Exit the program",
@@ -302,11 +307,11 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 					contextualBar
 							.setText("Output redirection preferences updated");
 				}).register(this);
-		
-		//WRITES SELECTED
-		new SimulatorAction(Actions.REPORT_SELECTED, "report.png", 
-				"Generates reports for selected items", KeyEvent.VK_I, "control shift I",
-				()->{
+
+		// WRITES SELECTED
+		new SimulatorAction(Actions.REPORT_SELECTED, "report.png",
+				"Generates reports for selected items", KeyEvent.VK_I,
+				"control shift I", () -> {
 					writeSelectedReports();
 				}).register(this);
 	}
@@ -551,8 +556,7 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 				.getModel();
 		CustomTableModel junctionsModel = (CustomTableModel) junctionsTable
 				.getModel();
-		CustomTableModel roadsModel = (CustomTableModel) roadsTable
-				.getModel();
+		CustomTableModel roadsModel = (CustomTableModel) roadsTable.getModel();
 		CustomTableModel eventsModel = (CustomTableModel) eventsQueueTable
 				.getModel();
 
@@ -630,10 +634,12 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 	}
 
 	/**
-	 * Utility  method for the one below.
+	 * Utility method for the one below.
 	 * 
-	 * @param title		Error title
-	 * @param message	Error message
+	 * @param title
+	 *            Error title
+	 * @param message
+	 *            Error message
 	 */
 	private void showErrorMessage(String title, String message) {
 		Logger.getLogger(SimWindow.class.getName()).info(
@@ -645,23 +651,23 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 	/**
 	 * Shows a popup message error dialogue
 	 * 
-	 * @param message	Error message
+	 * @param message
+	 *            Error message
 	 */
 	private void showErrorMessage(String message) {
 		showErrorMessage("An error occurred", message);
 	}
 
-	
-	public void lockActions(String[] actions){
+	public void lockActions(String[] actions) {
 		ActionMap m = getActionMap();
-		for(String a : actions){
+		for (String a : actions) {
 			m.get(a).setEnabled(false);
 		}
 	}
-	
-	public void unlockActions(String[] actions){
+
+	public void unlockActions(String[] actions) {
 		ActionMap m = getActionMap();
-		for(String a : actions){
+		for (String a : actions) {
 			m.get(a).setEnabled(true);
 		}
 	}
