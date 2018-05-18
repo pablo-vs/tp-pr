@@ -24,6 +24,9 @@ public class Road extends SimObject {
 	private int maxVel;
 	private Junction ini;
 	private Junction end;
+	
+	private static final String[] COLUMNS = {"ID", "Source", "Target",
+		"Length", "Max Speed", "Vehicles"};
 
 	/**
 	 * Constructor.
@@ -181,6 +184,10 @@ public class Road extends SimObject {
 		out.put("Length", "" + length);
 		out.put("Max Speed", "" + maxVel);
 		out.put("Vehicles", "[" + describeVehicles() + "]");
+	}
+	
+	public static String[] getColumns() {
+		return COLUMNS;
 	}
 
 	/**

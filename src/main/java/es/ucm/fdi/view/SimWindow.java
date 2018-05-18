@@ -1,6 +1,6 @@
 package es.ucm.fdi.view;
 
-import javax.swing.*;
+import javax.swing.*;	
 
 import java.awt.*;
 import java.awt.event.*;
@@ -23,9 +23,12 @@ import es.ucm.fdi.exceptions.UnreachableJunctionException;
 import es.ucm.fdi.ini.Ini;
 import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.sim.Simulator;
+import es.ucm.fdi.sim.events.Event;
+import es.ucm.fdi.sim.objects.Road;
+import es.ucm.fdi.sim.objects.Vehicle;
+import es.ucm.fdi.sim.objects.Junction;
 import es.ucm.fdi.sim.objects.SimObject;
 import es.ucm.fdi.view.util.ConcurrentSimulation;
-import es.ucm.fdi.view.util.Tables;
 import es.ucm.fdi.view.util.Actions;
 import es.ucm.fdi.view.customcomponents.CustomTable;
 import es.ucm.fdi.view.customcomponents.CustomTableModel;
@@ -55,13 +58,13 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 	private CustomTextComponent reportsArea = new CustomTextComponent(false);
 
 	private CustomTable eventsQueueTable = new CustomTable(new CustomTableModel(
-			Tables.EVENT_LIST.getTags()));
+			Event.getColumns()));
 	private CustomTable vehiclesTable = new CustomTable(new CustomTableModel(
-			Tables.VEHICLES.getTags()));
+			Vehicle.getColumns()));
 	private CustomTable roadsTable = new CustomTable(new CustomTableModel(
-			Tables.ROADS.getTags()));
+			Road.getColumns()));
 	private CustomTable junctionsTable = new CustomTable(new CustomTableModel(
-			Tables.JUNCTIONS.getTags()));
+			Junction.getColumns()));
 
 	private Actions[] actionsToUnlock = {Actions.CLEAR_EDITOR, 
 										Actions.DELETE_REPORT, 

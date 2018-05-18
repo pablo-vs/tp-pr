@@ -1,6 +1,6 @@
 package es.ucm.fdi.launcher;
 
-import java.io.File;
+import java.io.File;	
 import java.io.IOException;
 import java.io.FilenameFilter;
 import java.io.FileInputStream;
@@ -26,6 +26,7 @@ import es.ucm.fdi.ini.Ini;
 import es.ucm.fdi.view.SimWindow;
 import es.ucm.fdi.control.Controller;
 import es.ucm.fdi.exceptions.SimulatorException;
+
 
 public class Main {
 
@@ -291,7 +292,7 @@ public class Main {
 		// directory.
 		//
 		// test("resources/examples/basic/");
-
+		
 		// Call start to start the simulator from command line, etc.
 		try {
 			start(args);

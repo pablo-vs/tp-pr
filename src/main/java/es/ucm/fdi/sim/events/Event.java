@@ -31,6 +31,8 @@ public abstract class Event implements Describable {
 	private static String INVALID_ID_MSG = " Not a valid id ";
 
 	private int time;
+	
+	private static final String[] COLUMNS = {"#", "Time", "Type"};
 
 	/**
 	 * Empty constructor.
@@ -87,6 +89,10 @@ public abstract class Event implements Describable {
 		return j;
 	}
 
+	public static String[] getColumns() {
+		return COLUMNS;
+	}
+	
 	/**
 	 * Abstract parent of all the <code>EventBuilders</code>
 	 */

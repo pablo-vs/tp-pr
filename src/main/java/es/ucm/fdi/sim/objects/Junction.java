@@ -28,6 +28,8 @@ public class Junction extends SimObject {
 			new HashMap<Road, IncomingRoad>();
 	private HashMap<Junction, Road> junctionToRoadMap = 
 			new HashMap<Junction, Road>();
+	
+	private static final String[] COLUMNS = {"ID", "Green", "Red"};
 
 	/**
 	 * Class representing a <code>Road</code> with its respective queue of
@@ -311,6 +313,10 @@ public class Junction extends SimObject {
 				currentOpenQueue > -1 ? describeQueue(incomingRoads
 						.get(currentOpenQueue)) : "[]");
 		out.put("Red", "[" + describeQueues(true) + "]");
+	}
+	
+	public static String[] getColumns() {
+		return COLUMNS;
 	}
 
 	/**
