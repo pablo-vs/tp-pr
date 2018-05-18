@@ -32,6 +32,9 @@ public class Vehicle extends SimObject {
 	private boolean arrived = false;
 	private boolean inQueue = false;
 
+	private static final String[] COLUMNS = {"ID", "Road", "Location",
+		"Speed", "Km", "Faulty Units", "Itinerary"};
+	
 	/**
 	 * Constructor.
 	 * 
@@ -245,9 +248,13 @@ public class Vehicle extends SimObject {
 		out.put("Speed", "" + currentVel);
 		out.put("Km", "" + kilometrage);
 		out.put("Faulty Units", "" + brokenTime);
-		out.put("Faulty Units", "["	
+		out.put("Itinerary", "["	
 				+ itinerary.stream().map((j) -> j.getID())
 					.collect(Collectors.joining(",")) + "]");
+	}
+	
+	public static String[] getColumns() {
+		return COLUMNS;
 	}
 
 	/**
