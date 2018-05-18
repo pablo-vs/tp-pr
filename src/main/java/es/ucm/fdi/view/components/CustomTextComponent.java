@@ -88,7 +88,7 @@ public class CustomTextComponent extends JPanel {
 	 * TextArea.
 	 */
 	public boolean load() throws IOException {
-		int returnVal = fileChooser.showSaveDialog(null);
+		int returnVal = fileChooser.showOpenDialog(null);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			File file = fileChooser.getSelectedFile();
 			textArea.setText(new String(Files.readAllBytes(file.toPath()),
