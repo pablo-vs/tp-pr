@@ -1,39 +1,22 @@
 Eduardo Rivero Rodríguez
 Pablo Villalobos Sánchez
 
-GitHub (enlace de invitación) : 
-https://github.com/pablo-vs/tp-pr/invitations
+GitHub: 
+https://github.com/pablo-vs/tp-pr/
 
-commit: d7c6eee23979116ebd187f0df34ef2c25b2802a8
+commit: 2030a91405fac7c5978d0c7ec7c9c0b6d2114ec6
 
-Cambios respecto a la P4
+Cambios respecto a la P5
 
-- Cambios en eventos y vehículos avanzados para arreglar los fallos 
-anteriores.
+- El modo gráfico ahora tiene en cuenta los parámetros -i y -t y
+ejecuta el simulador en las condiciones adecuadas.
 
-- Eliminación de constructores innecesarios en objetos del simulador.
+- El menú de load ahora es un diálogo de "load" y no de "save".
 
-- Cambio en es.ucm.fdi.sim.SimulatorTest para que 'mvn test' detecte los 
-fallos en los casos de prueba estándar.
+- El botón de play está desactivado si no hay eventos en cola.
 
-- Eliminado el mensaje innecesario en es.ucm.fdi.control.ControllerTest:
-'System.err.println("God's in his heaven, all's right with the world");'
-(Que es un verso de un poema de Robert Browning)
+- Hemos acortado los nombres de algunos paquetes (customcomponents
+-> components)
 
-- Eliminado el método innecesario (y mal implementado) 
-setFaultProbability() de es.ucm.fdi.sim.object.advanced.Car
-
-- Modificadas las listas de solo lectura de 
-es.ucm.fdi.sim.objects.RoadMap, utilizando adecuadamente 
-Collections.unmodifiableList
-
-- Reemplazada la función de hash de SimObject por hashCode().
-
-- Inicialización de atributos en la declaración en objetos del 
-simulador.
-
-- Cambios en Controller para mejorar la gestión de excepciones.
-
-- Acortado comentarios demasiado extensos
-
-- Se ha revisado el formato de forma que las líneas no superen 80 columnas
+- El enum de acciones ahora está en SimWindow y las columnas de las tablas
+en los objetos respectivos (Event, Junction...).
