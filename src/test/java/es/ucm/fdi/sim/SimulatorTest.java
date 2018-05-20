@@ -1,7 +1,7 @@
 package es.ucm.fdi.sim;
 
 import java.lang.Exception;	
-import es.ucm.fdi.exceptions.SimulatorException;
+import java.io.IOException;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -20,7 +20,7 @@ public class SimulatorTest{
 		assertTrue(Main.test("src/main/resources/examples/advanced"));
 	}
 
-	@Test(expected = SimulatorException.class )
+	@Test(expected = IOException.class )
 	public void errorTest() throws Exception {
 		Main.test("src/main/resources/examples/err");
 	}

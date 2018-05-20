@@ -163,6 +163,15 @@ public class Simulator {
 		listeners.remove(l);
 	}
 
+        /**
+        * Notifies Listeners of an ERROR event.
+        * 
+	* @param e The cause of the error.
+	*/
+        public void fail(Throwable e) {
+	    fireUpdateEvent(EventType.ERROR, e.getMessage());
+	}
+    
 	/**
 	* Updates all the registered Listeners with the given event.
 	*
@@ -175,7 +184,7 @@ public class Simulator {
 			l.update(event, error);
 		}
 	}
-
+    
 	/**
 	* Updates all the registered Listeners with the given event.
 	*

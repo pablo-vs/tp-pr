@@ -157,12 +157,14 @@ public class Main {
 
 	private static void parseStepsOption(CommandLine line)
 			throws ParseException {
-		String t = line.getOptionValue("t", _timeLimitDefaultValue.toString());
-		try {
+		String t = line.getOptionValue("t");
+		if(t != null) {
+		    try {
 			_timeLimit = Integer.parseInt(t);
 			assert (_timeLimit < 0);
-		} catch (Exception e) {
+		    } catch (Exception e) {
 			throw new ParseException("Invalid value for time limit: " + t);
+		    }
 		}
 	}
 
@@ -193,6 +195,7 @@ public class Main {
 			}
 		});
 
+		setupLogging(Level.OFF);
 		for (File file : files) {
 			if (!test(file.getAbsolutePath(), file.getAbsolutePath() + ".out",
 					file.getAbsolutePath() + ".eout", 10)) {
@@ -231,6 +234,7 @@ public class Main {
 						: new FileInputStream(_inFile),
 				_outFile == null ? System.out : new FileOutputStream(_outFile));
 
+		control.addListener((ev, msg)->System.err.println(msg));
 		if (_timeLimit == null) {
 			_timeLimit = _timeLimitDefaultValue;
 		}
@@ -257,8 +261,8 @@ public class Main {
 			Controller control = new Controller(
 					_inFile == null ? new ByteArrayInputStream(new byte[0])
 							: new FileInputStream(_inFile),
-					_outFile == null ? System.out : new FileOutputStream(
-							_outFile));
+					_outFile == null ? null : new FileOutputStream(
+						   _outFile));
 			SimWindow view = new SimWindow(control, _timeLimit);
 			// Instance is created to avoid 'Exception while removing reference'
 		}

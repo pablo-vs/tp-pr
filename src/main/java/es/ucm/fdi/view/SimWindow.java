@@ -241,11 +241,7 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 		// STOPS SIMULATION
 		new SimulatorAction(Actions.STOP, "stop.png", "Stops the simulation",
 				KeyEvent.VK_T, "control shift T", () -> {
-					if (!(simulationThread == null)
-							&& simulationThread.isAlive()) {
-						simulationThread.interrupt();
-						unlockActions(actionsToUnlock);
-					}
+					stop();
 				}).register(this);
 		// RESETS SIMULATOR
 		new SimulatorAction(Actions.RESET, "reset.png",
@@ -572,6 +568,8 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 				break;
 	
 			case ERROR:
+			        stop();
+			        showErrorMessage(error);
 				break;
 	
 			case REGISTERED:
@@ -687,5 +685,13 @@ public class SimWindow extends JPanel implements Simulator.Listener {
 		} catch (SimulatorException e) {
 			showErrorMessage(e.getMessage());
 		}
+	}
+
+        private void stop() {
+	    if (!(simulationThread == null)
+		&& simulationThread.isAlive()) {
+		simulationThread.interrupt();
+		unlockActions(actionsToUnlock);
+	    }
 	}
 }

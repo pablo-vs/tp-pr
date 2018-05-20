@@ -105,12 +105,12 @@ public class Controller {
 		} catch (IniError e) {
 			Logger.getLogger(Controller.class.getName()).log(Level.WARNING,
 					INVALID_INI_MSG, e);
-			throw new IllegalArgumentException(
-					INVALID_INI_MSG + e.getMessage(), e);
+			sim.fail(new IllegalArgumentException
+				       (INVALID_INI_MSG + e.getMessage(), e));
 		} catch (IllegalArgumentException | IOException e) {
 			Logger.getLogger(Controller.class.getName()).log(Level.WARNING,
 					GENERIC_INI_ERROR_MSG, e);
-			throw e;
+			sim.fail(e);
 		}
 	}
 
@@ -121,7 +121,7 @@ public class Controller {
 			output = null;
 		}
 	}
-
+    
 	/**
 	 * Resets the simulator.
 	 */
@@ -150,10 +150,10 @@ public class Controller {
 
 			Logger.getLogger(Controller.class.getName()).log(Level.WARNING,
 					SIMULATOR_ERROR_MSG + sim.getTimer(), e);
-
-			throw new SimulatorException(
+		        
+			sim.fail(new SimulatorException(
 					SIMULATOR_ERROR_MSG + sim.getTimer() + ".\n" 
-					+ e.getMessage(), e);
+					+ e.getMessage(), e));
 		}
 	}
 
